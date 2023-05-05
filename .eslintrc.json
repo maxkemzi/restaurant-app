@@ -1,3 +1,18 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": ["next/core-web-vitals", "airbnb", "airbnb/hooks", "plugin:react/jsx-runtime", "prettier"],
+  "plugins": ["prettier"],
+  "rules": {
+		"prettier/prettier": "error",
+		"react/function-component-definition": [
+			"error",
+			{
+				"namedComponents": "arrow-function",
+				"unnamedComponents": "arrow-function"
+			}
+		],
+		"no-console": "off",
+		"import/prefer-default-export": "warn",
+		"react/prop-types": "off",
+		"global-require": "warn"
+	}
 }
