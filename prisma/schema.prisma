@@ -1,0 +1,90 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Order {
+  id             Int    @id @default(autoincrement())
+  cart           Cart   @relation(fields: [cart_id], references: [id])
+  cart_id        Int    @unique
+  client_name    String
+  client_phone   String
+  client_address String
+}
+
+model Cart {
+  id                Int           @id @default(autoincrement())
+  Order             Order?
+  CartProduct       CartProduct[]
+}
+
+model Product {
+  id                Int                 @id @default(autoincrement())
+  category          Category            @relation(fields: [category_id], references: [id])
+  category_id       Int
+  name              String
+  image             String
+  priceInUSD        Float
+  Pizza             Pizza?
+  Drink             Drink?
+  Dessert           Dessert?
+  CartProduct       CartProduct[]
+  ProductIngredient ProductIngredient[]
+}
+
+model CartProduct {
+  id         Int     @id @default(autoincrement())
+  Cart       Cart    @relation(fields: [cart_id], references: [id])
+  cart_id    Int
+  Product    Product @relation(fields: [product_id], references: [id])
+  product_id Int
+}
+
+model Category {
+  id      Int       @id @default(autoincrement())
+  name    String
+  Product Product[]
+}
+
+model Pizza {
+  id         Int     @id @default(autoincrement())
+  Product    Product @relation(fields: [product_id], references: [id])
+  product_id Int     @unique
+  weightInG  Float
+  sizeInCm   Float
+}
+
+model Drink {
+  id         Int     @id @default(autoincrement())
+  Product    Product @relation(fields: [product_id], references: [id])
+  product_id Int     @unique
+  volumeInMl Float
+}
+
+model Dessert {
+  id         Int     @id @default(autoincrement())
+  Product    Product @relation(fields: [product_id], references: [id])
+  product_id Int     @unique
+  weightInG  Float
+}
+
+model Ingredient {
+  id                Int                 @id @default(autoincrement())
+  name              String
+  ProductIngredient ProductIngredient[]
+}
+
+model ProductIngredient {
+  id            Int        @id @default(autoincrement())
+  Ingredient    Ingredient @relation(fields: [ingredient_id], references: [id])
+  ingredient_id Int
+  Product       Product    @relation(fields: [product_id], references: [id])
+  product_id    Int
+}
