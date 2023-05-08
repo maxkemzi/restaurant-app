@@ -1,13 +1,19 @@
 const createCategory = async () => {
-	const response = await fetch(`${process.env.BASE_URL}/api/createCategory`);
+	const response = await fetch(`${process.env.BASE_URL}/api/categories`, {
+		method: "POST"
+	});
 	const data = await response.json();
 	return data;
 };
 
 const getCategories = async () => {
-	const response = await fetch(`${process.env.BASE_URL}/api/getCategories`);
+	const response = await fetch(`${process.env.BASE_URL}/api/categories`);
+
+	if (!response.ok) {
+		throw new Error("Request error.");
+	}
+
 	const data = await response.json();
-	console.log(data);
 	return data;
 };
 

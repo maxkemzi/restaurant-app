@@ -11,80 +11,66 @@ datasource db {
 }
 
 model Order {
-  id             Int    @id @default(autoincrement())
-  cart           Cart   @relation(fields: [cart_id], references: [id])
-  cart_id        Int    @unique
+  id             Int      @id @default(autoincrement())
   client_name    String
   client_phone   String
   client_address String
+  created_at     DateTime @default(now())
+  Cart           Cart?
 }
 
 model Cart {
-  id                Int           @id @default(autoincrement())
-  Order             Order?
-  CartProduct       CartProduct[]
+  id           Int           @id @default(autoincrement())
+  Order        Order         @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  order_id     Int           @unique
+  CartProducts CartProduct[]
+  created_at   DateTime      @default(now())
 }
 
 model Product {
-  id                Int                 @id @default(autoincrement())
-  category          Category            @relation(fields: [category_id], references: [id])
-  category_id       Int
-  name              String
-  image             String
-  priceInUSD        Float
-  Pizza             Pizza?
-  Drink             Drink?
-  Dessert           Dessert?
-  CartProduct       CartProduct[]
-  ProductIngredient ProductIngredient[]
+  id                 Int                 @id @default(autoincrement())
+  Category           Category            @relation(fields: [category_id], references: [id])
+  category_id        Int
+  name               String              @unique
+  image              String
+  price_USD          Float
+  weight             Float
+  size_cm            Float?
+  is_vegan           Boolean?
+  is_spicy           Boolean?
+  CartProducts       CartProduct[]
+  ProductIngredients ProductIngredient[]
+  created_at         DateTime            @default(now())
 }
 
 model CartProduct {
-  id         Int     @id @default(autoincrement())
-  Cart       Cart    @relation(fields: [cart_id], references: [id])
+  id         Int      @id @default(autoincrement())
+  Cart       Cart     @relation(fields: [cart_id], references: [id], onDelete: Cascade)
   cart_id    Int
-  Product    Product @relation(fields: [product_id], references: [id])
+  Product    Product  @relation(fields: [product_id], references: [id], onDelete: Cascade)
   product_id Int
+  created_at DateTime @default(now())
 }
 
 model Category {
-  id      Int       @id @default(autoincrement())
-  name    String
-  Product Product[]
-}
-
-model Pizza {
-  id         Int     @id @default(autoincrement())
-  Product    Product @relation(fields: [product_id], references: [id])
-  product_id Int     @unique
-  weightInG  Float
-  sizeInCm   Float
-}
-
-model Drink {
-  id         Int     @id @default(autoincrement())
-  Product    Product @relation(fields: [product_id], references: [id])
-  product_id Int     @unique
-  volumeInMl Float
-}
-
-model Dessert {
-  id         Int     @id @default(autoincrement())
-  Product    Product @relation(fields: [product_id], references: [id])
-  product_id Int     @unique
-  weightInG  Float
+  id         Int       @id @default(autoincrement())
+  name       String    @unique
+  Products   Product[]
+  created_at DateTime  @default(now())
 }
 
 model Ingredient {
-  id                Int                 @id @default(autoincrement())
-  name              String
-  ProductIngredient ProductIngredient[]
+  id                 Int                 @id @default(autoincrement())
+  name               String              @unique
+  ProductIngredients ProductIngredient[]
+  created_at         DateTime            @default(now())
 }
 
 model ProductIngredient {
   id            Int        @id @default(autoincrement())
-  Ingredient    Ingredient @relation(fields: [ingredient_id], references: [id])
+  Ingredient    Ingredient @relation(fields: [ingredient_id], references: [id], onDelete: Cascade)
   ingredient_id Int
-  Product       Product    @relation(fields: [product_id], references: [id])
+  Product       Product    @relation(fields: [product_id], references: [id], onDelete: Cascade)
   product_id    Int
+  created_at    DateTime   @default(now())
 }
