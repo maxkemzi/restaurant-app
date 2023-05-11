@@ -9,7 +9,7 @@ const handler = async (req, res) => {
 			const product = await prisma.product.delete({where: {id: Number(id)}});
 			res.json(product);
 		} catch (e) {
-			res.status(500).json({error: e.message});
+			res.status(500).json({message: "Something went wrong."});
 		}
 	} else if (req.method === "GET") {
 		try {
@@ -23,7 +23,7 @@ const handler = async (req, res) => {
 			});
 			res.json(product);
 		} catch (e) {
-			res.status(500).json({error: e.message});
+			res.status(500).json({message: "Something went wrong."});
 		}
 	} else if (req.method === "PUT") {
 		try {
@@ -123,7 +123,7 @@ const handler = async (req, res) => {
 
 			res.json(updatedProduct);
 		} catch (e) {
-			res.status(500).json({error: e.message});
+			res.status(500).json({message: "Something went wrong."});
 		}
 	}
 };

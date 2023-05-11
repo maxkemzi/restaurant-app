@@ -5,7 +5,9 @@ const handler = async (req, res) => {
 		try {
 			const {clientName, clientPhone, clientAddress, productIds} = req.body;
 
-			const products = productIds.map(id => ({product_id: id}));
+			const products = productIds.map(id => ({
+				product_id: Number(id)
+			}));
 
 			const order = await prisma.order.create({
 				data: {
@@ -26,7 +28,7 @@ const handler = async (req, res) => {
 			res.status(201).json(order);
 		} catch (e) {
 			console.log(e);
-			res.status(500).json({error: e.message});
+			res.status(500).json({message: "Something went wrong."});
 		}
 	} else if (req.method === "GET") {
 		try {
@@ -35,7 +37,7 @@ const handler = async (req, res) => {
 			});
 			res.json(orders);
 		} catch (e) {
-			res.status(500);
+			res.status(500).json({message: "Something went wrong."});
 		}
 	}
 };

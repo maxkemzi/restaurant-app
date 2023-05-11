@@ -1,6 +1,6 @@
 {
   "extends": ["next/core-web-vitals", "airbnb", "airbnb/hooks", "plugin:react/jsx-runtime", "prettier"],
-  "plugins": ["prettier"],
+  "plugins": ["prettier", "jsx-a11y"],
 	"settings": {
 		"import/resolver": {
 			"alias": {
@@ -21,6 +21,7 @@
 		"no-console": "off",
 		"import/prefer-default-export": "off",
 		"react/prop-types": "off",
-		"global-require": "warn"
+		"global-require": "warn",
+		"jsx-a11y/no-noninteractive-tabindex": "off"
 	}
 }

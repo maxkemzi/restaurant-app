@@ -10,9 +10,10 @@ const handler = async (req, res) => {
 				where: {id: Number(id)},
 				data: {name}
 			});
-			res.status(201).json(category);
+			res.json(category);
 		} catch (e) {
-			res.status(500);
+			console.log(e);
+			res.status(500).json({message: "Something went wrong."});
 		}
 	} else if (req.method === "DELETE") {
 		try {
@@ -23,7 +24,7 @@ const handler = async (req, res) => {
 			});
 			res.json(category);
 		} catch (e) {
-			res.status(500);
+			res.status(500).json({message: "Something went wrong."});
 		}
 	} else if (req.method === "GET") {
 		try {
@@ -34,7 +35,7 @@ const handler = async (req, res) => {
 			});
 			res.json(category);
 		} catch (e) {
-			res.status(500);
+			res.status(500).json({message: "Something went wrong."});
 		}
 	}
 };

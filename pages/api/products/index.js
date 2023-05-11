@@ -15,7 +15,7 @@ const handler = async (req, res) => {
 				isSpicy
 			} = req.body;
 
-			const ingredients = ingredientIds.map(id => ({ingredient_id: id}));
+			const ingredients = ingredientIds?.map(id => ({ingredient_id: id}));
 
 			const product = await prisma.product.create({
 				data: {
@@ -23,7 +23,9 @@ const handler = async (req, res) => {
 					name,
 					price_USD: priceUSD,
 					Category: {connect: {id: categoryId}},
-					ProductIngredients: {createMany: {data: ingredients}},
+					...(ingredients
+						? {ProductIngredients: {createMany: {data: ingredients}}}
+						: {}),
 					weight,
 					size_cm: sizeCm,
 					is_vegan: isVegan,
@@ -34,14 +36,24 @@ const handler = async (req, res) => {
 
 			res.status(201).json(product);
 		} catch (e) {
-			res.status(500).json({error: e.message});
+			res.status(500).json({message: "Something went wrong."});
 		}
 	} else if (req.method === "GET") {
 		try {
-			const {categoryId, sort, isVegan, isSpicy} = req.query;
+			const {categoryId, categoryName, sort, isVegan, isSpicy} = req.query;
+
+			const vegan = isVegan ? !!isVegan : undefined;
+			const spicy = isSpicy ? !!isSpicy : undefined;
 
 			const options = {
-				where: {category_id: categoryId, is_vegan: isVegan, is_spicy: isSpicy},
+				where: {
+					AND: [
+						categoryId ? {Category: {is: {id: Number(categoryId)}}} : {},
+						categoryName ? {Category: {is: {name: categoryName}}} : {}
+					],
+					is_vegan: vegan,
+					is_spicy: spicy
+				},
 				include: {ProductIngredients: {include: {Ingredient: true}}}
 			};
 
@@ -51,10 +63,10 @@ const handler = async (req, res) => {
 				options.orderBy = {price_USD: "desc"};
 			}
 
-			const product = await prisma.product.findMany(options);
-			res.json(product);
+			const products = await prisma.product.findMany(options);
+			res.json(products);
 		} catch (e) {
-			res.status(500).json({error: e.message});
+			res.status(500).json({message: "Something went wrong."});
 		}
 	}
 };

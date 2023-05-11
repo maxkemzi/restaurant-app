@@ -12,7 +12,7 @@ const handler = async (req, res) => {
 			});
 			res.json(order);
 		} catch (e) {
-			res.status(500).json({error: e.message});
+			res.status(500).json({message: "Something went wrong."});
 		}
 	} else if (req.method === "PUT") {
 		try {
@@ -96,7 +96,7 @@ const handler = async (req, res) => {
 
 			res.json(updatedOrder);
 		} catch (e) {
-			res.status(500).json({error: e.message});
+			res.status(500).json({message: "Something went wrong."});
 		}
 	} else if (req.method === "GET") {
 		try {
@@ -108,7 +108,7 @@ const handler = async (req, res) => {
 			});
 			res.json(order);
 		} catch (e) {
-			res.status(500).json({error: e.message});
+			res.status(500).json({message: "Something went wrong."});
 		}
 	}
 };
