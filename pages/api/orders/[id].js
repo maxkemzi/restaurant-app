@@ -1,13 +1,13 @@
-import getCreateAndDeleteElements from "@/utils/helpers/getCreateAndDeleteEls";
 import prisma from "@/prisma/client";
+import parseQueryParams from "@/utils/helpers/parseQueryParams";
 
 const handler = async (req, res) => {
 	if (req.method === "DELETE") {
 		try {
-			const {id} = req.query;
+			const {id} = parseQueryParams(req.query);
 
 			const order = await prisma.order.delete({
-				where: {id: Number(id)},
+				where: {id},
 				include: {Cart: {include: {CartProducts: {include: {Product: true}}}}}
 			});
 			res.json(order);
@@ -16,94 +16,49 @@ const handler = async (req, res) => {
 		}
 	} else if (req.method === "PUT") {
 		try {
-			const {id} = req.query;
-			const {clientName, clientPhone, clientAddress, productIds} = req.body;
+			const {id} = parseQueryParams(req.query);
+			const {
+				client_name,
+				client_phone,
+				client_address,
+				product_ids: productIds
+			} = req.body;
 
-			const getProductOps = async () => {
-				const oldOrder = await prisma.order.findUnique({
-					where: {id: Number(id)},
-					include: {Cart: {include: {CartProducts: true}}}
-				});
-
-				const oldProductIds = oldOrder.Cart.CartProducts.map(
-					product => product.product_id
-				);
-
-				const [deleteIds, createIds] = getCreateAndDeleteElements(
-					oldProductIds,
-					productIds
-				);
-
-				const deleteProductIds = [];
-				let shouldSkip;
-
-				deleteIds.forEach(el => {
-					shouldSkip = false;
-					oldOrder.Cart.CartProducts.forEach(product => {
-						if (shouldSkip) {
-							return;
+			const updatedOrder = await prisma.order.update({
+				where: {id},
+				data: {
+					client_address,
+					client_name,
+					client_phone,
+					Cart: {
+						update: {
+							CartProducts: {
+								deleteMany: Array.isArray(productIds) ? {} : undefined,
+								createMany: Array.isArray(productIds)
+									? {
+											data: productIds.map(productId => ({
+												product_id: productId
+											}))
+									  }
+									: undefined
+							}
 						}
-
-						if (
-							el === product.product_id &&
-							!deleteProductIds.includes(product.id)
-						) {
-							deleteProductIds.push(product.id);
-							shouldSkip = true;
-						}
-					});
-				});
-
-				// Product ingredients, that need to be created
-				const createData = createIds.map(prodId => ({
-					cart_id: oldOrder.Cart.id,
-					product_id: prodId
-				}));
-
-				return [
-					// Delete redundant product ingredients if needed
-					...deleteProductIds.map(el =>
-						prisma.cartProduct.delete({
-							where: {id: el}
-						})
-					),
-					// Create new product ingredients if needed
-					prisma.cartProduct.createMany({
-						data: createData
-					})
-				];
-			};
-
-			// Get operations to update cart products
-			const operations = await getProductOps();
-
-			const result = await prisma.$transaction([
-				// Update product ingredients
-				...operations,
-				// Update product
-				prisma.order.update({
-					where: {id: Number(id)},
-					data: {
-						client_address: clientAddress,
-						client_name: clientName,
-						client_phone: clientPhone
-					},
-					include: {Cart: {include: {CartProducts: {include: {Product: true}}}}}
-				})
-			]);
-
-			const updatedOrder = result[result.length - 1];
+					}
+				},
+				include: {Cart: {include: {CartProducts: {include: {Product: true}}}}}
+			});
 
 			res.json(updatedOrder);
 		} catch (e) {
+			console.log(e);
 			res.status(500).json({message: "Something went wrong."});
 		}
 	} else if (req.method === "GET") {
 		try {
-			const {id} = req.query;
+			const {id} = parseQueryParams(req.query);
 
 			const order = await prisma.order.findUnique({
-				where: {id: Number(id)},
+				where: {id},
 				include: {Cart: {include: {CartProducts: {include: {Product: true}}}}}
 			});
 			res.json(order);

@@ -29,10 +29,10 @@ const Cart = () => {
 		e.preventDefault();
 
 		const data = {
-			clientName: e.target.clientName.value,
-			clientAddress: e.target.clientAddress.value,
-			clientPhone: e.target.clientPhone.value,
-			productIds
+			client_name: e.target.clientName.value,
+			client_address: e.target.clientAddress.value,
+			client_phone: e.target.clientPhone.value,
+			product_ids: productIds
 		};
 
 		const endpoint = "/api/orders";

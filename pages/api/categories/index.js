@@ -17,7 +17,7 @@ const handler = async (req, res) => {
 			const categories = await prisma.category.findMany();
 			res.json(categories);
 		} catch (e) {
-			res.status(500).json({message: "Something went wrong."});
+			res.status(500).json({message: e.message});
 		}
 	}
 };

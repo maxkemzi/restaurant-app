@@ -1,0 +1,36 @@
+name: CI Pipeline
+on: [push]
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    environment: Pipeline
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests
+        run: npm test -- --reporter=html --outputFile=./reports/tests/index.html
+      - name: Check code style
+        run: npm run lint -- -f node_modules/eslint-html-reporter/reporter.js -o ./reports/lint/index.html
+      - name: Upload lint and test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: ci-results
+          path: ./reports/
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      -
+        name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/restaurant:latest
+        

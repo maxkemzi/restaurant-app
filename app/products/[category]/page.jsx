@@ -16,19 +16,21 @@ const Products = ({params}) => {
 
 	useEffect(() => {
 		const fetchProducts = async () => {
-			const queryParams = [];
+			const queryParams = {};
 
-			queryParams.push(`?categoryName=${params.category}`);
+			queryParams.category_name = params.category;
 
 			if (isVegan) {
-				queryParams.push(`&isVegan=true`);
+				queryParams.is_vegan = true;
 			}
 
 			if (isSpicy) {
-				queryParams.push(`&isSpicy=true`);
+				queryParams.is_spicy = true;
 			}
 
-			const response = await fetch(`/api/products${queryParams.join("")}`);
+			const response = await fetch(
+				`/api/products?${new URLSearchParams(queryParams)}`
+			);
 
 			if (!response.ok) {
 				showToast("Error loading products.", "error");

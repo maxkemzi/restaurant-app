@@ -1,4 +1,5 @@
 import prisma from "@/prisma/client";
+import parseQueryParams from "@/utils/helpers/parseQueryParams";
 
 const handler = async (req, res) => {
 	if (req.method === "POST") {
@@ -6,30 +7,28 @@ const handler = async (req, res) => {
 			const {
 				image,
 				name,
-				categoryId,
-				priceUSD,
+				price_USD,
 				weight,
-				sizeCm,
-				ingredientIds,
-				isVegan,
-				isSpicy
+				size_cm,
+				is_vegan,
+				is_spicy,
+				category_id: categoryId,
+				ingredient_ids: ingredientIds
 			} = req.body;
 
 			const ingredients = ingredientIds?.map(id => ({ingredient_id: id}));
 
 			const product = await prisma.product.create({
 				data: {
+					Category: {connect: {id: categoryId}},
+					ProductIngredients: {createMany: {data: ingredients}},
 					image,
 					name,
-					price_USD: priceUSD,
-					Category: {connect: {id: categoryId}},
-					...(ingredients
-						? {ProductIngredients: {createMany: {data: ingredients}}}
-						: {}),
+					price_USD,
 					weight,
-					size_cm: sizeCm,
-					is_vegan: isVegan,
-					is_spicy: isSpicy
+					size_cm,
+					is_vegan,
+					is_spicy
 				},
 				include: {ProductIngredients: {include: {Ingredient: true}}}
 			});
@@ -40,19 +39,23 @@ const handler = async (req, res) => {
 		}
 	} else if (req.method === "GET") {
 		try {
-			const {categoryId, categoryName, sort, isVegan, isSpicy} = req.query;
-
-			const vegan = isVegan ? !!isVegan : undefined;
-			const spicy = isSpicy ? !!isSpicy : undefined;
+			const {
+				category_id: categoryId,
+				category_name: categoryName,
+				is_vegan: isVegan,
+				is_spicy: isSpicy,
+				sort
+			} = parseQueryParams(req.query);
+			console.log(req.query);
 
 			const options = {
 				where: {
 					AND: [
-						categoryId ? {Category: {is: {id: Number(categoryId)}}} : {},
-						categoryName ? {Category: {is: {name: categoryName}}} : {}
+						{Category: {is: {id: categoryId}}},
+						{Category: {is: {name: categoryName}}}
 					],
-					is_vegan: vegan,
-					is_spicy: spicy
+					is_vegan: isVegan,
+					is_spicy: isSpicy
 				},
 				include: {ProductIngredients: {include: {Ingredient: true}}}
 			};
@@ -66,6 +69,7 @@ const handler = async (req, res) => {
 			const products = await prisma.product.findMany(options);
 			res.json(products);
 		} catch (e) {
+			console.log(e);
 			res.status(500).json({message: "Something went wrong."});
 		}
 	}

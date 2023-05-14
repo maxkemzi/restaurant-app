@@ -73,4 +73,6 @@ model ProductIngredient {
   Product       Product    @relation(fields: [product_id], references: [id], onDelete: Cascade)
   product_id    Int
   created_at    DateTime   @default(now())
+
+  @@unique([ingredient_id, product_id])
 }

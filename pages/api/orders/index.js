@@ -3,17 +3,22 @@ import prisma from "@/prisma/client";
 const handler = async (req, res) => {
 	if (req.method === "POST") {
 		try {
-			const {clientName, clientPhone, clientAddress, productIds} = req.body;
+			const {
+				client_name,
+				client_phone,
+				client_address,
+				product_ids: productIds
+			} = req.body;
 
-			const products = productIds.map(id => ({
+			const products = productIds?.map(id => ({
 				product_id: Number(id)
 			}));
 
 			const order = await prisma.order.create({
 				data: {
-					client_address: clientAddress,
-					client_name: clientName,
-					client_phone: clientPhone,
+					client_address,
+					client_name,
+					client_phone,
 					Cart: {
 						create: {
 							CartProducts: {

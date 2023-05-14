@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+  postgres:
+    image: maxkemzi/restaurant:latest
+    container_name: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=qwerty77
+      - POSTGRES_DB=restaurant
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+  web:
+    image: maxkemzi/restaurant:latest
+    links:
+      - postgres
+    depends_on:
+      - postgres
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+volumes:
+  postgres:
