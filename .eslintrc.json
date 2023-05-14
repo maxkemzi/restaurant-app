@@ -24,6 +24,8 @@
 		"global-require": "warn",
 		"jsx-a11y/no-noninteractive-tabindex": "off",
 		"eqeqeq": ["error", "always", {"null": "ignore"}],
-		"camelcase": ["error", {"ignoreDestructuring": true, "properties": "never"}]
+		"camelcase": ["error", {"ignoreDestructuring": true, "properties": "never"}],
+		"no-underscore-dangle": ["error", {"allow": ["_getJSONData"]}],
+		"import/no-extraneous-dependencies": "off"
 	}
 }

@@ -7,11 +7,12 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
-		"test": "vitest --singleThread --sequence.hooks=list"
+		"test": "vitest --threads=false",
+		"start:prod": "node server.js",
+		"start:migrate:prod": "npx prisma migrate deploy && npm run start:prod"
 	},
 	"dependencies": {
 		"@prisma/client": "^4.13.0",
-		"@tailwindcss/typography": "^0.5.9",
 		"classnames": "^2.3.2",
 		"daisyui": "^2.51.6",
 		"next": "13.4.1",
@@ -19,7 +20,9 @@
 		"react-dom": "18.2.0"
 	},
 	"devDependencies": {
+		"@tailwindcss/typography": "^0.5.9",
 		"@vitest/coverage-c8": "^0.31.0",
+		"@vitest/ui": "^0.31.0",
 		"autoprefixer": "^10.4.14",
 		"eslint": "^8.39.0",
 		"eslint-config-airbnb": "^19.0.4",

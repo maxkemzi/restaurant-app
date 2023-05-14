@@ -30,9 +30,8 @@ describe("/api/orders/:id", () => {
 		const ingredient = createIngredientRes._getJSONData();
 
 		// Create first product
-		const {req: createProduct1Req, res: createProduct1Res} = mockRequestResponse(
-			"POST",
-			{
+		const {req: createProduct1Req, res: createProduct1Res} =
+			mockRequestResponse("POST", {
 				image: "image",
 				name: "name1",
 				category_id: category.id,
@@ -42,15 +41,13 @@ describe("/api/orders/:id", () => {
 				is_vegan: false,
 				is_spicy: false,
 				ingredient_ids: [ingredient.id]
-			}
-		);
+			});
 		await productsHandler(createProduct1Req, createProduct1Res);
 		const product1 = createProduct1Res._getJSONData();
 
 		// Create second product
-		const {req: createProduct2Req, res: createProduct2Res} = mockRequestResponse(
-			"POST",
-			{
+		const {req: createProduct2Req, res: createProduct2Res} =
+			mockRequestResponse("POST", {
 				image: "image",
 				name: "name2",
 				category_id: category.id,
@@ -60,8 +57,7 @@ describe("/api/orders/:id", () => {
 				is_vegan: false,
 				is_spicy: false,
 				ingredient_ids: [ingredient.id]
-			}
-		);
+			});
 		await productsHandler(createProduct2Req, createProduct2Res);
 		const product2 = createProduct2Res._getJSONData();
 
@@ -180,11 +176,7 @@ describe("/api/orders/:id", () => {
 		});
 
 		it("should respond with 500 status code", async () => {
-			const {req, res} = mockRequestResponse(
-				"GET",
-				{},
-				{id: "id"}
-			);
+			const {req, res} = mockRequestResponse("GET", {}, {id: "id"});
 			await orderHandler(req, res);
 
 			expect(res.statusCode).toBe(500);
