@@ -1,5 +1,5 @@
+import {parseQueryParams} from "@/lib/helpers";
 import prisma from "@/prisma/client";
-import parseQueryParams from "@/utils/helpers/parseQueryParams";
 
 const handler = async (req, res) => {
 	if (req.method === "POST") {
@@ -47,7 +47,6 @@ const handler = async (req, res) => {
 				is_spicy: isSpicy,
 				sort
 			} = parseQueryParams(req.query);
-			console.log(req.query);
 
 			const options = {
 				where: {

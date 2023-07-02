@@ -1,23 +1,36 @@
-"use client";
-
-import {RESTAURANT_NAME} from "@/utils/constants/restaurantInfo";
-import "./globals.css";
-import BodyContent from "@/components/BodyContent";
+import {RESTAURANT_NAME} from "@/lib/constants/restaurantInfo";
+import {CartProvider, ToastProvider} from "@/lib/contexts";
 import {Montserrat} from "next/font/google";
-import {CartProvider} from "@/contexts/cartContext";
-import {ToastProvider} from "@/contexts/toastContext";
+import Header from "./(header)/Header";
+import Footer from "./Footer";
+import "./globals.css";
 
 const montserrat = Montserrat({subsets: ["latin"]});
 
-const RootLayout = ({children}) => (
+export const metadata = {
+	title: RESTAURANT_NAME,
+	description: "Created by Max Kyrychenko",
+	keywords: ["Restaurant", "Pizza", "Desserts", "Food"],
+	authors: [
+		{
+			name: "Max Kyrychenko",
+			url: "https://github.com/Kemzi-coder"
+		}
+	],
+	creator: "Max Kyrychenko",
+	publisher: "Max Kyrychenko"
+};
+
+const RootLayout = async ({children}) => (
 	<html lang="en">
-		<head>
-			<title>{RESTAURANT_NAME}</title>
-		</head>
 		<body className={montserrat.className}>
 			<CartProvider>
 				<ToastProvider>
-					<BodyContent>{children}</BodyContent>
+					<div className="flex flex-col min-h-screen">
+						<Header />
+						<main className="flex-grow">{children}</main>
+						<Footer />
+					</div>
 				</ToastProvider>
 			</CartProvider>
 		</body>

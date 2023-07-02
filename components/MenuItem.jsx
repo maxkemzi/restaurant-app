@@ -2,7 +2,9 @@ import Link from "next/link";
 
 const MenuItem = ({path, text}) => (
 	<li>
-		<Link href={path}>{text}</Link>
+		<Link className="capitalize" href={path}>
+			{text}
+		</Link>
 	</li>
 );
 

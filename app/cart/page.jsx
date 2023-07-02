@@ -1,17 +1,15 @@
 "use client";
 
-import CartProduct from "@/components/CartProduct";
 import TextField from "@/components/TextField";
-import {useCartContext} from "@/contexts/cartContext";
-import {useToastContext} from "@/contexts/toastContext";
+import {useCartContext, useToastContext} from "@/lib/contexts";
 import {useRouter} from "next/navigation";
+import CartProductCard from "./CartProductCard";
 
 const Cart = () => {
 	const {
 		cart: {products, cost},
 		removeProduct,
-		addProduct,
-		clearCart
+		addProduct
 	} = useCartContext();
 	const {showToast} = useToastContext();
 	const router = useRouter();
@@ -21,21 +19,17 @@ const Cart = () => {
 		return [...prev, ...ids];
 	}, []);
 
-	const handleAdd = product => () => addProduct(product);
-
-	const handleRemove = id => () => removeProduct(id);
-
 	const handleSubmit = async e => {
 		e.preventDefault();
 
+		const {clientName, clientAddress, clientPhone} = e.target;
+
 		const data = {
-			client_name: e.target.clientName.value,
-			client_address: e.target.clientAddress.value,
-			client_phone: e.target.clientPhone.value,
+			client_name: clientName.value,
+			client_address: clientAddress.value,
+			client_phone: clientPhone.value,
 			product_ids: productIds
 		};
-
-		const endpoint = "/api/orders";
 
 		const options = {
 			method: "POST",
@@ -43,14 +37,13 @@ const Cart = () => {
 			body: JSON.stringify(data)
 		};
 
-		const response = await fetch(endpoint, options);
+		const response = await fetch("/api/orders", options);
 
 		if (response.ok) {
-			showToast("Your order is successfully placed.");
+			showToast("success", "Your order is successfully placed.");
 			router.push("/");
-			clearCart();
 		} else {
-			showToast("Error processing your order.", "error");
+			showToast("error", "Error processing your order.");
 		}
 	};
 
@@ -82,20 +75,20 @@ const Cart = () => {
 				</div>
 				<div className="flex-1">
 					<div className="flex flex-col gap-4 mb-6">
-						{Object.entries(products).map(([id, arr]) => {
-							const product = arr[0];
-							const count = arr.length;
+						{Object.values(products).map(productArr => {
+							const product = productArr[0];
+							const count = productArr.length;
 
 							return (
-								<CartProduct
+								<CartProductCard
 									key={product.id}
 									count={count}
 									image={product.image}
 									name={product.name}
 									priceUSD={product.priceUSD}
 									weight={product.weight}
-									onAddClick={handleAdd(product)}
-									onRemoveClick={handleRemove(id)}
+									onAddClick={() => addProduct(product)}
+									onRemoveClick={() => removeProduct(product.id)}
 								/>
 							);
 						})}

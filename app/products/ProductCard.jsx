@@ -1,7 +1,6 @@
-import capitalize from "@/utils/helpers/capitalize";
 import Image from "next/image";
 
-const Product = ({
+const ProductCard = ({
 	image,
 	sizeCm,
 	weight,
@@ -11,7 +10,7 @@ const Product = ({
 	categoryName,
 	isSpicy,
 	isVegan,
-	onClick
+	buttonSlot
 }) => {
 	const ingredientsString = ingredients
 		.map(el => {
@@ -32,8 +31,8 @@ const Product = ({
 				/>
 			</figure>
 			<div className="card-body">
-				<h2 className="card-title self-center">
-					{capitalize(name)}
+				<h2 className="card-title self-center capitalize">
+					{name}
 					{isSpicy ? <div className="badge badge-error">Spicy</div> : null}
 					{isVegan ? <div className="badge badge-success">Vegan</div> : null}
 				</h2>
@@ -44,13 +43,11 @@ const Product = ({
 				</p>
 				<div className="card-actions justify-between items-center">
 					<p>${priceUSD}</p>
-					<button onClick={onClick} type="button" className="btn btn-primary">
-						Order
-					</button>
+					{buttonSlot}
 				</div>
 			</div>
 		</div>
 	);
 };
 
-export default Product;
+export default ProductCard;

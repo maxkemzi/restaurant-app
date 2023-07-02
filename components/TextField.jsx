@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import {useId} from "react";
 
-const TextField = ({label, name, type = "text", className}) => {
+const TextField = ({label, name, type, className}) => {
 	const id = useId();
 	return (
 		<div className={classNames(className, "form-control w-full")}>

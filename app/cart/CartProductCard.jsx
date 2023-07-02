@@ -1,7 +1,6 @@
-import capitalize from "@/utils/helpers/capitalize";
 import Image from "next/image";
 
-const CartProduct = ({
+const CartProductCard = ({
 	onRemoveClick,
 	onAddClick,
 	image,
@@ -16,7 +15,7 @@ const CartProduct = ({
 		</figure>
 		<div className="card-body basis-3/5">
 			<div>
-				<h2 className="card-title">{capitalize(name)}</h2>
+				<h2 className="card-title capitalize">{name}</h2>
 				<p>Count: {count}</p>
 			</div>
 			<p>{weight} g</p>
@@ -39,4 +38,4 @@ const CartProduct = ({
 	</div>
 );
 
-export default CartProduct;
+export default CartProductCard;

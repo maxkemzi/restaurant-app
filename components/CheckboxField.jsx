@@ -1,12 +1,7 @@
 import classNames from "classnames";
 import {useId} from "react";
 
-const CheckboxField = ({
-	label,
-	defaultChecked,
-	onChange,
-	variant = "success"
-}) => {
+const CheckboxField = ({label, defaultChecked, onChange, variant}) => {
 	const id = useId();
 	return (
 		<div className="form-control">

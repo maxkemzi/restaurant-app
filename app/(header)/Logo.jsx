@@ -1,4 +1,4 @@
-import {RESTAURANT_NAME} from "@/utils/constants/restaurantInfo";
+import {RESTAURANT_NAME} from "@/lib/constants/restaurantInfo";
 import Link from "next/link";
 
 const Logo = () => (

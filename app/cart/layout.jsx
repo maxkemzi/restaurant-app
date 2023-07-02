@@ -1,3 +1,5 @@
-const Layout = ({children}) => <div className="py-4">{children}</div>;
+const CartLayout = ({children}) => (
+	<div className="container mx-auto p-4">{children}</div>
+);
 
-export default Layout;
+export default CartLayout;
