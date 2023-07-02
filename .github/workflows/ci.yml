@@ -4,7 +4,7 @@ jobs:
   pipeline:
     runs-on: ubuntu-latest
     env:
-      DATABASE_URL: postgresql://postgres:qwerty77@postgres:5432/restaurant?schema=public
+      DB_URL: postgresql://postgres:qwerty77@postgres:5432/restaurant?schema=public
     container: node:latest
     services:
       postgres:

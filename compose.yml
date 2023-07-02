@@ -14,7 +14,7 @@ services:
   web:
     image: maxkemzi/restaurant:latest
     environment:
-      - DATABASE_URL=postgresql://postgres:qwerty77@postgres:5432/restaurant?schema=public
+      - DB_URL=postgresql://postgres:qwerty77@postgres:5432/restaurant?schema=public
     restart: always
     build:
       context: .
