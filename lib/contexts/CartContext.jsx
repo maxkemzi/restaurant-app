@@ -19,19 +19,28 @@ const CART_STORAGE_KEY = "cart";
 
 const CartProvider = ({children}) => {
 	const [cart, setCart] = useState(() => {
-		const cartFromStorage = localStorage.getItem(CART_STORAGE_KEY);
-		const cartInStorage = !!localStorage.getItem(CART_STORAGE_KEY);
+		if (typeof window !== "undefined") {
+			const cartFromStorage = localStorage.getItem(CART_STORAGE_KEY);
+			const cartInStorage = !!localStorage.getItem(CART_STORAGE_KEY);
 
-		if (!cartInStorage) {
-			localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(initialCartState));
-			return initialCartState;
+			if (!cartInStorage) {
+				localStorage.setItem(
+					CART_STORAGE_KEY,
+					JSON.stringify(initialCartState)
+				);
+				return initialCartState;
+			}
+
+			return JSON.parse(cartFromStorage);
 		}
 
-		return JSON.parse(cartFromStorage);
+		return initialCartState;
 	});
 
 	const updateCartInStorage = updatedState => {
-		localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(updatedState));
+		if (typeof window !== "undefined") {
+			localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(updatedState));
+		}
 	};
 
 	const addProduct = useCallback(product => {
