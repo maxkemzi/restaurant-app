@@ -1,4 +1,4 @@
-import prisma from "@/prisma/client";
+import {createOrder, getOrders} from "@/lib/prisma/orders";
 
 const handler = async (req, res) => {
 	if (req.method === "POST") {
@@ -14,20 +14,11 @@ const handler = async (req, res) => {
 				product_id: Number(id)
 			}));
 
-			const order = await prisma.order.create({
-				data: {
-					client_address,
-					client_name,
-					client_phone,
-					Cart: {
-						create: {
-							CartProducts: {
-								createMany: {data: products}
-							}
-						}
-					}
-				},
-				include: {Cart: {include: {CartProducts: {include: {Product: true}}}}}
+			const order = await createOrder({
+				client_name,
+				client_phone,
+				client_address,
+				products
 			});
 
 			res.status(201).json(order);
@@ -37,9 +28,7 @@ const handler = async (req, res) => {
 		}
 	} else if (req.method === "GET") {
 		try {
-			const orders = await prisma.order.findMany({
-				include: {Cart: {include: {CartProducts: {include: {Product: true}}}}}
-			});
+			const orders = await getOrders();
 			res.json(orders);
 		} catch (e) {
 			res.status(500).json({message: "Something went wrong."});

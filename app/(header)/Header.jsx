@@ -1,3 +1,4 @@
+import {getCategories} from "@/lib/prisma/categories";
 import Menu from "../../components/Menu";
 import MenuDropdown from "../../components/MenuDropdown";
 import MenuItem from "../../components/MenuItem";
@@ -6,15 +7,10 @@ import MobileMenuDropdown from "../../components/MobileMenuDropdown";
 import CartDropdown from "./CartDropdown";
 import Logo from "./Logo";
 
-const fetchCategories = async () => {
-	const response = await fetch(`${process.env.API_URL}/categories`, {
-		next: {revalidate: 60}
-	});
-	return response.json();
-};
+export const revalidate = 60;
 
 const Header = async () => {
-	const categories = await fetchCategories();
+	const categories = await getCategories();
 
 	const getCategoryLinkPath = category => ({
 		pathname: "/products",

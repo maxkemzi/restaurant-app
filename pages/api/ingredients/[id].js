@@ -1,5 +1,9 @@
 import {parseQueryParams} from "@/lib/helpers";
-import prisma from "@/prisma/client";
+import {
+	deleteIngredientById,
+	getIngredientById,
+	updateIngredientById
+} from "@/lib/prisma/ingredients";
 
 const handler = async (req, res) => {
 	if (req.method === "PUT") {
@@ -7,10 +11,7 @@ const handler = async (req, res) => {
 			const {id} = parseQueryParams(req.query);
 			const {name} = req.body;
 
-			const ingredient = await prisma.ingredient.update({
-				where: {id},
-				data: {name}
-			});
+			const ingredient = await updateIngredientById(id, {name});
 			res.status(200).json(ingredient);
 		} catch (e) {
 			res.status(500).json({message: "Something went wrong."});
@@ -19,7 +20,7 @@ const handler = async (req, res) => {
 		try {
 			const {id} = parseQueryParams(req.query);
 
-			const ingredient = await prisma.ingredient.delete({where: {id}});
+			const ingredient = await deleteIngredientById(id);
 			res.json(ingredient);
 		} catch (e) {
 			res.status(500).json({message: "Something went wrong."});
@@ -28,7 +29,7 @@ const handler = async (req, res) => {
 		try {
 			const {id} = parseQueryParams(req.query);
 
-			const ingredient = await prisma.ingredient.findUnique({where: {id}});
+			const ingredient = await getIngredientById(id);
 			res.json(ingredient);
 		} catch (e) {
 			res.status(500).json({message: "Something went wrong."});

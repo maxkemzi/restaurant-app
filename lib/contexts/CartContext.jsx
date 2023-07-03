@@ -1,6 +1,13 @@
 "use client";
 
-import {createContext, useCallback, useContext, useMemo, useState} from "react";
+import {
+	createContext,
+	useCallback,
+	useContext,
+	useEffect,
+	useMemo,
+	useState
+} from "react";
 
 const initialCartState = {
 	products: {},
@@ -18,24 +25,19 @@ const CartContext = createContext({
 const CART_STORAGE_KEY = "cart";
 
 const CartProvider = ({children}) => {
-	const [cart, setCart] = useState(() => {
-		if (typeof window !== "undefined") {
-			const cartFromStorage = localStorage.getItem(CART_STORAGE_KEY);
-			const cartInStorage = !!localStorage.getItem(CART_STORAGE_KEY);
+	const [cart, setCart] = useState(initialCartState);
 
-			if (!cartInStorage) {
-				localStorage.setItem(
-					CART_STORAGE_KEY,
-					JSON.stringify(initialCartState)
-				);
-				return initialCartState;
-			}
+	useEffect(() => {
+		const cartFromStorage = localStorage.getItem(CART_STORAGE_KEY);
+		const cartInStorage = !!localStorage.getItem(CART_STORAGE_KEY);
 
-			return JSON.parse(cartFromStorage);
+		if (!cartInStorage) {
+			localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(initialCartState));
+			return;
 		}
 
-		return initialCartState;
-	});
+		setCart(JSON.parse(cartFromStorage));
+	}, []);
 
 	const updateCartInStorage = updatedState => {
 		if (typeof window !== "undefined") {

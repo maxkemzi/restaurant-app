@@ -1,5 +1,9 @@
 import {parseQueryParams} from "@/lib/helpers";
-import prisma from "@/prisma/client";
+import {
+	deleteCategoryById,
+	getCategoryById,
+	updateCategoryById
+} from "@/lib/prisma/categories";
 
 const handler = async (req, res) => {
 	if (req.method === "PUT") {
@@ -7,10 +11,7 @@ const handler = async (req, res) => {
 			const {id} = parseQueryParams(req.query);
 			const {name} = req.body;
 
-			const category = await prisma.category.update({
-				where: {id},
-				data: {name}
-			});
+			const category = await updateCategoryById(id, {name});
 			res.json(category);
 		} catch (e) {
 			console.log(e);
@@ -20,7 +21,7 @@ const handler = async (req, res) => {
 		try {
 			const {id} = parseQueryParams(req.query);
 
-			const category = await prisma.category.delete({where: {id}});
+			const category = await deleteCategoryById(id);
 			res.json(category);
 		} catch (e) {
 			res.status(500).json({message: "Something went wrong."});
@@ -29,7 +30,7 @@ const handler = async (req, res) => {
 		try {
 			const {id} = parseQueryParams(req.query);
 
-			const category = await prisma.category.findUnique({where: {id}});
+			const category = await getCategoryById(id);
 			res.json(category);
 		} catch (e) {
 			res.status(500).json({message: "Something went wrong."});

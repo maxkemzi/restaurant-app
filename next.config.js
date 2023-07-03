@@ -1,17 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-	output: "standalone",
 	eslint: {
-		dirs: [
-			"pages",
-			"app",
-			"components",
-			"contexts",
-			"prisma",
-			"utils",
-			"dtos",
-			"__tests__"
-		]
+		dirs: ["pages", "app", "components", "lib", "prisma", "__tests__"]
 	}
 };
 

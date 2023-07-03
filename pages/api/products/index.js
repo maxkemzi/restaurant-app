@@ -1,5 +1,5 @@
 import {parseQueryParams} from "@/lib/helpers";
-import prisma from "@/prisma/client";
+import {createProduct, getProducts} from "@/lib/prisma/products";
 
 const handler = async (req, res) => {
 	if (req.method === "POST") {
@@ -12,25 +12,24 @@ const handler = async (req, res) => {
 				size_cm,
 				is_vegan,
 				is_spicy,
-				category_id: categoryId,
+				category_id,
 				ingredient_ids: ingredientIds
 			} = req.body;
 
-			const ingredients = ingredientIds?.map(id => ({ingredient_id: id}));
+			const ingredients = ingredientIds?.map(id => ({
+				ingredient_id: Number(id)
+			}));
 
-			const product = await prisma.product.create({
-				data: {
-					Category: {connect: {id: categoryId}},
-					ProductIngredients: {createMany: {data: ingredients}},
-					image,
-					name,
-					price_USD,
-					weight,
-					size_cm,
-					is_vegan,
-					is_spicy
-				},
-				include: {ProductIngredients: {include: {Ingredient: true}}}
+			const product = await createProduct({
+				image,
+				name,
+				price_USD,
+				weight,
+				size_cm,
+				is_vegan,
+				is_spicy,
+				category_id,
+				ingredients
 			});
 
 			res.status(201).json(product);
@@ -40,33 +39,17 @@ const handler = async (req, res) => {
 		}
 	} else if (req.method === "GET") {
 		try {
-			const {
-				category_id: categoryId,
-				category_name: categoryName,
-				is_vegan: isVegan,
-				is_spicy: isSpicy,
+			const {category_id, category_name, is_vegan, is_spicy, sort} =
+				parseQueryParams(req.query);
+
+			const products = await getProducts({
+				category_id,
+				category_name,
+				is_vegan,
+				is_spicy,
 				sort
-			} = parseQueryParams(req.query);
+			});
 
-			const options = {
-				where: {
-					AND: [
-						{Category: {is: {id: categoryId}}},
-						{Category: {is: {name: categoryName}}}
-					],
-					is_vegan: isVegan,
-					is_spicy: isSpicy
-				},
-				include: {ProductIngredients: {include: {Ingredient: true}}}
-			};
-
-			if (sort === "price_asc") {
-				options.orderBy = {price_USD: "asc"};
-			} else if (sort === "price_desc") {
-				options.orderBy = {price_USD: "desc"};
-			}
-
-			const products = await prisma.product.findMany(options);
 			res.json(products);
 		} catch (e) {
 			console.log(e);

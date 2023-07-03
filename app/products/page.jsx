@@ -1,31 +1,16 @@
+import {getProducts} from "@/lib/prisma/products";
 import PizzaFilters from "./PizzaFilters";
 import ProductList from "./ProductList";
 
-const fetchProducts = async (category, {isSpicy, isVegan}) => {
-	const queryParams = new URLSearchParams();
-
-	if (category) {
-		queryParams.set("category_name", category);
-	}
-
-	if (isVegan != null) {
-		queryParams.set("is_vegan", isVegan);
-	}
-
-	if (isSpicy != null) {
-		queryParams.set("is_spicy", isSpicy);
-	}
-
-	const response = await fetch(
-		`${process.env.API_URL}/products?${queryParams}`,
-		{next: {revalidate: 60}}
-	);
-	return response.json();
-};
+export const revalidate = 60;
 
 const Products = async ({searchParams}) => {
 	const {isSpicy, isVegan, category} = searchParams;
-	const products = await fetchProducts(category, {isSpicy, isVegan});
+	const products = await getProducts({
+		category_name: category,
+		is_spicy: isSpicy != null ? Boolean(isSpicy) : undefined,
+		is_vegan: isVegan != null ? Boolean(isVegan) : undefined
+	});
 
 	return (
 		<>
