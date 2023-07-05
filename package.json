@@ -7,10 +7,15 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
-		"test": "vitest --threads=false",
+		"test": "dotenv -e .env.local -- vitest --threads=false",
 		"start:prod": "node server.js",
 		"start:migrate:prod": "npx prisma migrate deploy && npm run start:prod",
-		"vercel-build": "npx prisma generate && npx prisma migrate deploy && next build"
+		"db:seed": "dotenv -e .env.local -- npx prisma db push --force-reset && dotenv -e .env.local -- npx prisma db seed",
+		"migrate:dev": "dotenv -e .env.local -- npx prisma migrate dev",
+		"vercel-build": "npx prisma generate && npx prisma migrate deploy && npx prisma db seed && next build"
+	},
+	"prisma": {
+		"seed": "node prisma/seed.js"
 	},
 	"dependencies": {
 		"@prisma/client": "^4.13.0",
@@ -25,6 +30,7 @@
 		"@vitest/coverage-c8": "^0.31.0",
 		"@vitest/ui": "^0.31.0",
 		"autoprefixer": "^10.4.14",
+		"dotenv-cli": "^7.2.1",
 		"eslint": "^8.39.0",
 		"eslint-config-airbnb": "^19.0.4",
 		"eslint-config-next": "^13.4.1",

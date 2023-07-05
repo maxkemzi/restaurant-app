@@ -30,28 +30,28 @@ const handler = async (req, res) => {
 			const {
 				image,
 				name,
-				category_id,
-				price_USD,
+				categoryId,
+				priceUsd,
 				weight,
-				size_cm,
-				is_vegan,
-				is_spicy,
-				ingredient_ids: ingredientIds
+				sizeCm,
+				isVegan,
+				isSpicy,
+				ingredientIds
 			} = req.body;
 
 			const ingredients = ingredientIds?.map(ingredientId => ({
-				ingredient_id: Number(ingredientId)
+				ingredientId: Number(ingredientId)
 			}));
 
 			const product = await updateProductById(id, {
 				image,
 				name,
-				category_id,
-				price_USD,
+				categoryId,
+				priceUsd,
 				weight,
-				size_cm,
-				is_vegan,
-				is_spicy,
+				sizeCm,
+				isVegan,
+				isSpicy,
 				ingredients
 			});
 

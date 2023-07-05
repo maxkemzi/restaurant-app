@@ -31,24 +31,24 @@ describe("/api/products", () => {
 		mockProduct = {
 			image: "image",
 			name: "name",
-			category_id: category.id,
-			price_USD: 500,
+			categoryId: category.id,
+			priceUsd: 500,
 			weight: 500,
-			size_cm: 30,
-			is_vegan: false,
-			is_spicy: false
+			sizeCm: 30,
+			isVegan: false,
+			isSpicy: false
 		};
 
 		mockProductWithIncludedRelations = {
 			...mockProduct,
 			ProductIngredients: [
-				{ingredient_id: ingredient.id, Ingredient: ingredient}
+				{ingredientId: ingredient.id, Ingredient: ingredient}
 			]
 		};
 
 		mockBody = {
 			...mockProduct,
-			ingredient_ids: [ingredient.id]
+			ingredientIds: [ingredient.id]
 		};
 	});
 
@@ -87,21 +87,21 @@ describe("/api/products", () => {
 
 		describe("should respond with 500 status code", async () => {
 			it("pass invalid is_vegan value", async () => {
-				const {req, res} = mockRequestResponse("GET", {}, {is_vegan: "5"});
+				const {req, res} = mockRequestResponse("GET", {}, {isVegan: "5"});
 				await productsHandler(req, res);
 
 				expect(res.statusCode).toBe(500);
 			});
 
 			it("pass invalid is_spicy value", async () => {
-				const {req, res} = mockRequestResponse("GET", {}, {is_spicy: "5"});
+				const {req, res} = mockRequestResponse("GET", {}, {isSpicy: "5"});
 				await productsHandler(req, res);
 
 				expect(res.statusCode).toBe(500);
 			});
 
 			it("pass invalid category_id value", async () => {
-				const {req, res} = mockRequestResponse("GET", {}, {category_id: "id"});
+				const {req, res} = mockRequestResponse("GET", {}, {categoryId: "id"});
 				await productsHandler(req, res);
 
 				expect(res.statusCode).toBe(500);
@@ -111,7 +111,7 @@ describe("/api/products", () => {
 				const {req, res} = mockRequestResponse(
 					"GET",
 					{},
-					{category_name: false}
+					{categoryName: false}
 				);
 				await productsHandler(req, res);
 
@@ -125,9 +125,9 @@ describe("/api/products", () => {
 
 			beforeEach(async () => {
 				mockBodies = [
-					{...mockBody, name: "pizza", price_USD: 500},
-					{...mockBody, name: "cake", is_vegan: true, price_USD: 300},
-					{...mockBody, name: "wok", is_spicy: true, price_USD: 400}
+					{...mockBody, name: "pizza", priceUsd: 500},
+					{...mockBody, name: "cake", isVegan: true, priceUsd: 300},
+					{...mockBody, name: "wok", isSpicy: true, priceUsd: 400}
 				];
 
 				const createProduct = async body => {
@@ -158,26 +158,26 @@ describe("/api/products", () => {
 			});
 
 			it("should return only spicy products", async () => {
-				const {req, res} = mockRequestResponse("GET", {}, {is_spicy: "true"});
+				const {req, res} = mockRequestResponse("GET", {}, {isSpicy: "true"});
 				await productsHandler(req, res);
 
 				const body = res._getJSONData();
 
 				expect(res.statusCode).toBe(200);
 				expect(body).toEqual(
-					productsFromResponse.filter(product => product.is_spicy === true)
+					productsFromResponse.filter(product => product.isSpicy === true)
 				);
 			});
 
 			it("should return only vegan products", async () => {
-				const {req, res} = mockRequestResponse("GET", {}, {is_vegan: "true"});
+				const {req, res} = mockRequestResponse("GET", {}, {isVegan: "true"});
 				await productsHandler(req, res);
 
 				const body = res._getJSONData();
 
 				expect(res.statusCode).toBe(200);
 				expect(body).toEqual(
-					productsFromResponse.filter(product => product.is_vegan === true)
+					productsFromResponse.filter(product => product.isVegan === true)
 				);
 			});
 
@@ -185,7 +185,7 @@ describe("/api/products", () => {
 				const {req, res} = mockRequestResponse(
 					"GET",
 					{},
-					{is_vegan: "false", is_spicy: "false"}
+					{isVegan: "false", isSpicy: "false"}
 				);
 				await productsHandler(req, res);
 
@@ -194,32 +194,32 @@ describe("/api/products", () => {
 				expect(res.statusCode).toBe(200);
 				expect(body).toEqual(
 					productsFromResponse.filter(
-						product => product.is_vegan === false && product.is_spicy === false
+						product => product.isVegan === false && product.isSpicy === false
 					)
 				);
 			});
 
 			it("should return products sorted by price in descending order", async () => {
-				const {req, res} = mockRequestResponse("GET", {}, {sort: "price_desc"});
+				const {req, res} = mockRequestResponse("GET", {}, {sort: "priceDesc"});
 				await productsHandler(req, res);
 
 				const body = res._getJSONData();
 
 				expect(res.statusCode).toBe(200);
 				expect(body).toEqual(
-					productsFromResponse.sort((a, b) => (a.price_USD - b.price_USD) * -1)
+					productsFromResponse.sort((a, b) => (a.priceUsd - b.priceUsd) * -1)
 				);
 			});
 
 			it("should return products sorted by price in ascending order", async () => {
-				const {req, res} = mockRequestResponse("GET", {}, {sort: "price_asc"});
+				const {req, res} = mockRequestResponse("GET", {}, {sort: "priceAsc"});
 				await productsHandler(req, res);
 
 				const body = res._getJSONData();
 
 				expect(res.statusCode).toBe(200);
 				expect(body).toEqual(
-					productsFromResponse.sort((a, b) => a.price_USD - b.price_USD)
+					productsFromResponse.sort((a, b) => a.priceUsd - b.priceUsd)
 				);
 			});
 		});

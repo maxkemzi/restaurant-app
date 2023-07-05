@@ -58,7 +58,7 @@ const CartProvider = ({children}) => {
 				products[product.id] = [product];
 			}
 
-			updatedCart.cost += product.priceUSD;
+			updatedCart.cost += product.priceUsd;
 			updatedCart.count += 1;
 
 			updateCartInStorage(updatedCart);
@@ -75,7 +75,7 @@ const CartProvider = ({children}) => {
 			const productsById = products[id];
 			const removedProduct = productsById.pop();
 
-			updatedCart.cost -= removedProduct.priceUSD;
+			updatedCart.cost -= removedProduct.priceUsd;
 			updatedCart.count -= 1;
 
 			const noProductsByIdLeft = productsById.length === 0;

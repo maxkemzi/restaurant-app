@@ -34,13 +34,13 @@ describe("/api/orders/:id", () => {
 			mockRequestResponse("POST", {
 				image: "image",
 				name: "name1",
-				category_id: category.id,
-				price_USD: 500,
+				categoryId: category.id,
+				priceUsd: 500,
 				weight: 500,
-				size_cm: 30,
-				is_vegan: false,
-				is_spicy: false,
-				ingredient_ids: [ingredient.id]
+				sizeCm: 30,
+				isVegan: false,
+				isSpicy: false,
+				ingredientIds: [ingredient.id]
 			});
 		await productsHandler(createProduct1Req, createProduct1Res);
 		const product1 = createProduct1Res._getJSONData();
@@ -50,13 +50,13 @@ describe("/api/orders/:id", () => {
 			mockRequestResponse("POST", {
 				image: "image",
 				name: "name2",
-				category_id: category.id,
-				price_USD: 500,
+				categoryId: category.id,
+				priceUsd: 500,
 				weight: 500,
-				size_cm: 30,
-				is_vegan: false,
-				is_spicy: false,
-				ingredient_ids: [ingredient.id]
+				sizeCm: 30,
+				isVegan: false,
+				isSpicy: false,
+				ingredientIds: [ingredient.id]
 			});
 		await productsHandler(createProduct2Req, createProduct2Res);
 		const product2 = createProduct2Res._getJSONData();
@@ -65,10 +65,10 @@ describe("/api/orders/:id", () => {
 
 		// Create order
 		const {req, res} = mockRequestResponse("POST", {
-			client_name: "name",
-			client_address: "address",
-			client_phone: "+380",
-			product_ids: [product1.id]
+			clientName: "name",
+			clientAddress: "address",
+			clientPhone: "+380",
+			productIds: [product1.id]
 		});
 		await ordersHandler(req, res);
 
@@ -82,7 +82,7 @@ describe("/api/orders/:id", () => {
 
 			const {req, res} = mockRequestResponse(
 				"PUT",
-				{client_name: newClientName, product_ids: newProductIds},
+				{clientName: newClientName, productIds: newProductIds},
 				{id: orderFromCreateResponse.id}
 			);
 			await orderHandler(req, res);
@@ -102,12 +102,12 @@ describe("/api/orders/:id", () => {
 
 			const expectedOrder = {
 				...orderFromCreateResponse,
-				client_name: newClientName,
+				clientName: newClientName,
 				Cart: {
 					...orderFromCreateResponse.Cart,
 					CartProducts: products.map(({ProductIngredients: _, ...product}) => ({
-						cart_id: orderFromCreateResponse.Cart.id,
-						product_id: product.id,
+						cartId: orderFromCreateResponse.Cart.id,
+						productId: product.id,
 						Product: product
 					}))
 				}
@@ -123,7 +123,7 @@ describe("/api/orders/:id", () => {
 
 			const {req, res} = mockRequestResponse(
 				"PUT",
-				{client_name: newClientName},
+				{clientName: newClientName},
 				{id: orderFromCreateResponse.id}
 			);
 			await orderHandler(req, res);

@@ -1,5 +1,5 @@
-import ProductCard from "./ProductCard";
 import AddToCartButton from "./AddToCartButton";
+import ProductCard from "./ProductCard";
 
 const ProductList = ({products, category}) => {
 	if (products.length === 0) {
@@ -13,14 +13,14 @@ const ProductList = ({products, category}) => {
 					key={product.id}
 					buttonSlot={<AddToCartButton product={product} />}
 					id={product.id}
-					isVegan={product.is_vegan}
-					isSpicy={product.is_spicy}
+					isVegan={product.isVegan}
+					isSpicy={product.isSpicy}
 					categoryName={category}
 					image={product.image}
 					ingredients={product.ProductIngredients}
 					name={product.name}
-					priceUSD={product.price_USD}
-					sizeCm={product.size_cm}
+					priceUsd={product.priceUsd}
+					sizeCm={product.sizeCm}
 					weight={product.weight}
 				/>
 			))}

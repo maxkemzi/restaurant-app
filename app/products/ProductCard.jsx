@@ -5,7 +5,7 @@ const ProductCard = ({
 	sizeCm,
 	weight,
 	name,
-	priceUSD,
+	priceUsd,
 	ingredients,
 	categoryName,
 	isSpicy,
@@ -42,7 +42,7 @@ const ProductCard = ({
 					{ingredients.length !== 0 ? `- ${ingredientsString}` : null}
 				</p>
 				<div className="card-actions justify-between items-center">
-					<p>${priceUSD}</p>
+					<p>${priceUsd}</p>
 					{buttonSlot}
 				</div>
 			</div>

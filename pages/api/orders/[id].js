@@ -18,21 +18,16 @@ const handler = async (req, res) => {
 	} else if (req.method === "PUT") {
 		try {
 			const {id} = parseQueryParams(req.query);
-			const {
-				client_name,
-				client_phone,
-				client_address,
-				product_ids: productIds
-			} = req.body;
+			const {clientName, clientPhone, clientAddress, productIds} = req.body;
 
 			const products = productIds?.map(productId => ({
-				product_id: Number(productId)
+				productId: Number(productId)
 			}));
 
 			const order = await updateOrderById(id, {
-				client_name,
-				client_phone,
-				client_address,
+				clientName,
+				clientPhone,
+				clientAddress,
 				products
 			});
 

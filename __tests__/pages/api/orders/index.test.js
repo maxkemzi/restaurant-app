@@ -35,13 +35,13 @@ describe("/api/orders", () => {
 			{
 				image: "image",
 				name: "name",
-				category_id: category.id,
-				price_USD: 500,
+				categoryId: category.id,
+				priceUsd: 500,
 				weight: 500,
-				size_cm: 30,
-				is_vegan: false,
-				is_spicy: false,
-				ingredient_ids: [ingredient.id]
+				sizeCm: 30,
+				isVegan: false,
+				isSpicy: false,
+				ingredientIds: [ingredient.id]
 			}
 		);
 		await productsHandler(createProductReq, createProductRes);
@@ -49,21 +49,21 @@ describe("/api/orders", () => {
 		const product = createProductRes._getJSONData();
 
 		mockOrder = {
-			client_name: "name",
-			client_address: "address",
-			client_phone: "+380"
+			clientName: "name",
+			clientAddress: "address",
+			clientPhone: "+380"
 		};
 
 		mockOrderWithIncludedRelations = {
 			...mockOrder,
 			Cart: {
-				CartProducts: [{product_id: product.id, Product: {id: product.id}}]
+				CartProducts: [{productId: product.id, Product: {id: product.id}}]
 			}
 		};
 
 		mockBody = {
 			...mockOrder,
-			product_ids: [product.id]
+			productIds: [product.id]
 		};
 	});
 

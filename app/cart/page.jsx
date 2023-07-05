@@ -25,10 +25,10 @@ const Cart = () => {
 		const {clientName, clientAddress, clientPhone} = e.target;
 
 		const data = {
-			client_name: clientName.value,
-			client_address: clientAddress.value,
-			client_phone: clientPhone.value,
-			product_ids: productIds
+			clientName: clientName.value,
+			clientAddress: clientAddress.value,
+			clientPhone: clientPhone.value,
+			productIds
 		};
 
 		const options = {
@@ -85,7 +85,7 @@ const Cart = () => {
 									count={count}
 									image={product.image}
 									name={product.name}
-									priceUSD={product.priceUSD}
+									priceUsd={product.priceUsd}
 									weight={product.weight}
 									onAddClick={() => addProduct(product)}
 									onRemoveClick={() => removeProduct(product.id)}

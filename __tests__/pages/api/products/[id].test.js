@@ -38,13 +38,13 @@ describe("/api/products/:id", () => {
 		const {req, res} = mockRequestResponse("POST", {
 			image: "image",
 			name: "name",
-			category_id: category.id,
-			price_USD: 500,
+			categoryId: category.id,
+			priceUsd: 500,
 			weight: 500,
-			size_cm: 30,
-			is_vegan: false,
-			is_spicy: false,
-			ingredient_ids: [ingredient1.id]
+			sizeCm: 30,
+			isVegan: false,
+			isSpicy: false,
+			ingredientIds: [ingredient1.id]
 		});
 		await productsHandler(req, res);
 
@@ -58,7 +58,7 @@ describe("/api/products/:id", () => {
 
 			const {req, res} = mockRequestResponse(
 				"PUT",
-				{name: newName, ingredient_ids: newIngredientIds},
+				{name: newName, ingredientIds: newIngredientIds},
 				{id: productFromCreateReq.id}
 			);
 			await productHandler(req, res);
@@ -78,8 +78,8 @@ describe("/api/products/:id", () => {
 				...productFromCreateReq,
 				name: newName,
 				ProductIngredients: ingredients.map(ingredient => ({
-					ingredient_id: ingredient.id,
-					product_id: productFromCreateReq.id,
+					ingredientId: ingredient.id,
+					productId: productFromCreateReq.id,
 					Ingredient: ingredient
 				}))
 			};

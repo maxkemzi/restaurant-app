@@ -7,7 +7,7 @@ const CartProductCard = ({
 	name,
 	weight,
 	count,
-	priceUSD
+	priceUsd
 }) => (
 	<div className="card card-side flex justify-center flex-wrap bg-base-100 shadow-xl">
 		<figure className="p-4 grow max-w-[140px]">
@@ -19,7 +19,7 @@ const CartProductCard = ({
 				<p>Count: {count}</p>
 			</div>
 			<p>{weight} g</p>
-			<p>${priceUSD}</p>
+			<p>${priceUsd}</p>
 			<div className="card-actions justify-end">
 				<button
 					onClick={onRemoveClick}

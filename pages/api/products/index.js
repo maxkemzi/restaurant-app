@@ -7,28 +7,28 @@ const handler = async (req, res) => {
 			const {
 				image,
 				name,
-				price_USD,
+				categoryId,
+				priceUsd,
 				weight,
-				size_cm,
-				is_vegan,
-				is_spicy,
-				category_id,
-				ingredient_ids: ingredientIds
+				sizeCm,
+				isVegan,
+				isSpicy,
+				ingredientIds
 			} = req.body;
 
-			const ingredients = ingredientIds?.map(id => ({
-				ingredient_id: Number(id)
+			const ingredients = ingredientIds?.map(ingredientId => ({
+				ingredientId: Number(ingredientId)
 			}));
 
 			const product = await createProduct({
 				image,
 				name,
-				price_USD,
+				priceUsd,
 				weight,
-				size_cm,
-				is_vegan,
-				is_spicy,
-				category_id,
+				sizeCm,
+				isVegan,
+				isSpicy,
+				categoryId,
 				ingredients
 			});
 
@@ -39,14 +39,14 @@ const handler = async (req, res) => {
 		}
 	} else if (req.method === "GET") {
 		try {
-			const {category_id, category_name, is_vegan, is_spicy, sort} =
+			const {categoryId, categoryName, isVegan, isSpicy, sort} =
 				parseQueryParams(req.query);
 
 			const products = await getProducts({
-				category_id,
-				category_name,
-				is_vegan,
-				is_spicy,
+				categoryId,
+				categoryName,
+				isVegan,
+				isSpicy,
 				sort
 			});
 

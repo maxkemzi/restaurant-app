@@ -2,78 +2,78 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-3.0.x", "linux-arm64-openssl-1.1.x", "rhel-openssl-1.0.x"]
 }
 
 datasource db {
   provider = "postgresql"
-  url = env("DB_PRISMA_URL")
+  url      = env("DB_PRISMA_URL")
 }
 
 model Order {
-  id             Int      @id @default(autoincrement())
-  client_name    String
-  client_phone   String
-  client_address String
-  created_at     DateTime @default(now())
-  Cart           Cart?
+  id            Int      @id @default(autoincrement())
+  clientName    String
+  clientPhone   String
+  clientAddress String
+  createdAt     DateTime @default(now())
+  Cart          Cart?
 }
 
 model Cart {
   id           Int           @id @default(autoincrement())
-  Order        Order         @relation(fields: [order_id], references: [id], onDelete: Cascade)
-  order_id     Int           @unique
+  Order        Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId      Int           @unique
   CartProducts CartProduct[]
-  created_at   DateTime      @default(now())
+  createdAt    DateTime      @default(now())
 }
 
 model Product {
   id                 Int                 @id @default(autoincrement())
-  Category           Category            @relation(fields: [category_id], references: [id])
-  category_id        Int
+  Category           Category            @relation(fields: [categoryId], references: [id])
+  categoryId         Int
   name               String              @unique
   image              String
-  price_USD          Float
+  priceUsd           Float
   weight             Float
-  size_cm            Float?
-  is_vegan           Boolean?
-  is_spicy           Boolean?
+  sizeCm             Float?
+  isVegan            Boolean?
+  isSpicy            Boolean?
   CartProducts       CartProduct[]
   ProductIngredients ProductIngredient[]
-  created_at         DateTime            @default(now())
+  createdAt          DateTime            @default(now())
 }
 
 model CartProduct {
-  id         Int      @id @default(autoincrement())
-  Cart       Cart     @relation(fields: [cart_id], references: [id], onDelete: Cascade)
-  cart_id    Int
-  Product    Product  @relation(fields: [product_id], references: [id], onDelete: Cascade)
-  product_id Int
-  created_at DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  Cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  cartId    Int
+  Product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+  createdAt DateTime @default(now())
 }
 
 model Category {
-  id         Int       @id @default(autoincrement())
-  name       String    @unique
-  Products   Product[]
-  created_at DateTime  @default(now())
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  Products  Product[]
+  createdAt DateTime  @default(now())
 }
 
 model Ingredient {
   id                 Int                 @id @default(autoincrement())
   name               String              @unique
   ProductIngredients ProductIngredient[]
-  created_at         DateTime            @default(now())
+  createdAt          DateTime            @default(now())
 }
 
 model ProductIngredient {
-  id            Int        @id @default(autoincrement())
-  Ingredient    Ingredient @relation(fields: [ingredient_id], references: [id], onDelete: Cascade)
-  ingredient_id Int
-  Product       Product    @relation(fields: [product_id], references: [id], onDelete: Cascade)
-  product_id    Int
-  created_at    DateTime   @default(now())
+  id           Int        @id @default(autoincrement())
+  Ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+  ingredientId Int
+  Product      Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId    Int
+  createdAt    DateTime   @default(now())
 
-  @@unique([ingredient_id, product_id])
+  @@unique([ingredientId, productId])
 }
