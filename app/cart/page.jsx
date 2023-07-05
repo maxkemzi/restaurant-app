@@ -1,5 +1,6 @@
 "use client";
 
+import Button from "@/components/Button";
 import TextField from "@/components/TextField";
 import {useCartContext, useToastContext} from "@/lib/contexts";
 import {useRouter} from "next/navigation";
@@ -99,9 +100,7 @@ const Cart = () => {
 								<div className="stat-title">Total cost</div>
 								<div className="stat-value">${cost}</div>
 							</div>
-							<button type="submit" className="btn btn-primary">
-								Place an order
-							</button>
+							<Button isSubmit>Place an order</Button>
 						</div>
 					</div>
 				</div>

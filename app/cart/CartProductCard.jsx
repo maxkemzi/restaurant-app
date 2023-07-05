@@ -1,3 +1,4 @@
+import Button from "@/components/Button";
 import Image from "next/image";
 
 const CartProductCard = ({
@@ -21,18 +22,12 @@ const CartProductCard = ({
 			<p>{weight} g</p>
 			<p>${priceUsd}</p>
 			<div className="card-actions justify-end">
-				<button
-					onClick={onRemoveClick}
-					type="button"
-					className="btn btn-sm btn-error">
+				<Button onClick={onRemoveClick} size="small" color="error">
 					Remove
-				</button>
-				<button
-					type="button"
-					onClick={onAddClick}
-					className="btn btn-sm btn-success">
+				</Button>
+				<Button onClick={onAddClick} size="small" color="success">
 					Add
-				</button>
+				</Button>
 			</div>
 		</div>
 	</div>

@@ -1,3 +1,4 @@
+import Button from "@/components/Button";
 import {RESTAURANT_NAME} from "@/lib/constants";
 
 const Home = () => (
@@ -10,9 +11,7 @@ const Home = () => (
 						<p className="py-6">
 							Indulge in Flavorful Delights at {RESTAURANT_NAME}
 						</p>
-						<button type="button" className="btn btn-primary">
-							Get Started
-						</button>
+						<Button>Get Started</Button>
 					</div>
 				</div>
 			</div>

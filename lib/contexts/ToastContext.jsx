@@ -12,9 +12,8 @@ import {
 } from "react";
 
 const initialToastState = {
-	isVisible: false,
 	type: null,
-	message: null
+	message: ""
 };
 
 const ToastContext = createContext({
@@ -24,6 +23,10 @@ const ToastContext = createContext({
 
 const ToastProvider = ({children}) => {
 	const [toast, setToast] = useState(initialToastState);
+	const isVisible = useMemo(
+		() => toast.type && toast.message,
+		[toast.message, toast.type]
+	);
 
 	const timeout = useRef(null);
 	useEffect(
@@ -36,22 +39,22 @@ const ToastProvider = ({children}) => {
 	);
 
 	const showToast = useCallback((type, message) => {
-		setToast(prev => ({...prev, type, message, isVisible: true}));
+		setToast({type, message});
 
 		timeout.current = setTimeout(() => {
-			setToast(prev => ({...prev, isVisible: false}));
+			setToast(initialToastState);
 		}, 3000);
 	}, []);
 
-	const value = useMemo(() => ({showToast}), [showToast]);
+	const value = useMemo(() => ({showToast, toast}), [showToast, toast]);
 
 	return (
 		<ToastContext.Provider value={value}>
 			{children}
 			<div
 				className={classNames("toast toast-top toast-end z-50", {
-					invisible: !toast.isVisible,
-					"opacity-0": !toast.isVisible
+					invisible: !isVisible,
+					"opacity-0": !isVisible
 				})}>
 				<div
 					className={classNames("alert", {

@@ -1,5 +1,6 @@
 "use client";
 
+import Button from "@/components/Button";
 import {useCartContext} from "@/lib/contexts";
 import {CartProductDTO} from "@/lib/dtos";
 
@@ -22,12 +23,9 @@ const AddToCartButton = ({product}) => {
 	};
 
 	return (
-		<button
-			onClick={toggleProductInCart}
-			type="button"
-			className="btn btn-primary">
+		<Button onClick={toggleProductInCart}>
 			{productInCart ? "Remove from cart" : "Add to cart"}
-		</button>
+		</Button>
 	);
 };
 
