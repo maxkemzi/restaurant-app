@@ -7,7 +7,7 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
-		"test": "dotenv -e .env.local -- vitest --threads=false",
+		"test": "vitest --threads=false",
 		"start:prod": "node server.js",
 		"start:migrate:prod": "npx prisma migrate deploy && npm run start:prod",
 		"db:seed": "dotenv -e .env.local -- npx prisma db push --force-reset && dotenv -e .env.local -- npx prisma db seed",

@@ -1,156 +1,121 @@
-import {describe, it, expect, beforeEach} from "vitest";
-import categoriesHandler from "@/pages/api/categories";
-import ingredientsHandler from "@/pages/api/ingredients";
-import productsHandler from "@/pages/api/products";
+import {requestHandler} from "@/__tests__/utils";
+import {
+	CategoryDbService,
+	IngredientDbService,
+	ProductDbService,
+	cleanUpDatabase
+} from "@/__tests__/utils/db";
+import {
+	CategoryMockGenerator,
+	IngredientMockGenerator,
+	ProductMockGenerator
+} from "@/__tests__/utils/mocks";
 import productHandler from "@/pages/api/products/[id]";
-import prisma from "@/prisma/client";
-import cleanUp from "@/__tests__/cleanUp";
-import mockRequestResponse from "@/__tests__/mockRequestResponse";
+import {beforeEach, describe, expect, it} from "vitest";
 
 describe("/api/products/:id", () => {
-	let productFromCreateReq;
-	let ingredients;
+	let product;
+	let category;
 
 	beforeEach(async () => {
-		await cleanUp();
+		await cleanUpDatabase();
 
-		// Create category
-		const {req: createCategoryReq, res: createCategoryRes} =
-			mockRequestResponse("POST", {name: "category"});
-		await categoriesHandler(createCategoryReq, createCategoryRes);
-		const category = createCategoryRes._getJSONData();
+		const mockCategory = CategoryMockGenerator.generate();
+		category = await CategoryDbService.create(mockCategory);
 
-		// Create first ingredient
-		const {req: createIngredient1Req, res: createIngredient1Res} =
-			mockRequestResponse("POST", {name: "egg"});
-		await ingredientsHandler(createIngredient1Req, createIngredient1Res);
-		const ingredient1 = createIngredient1Res._getJSONData();
+		const mockIngredient = IngredientMockGenerator.generate();
+		const ingredient = await IngredientDbService.create(mockIngredient);
 
-		// Create second ingredient
-		const {req: createIngredient2Req, res: createIngredient2Res} =
-			mockRequestResponse("POST", {name: "milk"});
-		await ingredientsHandler(createIngredient2Req, createIngredient2Res);
-		const ingredient2 = createIngredient2Res._getJSONData();
-
-		ingredients = [ingredient1, ingredient2];
-
-		// Create product
-		const {req, res} = mockRequestResponse("POST", {
-			image: "image",
-			name: "name",
-			categoryId: category.id,
-			priceUsd: 500,
-			weight: 500,
-			sizeCm: 30,
-			isVegan: false,
-			isSpicy: false,
-			ingredientIds: [ingredient1.id]
+		const mockProduct = ProductMockGenerator.generate(category.id);
+		product = await ProductDbService.create({
+			...mockProduct,
+			ProductIngredients: {create: {data: {ingredientId: ingredient.id}}}
 		});
-		await productsHandler(req, res);
-
-		productFromCreateReq = res._getJSONData();
 	});
 
 	describe("PUT", () => {
 		it("should update product by id", async () => {
-			const newName = "pizza";
-			const newIngredientIds = ingredients.map(ingredient => ingredient.id);
+			const mockProduct = {name: "new product name"};
 
-			const {req, res} = mockRequestResponse(
-				"PUT",
-				{name: newName, ingredientIds: newIngredientIds},
-				{id: productFromCreateReq.id}
-			);
-			await productHandler(req, res);
-
-			const body = res._getJSONData();
-
-			const productThatMustBeUpdated = JSON.parse(
-				JSON.stringify(
-					await prisma.product.findUnique({
-						where: {id: productFromCreateReq.id},
-						include: {ProductIngredients: {include: {Ingredient: true}}}
-					})
-				)
-			);
-
-			const expectedProduct = {
-				...productFromCreateReq,
-				name: newName,
-				ProductIngredients: ingredients.map(ingredient => ({
-					ingredientId: ingredient.id,
-					productId: productFromCreateReq.id,
-					Ingredient: ingredient
-				}))
+			const requestOptions = {
+				method: "PUT",
+				body: mockProduct,
+				query: {id: product.id}
 			};
 
-			expect(res.statusCode).toBe(200);
-			expect(productThatMustBeUpdated).toMatchObject(expectedProduct);
-			expect(body).toMatchObject(expectedProduct);
+			const {statusCode, body} = await requestHandler(
+				productHandler,
+				requestOptions
+			);
+
+			expect(statusCode).toBe(200);
+
+			const productFromDb = await ProductDbService.getById(product.id);
+
+			expect(productFromDb).toMatchObject(mockProduct);
+			expect(body).toMatchObject(productFromDb);
 		});
 
 		it("should respond with 500 status code", async () => {
-			const newName = "pizza";
+			const requestOptions = {
+				method: "PUT",
+				body: {name: false},
+				query: {id: product.id}
+			};
 
-			const {req, res} = mockRequestResponse(
-				"PUT",
-				{name: newName},
-				{id: "id"}
-			);
-			await productHandler(req, res);
+			const {statusCode} = await requestHandler(productHandler, requestOptions);
 
-			expect(res.statusCode).toBe(500);
+			expect(statusCode).toBe(500);
 		});
 	});
 
 	describe("DELETE", () => {
 		it("should delete product by id", async () => {
-			const {req, res} = mockRequestResponse(
-				"DELETE",
-				{},
-				{id: productFromCreateReq.id}
+			const requestOptions = {method: "DELETE", query: {id: product.id}};
+
+			const {body, statusCode} = await requestHandler(
+				productHandler,
+				requestOptions
 			);
-			await productHandler(req, res);
 
-			const body = res._getJSONData();
+			expect(statusCode).toBe(200);
 
-			const productThatMustBeDeleted = await prisma.product.findUnique({
-				where: {id: productFromCreateReq.id}
-			});
+			const existsInDb = await ProductDbService.exists({id: product.id});
+			expect(existsInDb).toBe(false);
 
-			expect(res.statusCode).toBe(200);
-			expect(productThatMustBeDeleted).toBeNull();
-			expect(body).toEqual(productFromCreateReq);
+			expect(body).toMatchObject(product);
 		});
 
 		it("should respond with 500 status code", async () => {
-			const {req, res} = mockRequestResponse("DELETE", {}, {id: "id"});
-			await productHandler(req, res);
+			const requestOptions = {method: "DELETE", query: {id: "invalid id"}};
 
-			expect(res.statusCode).toBe(500);
+			const {statusCode} = await requestHandler(productHandler, requestOptions);
+
+			expect(statusCode).toBe(500);
 		});
 	});
 
 	describe("GET", () => {
 		it("should return product by id", async () => {
-			const {req, res} = mockRequestResponse(
-				"GET",
-				{},
-				{id: productFromCreateReq.id}
+			const requestOptions = {query: {id: product.id}};
+
+			const {body, statusCode} = await requestHandler(
+				productHandler,
+				requestOptions
 			);
-			await productHandler(req, res);
 
-			const body = res._getJSONData();
+			expect(statusCode).toBe(200);
 
-			expect(res.statusCode).toBe(200);
-			expect(body).toEqual(productFromCreateReq);
+			const productFromDb = await ProductDbService.getById(product.id);
+			expect(body).toMatchObject(productFromDb);
 		});
 
 		it("should respond with 500 status code", async () => {
-			const {req, res} = mockRequestResponse("GET", {}, {id: "id"});
-			await productHandler(req, res);
+			const requestOptions = {query: {id: "invalid id"}};
 
-			expect(res.statusCode).toBe(500);
+			const {statusCode} = await requestHandler(productHandler, requestOptions);
+
+			expect(statusCode).toBe(500);
 		});
 	});
 });

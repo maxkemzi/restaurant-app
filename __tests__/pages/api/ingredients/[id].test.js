@@ -1,103 +1,111 @@
-import {describe, it, expect, beforeEach} from "vitest";
-import ingredientsHandler from "@/pages/api/ingredients";
+import {requestHandler} from "@/__tests__/utils";
+import {IngredientDbService, cleanUpDatabase} from "@/__tests__/utils/db";
+import {IngredientMockGenerator} from "@/__tests__/utils/mocks";
 import ingredientHandler from "@/pages/api/ingredients/[id]";
-import prisma from "@/prisma/client";
-import cleanUp from "@/__tests__/cleanUp";
-import mockRequestResponse from "@/__tests__/mockRequestResponse";
+import {beforeEach, describe, expect, it} from "vitest";
 
 describe("/api/ingredients/:id", () => {
 	let ingredient;
 
 	beforeEach(async () => {
-		await cleanUp();
+		await cleanUpDatabase();
 
-		// Create new category
-		const {req, res} = mockRequestResponse("POST", {name: "egg"});
-		await ingredientsHandler(req, res);
-
-		ingredient = res._getJSONData();
+		const mockIngredient = IngredientMockGenerator.generate();
+		ingredient = await IngredientDbService.create(mockIngredient);
 	});
 
 	describe("PUT", () => {
 		it("should update ingredient by id", async () => {
-			const {req, res} = mockRequestResponse(
-				"PUT",
-				{name: "milk"},
-				{id: ingredient.id}
-			);
-			await ingredientHandler(req, res);
+			const mockIngredient = IngredientMockGenerator.generate();
 
-			const body = res._getJSONData();
+			const requestOptions = {
+				method: "PUT",
+				body: mockIngredient,
+				query: {id: ingredient.id}
+			};
 
-			const updatedIngredient = JSON.parse(
-				JSON.stringify(
-					await prisma.ingredient.findUnique({where: {id: ingredient.id}})
-				)
+			const {body, statusCode} = await requestHandler(
+				ingredientHandler,
+				requestOptions
 			);
 
-			expect(res.statusCode).toBe(200);
-			expect(updatedIngredient).toEqual({...ingredient, name: "milk"});
-			expect(body).toEqual(updatedIngredient);
+			expect(statusCode).toBe(200);
+
+			const ingredientFromDb = await IngredientDbService.getById(ingredient.id);
+
+			expect(ingredientFromDb).toMatchObject(mockIngredient);
+			expect(body).toEqual(ingredientFromDb);
 		});
 
 		it("should respond with 500 status code", async () => {
-			const {req, res} = mockRequestResponse("PUT", {}, {id: "id"});
-			await ingredientHandler(req, res);
+			const requestOptions = {
+				method: "PUT",
+				body: {name: false},
+				query: {id: ingredient.id}
+			};
 
-			expect(res.statusCode).toBe(500);
+			const {statusCode} = await requestHandler(
+				ingredientHandler,
+				requestOptions
+			);
+
+			expect(statusCode).toBe(500);
 		});
 	});
 
 	describe("DELETE", () => {
 		it("should delete ingredient by id", async () => {
-			const {req, res} = mockRequestResponse(
-				"DELETE",
-				{},
-				{id: `${ingredient.id}`}
-			);
-			await ingredientHandler(req, res);
+			const requestOptions = {method: "DELETE", query: {id: ingredient.id}};
 
-			const body = res._getJSONData();
-
-			const deletedIngredient = JSON.parse(
-				JSON.stringify(
-					await prisma.ingredient.findUnique({where: {id: ingredient.id}})
-				)
+			const {body, statusCode} = await requestHandler(
+				ingredientHandler,
+				requestOptions
 			);
 
-			expect(res.statusCode).toBe(200);
-			expect(deletedIngredient).toBeNull();
+			expect(statusCode).toBe(200);
+
+			const existsInDb = await IngredientDbService.exists({id: ingredient.id});
+			expect(existsInDb).toBe(false);
+
 			expect(body).toEqual(ingredient);
 		});
 
 		it("should respond with 500 status code", async () => {
-			const {req, res} = mockRequestResponse("DELETE", {}, {id: "id"});
-			await ingredientHandler(req, res);
+			const requestOptions = {method: "DELETE", query: {id: "invalid id"}};
 
-			expect(res.statusCode).toBe(500);
+			const {statusCode} = await requestHandler(
+				ingredientHandler,
+				requestOptions
+			);
+
+			expect(statusCode).toBe(500);
 		});
 	});
 
 	describe("GET", () => {
 		it("should return ingredient by id", async () => {
-			const {req, res} = mockRequestResponse(
-				"GET",
-				{},
-				{id: `${ingredient.id}`}
+			const requestOptions = {query: {id: ingredient.id}};
+
+			const {body, statusCode} = await requestHandler(
+				ingredientHandler,
+				requestOptions
 			);
-			await ingredientHandler(req, res);
 
-			const body = res._getJSONData();
+			expect(statusCode).toBe(200);
 
-			expect(res.statusCode).toBe(200);
-			expect(body).toEqual(ingredient);
+			const ingredientFromDb = await IngredientDbService.getById(ingredient.id);
+			expect(body).toEqual(ingredientFromDb);
 		});
 
 		it("should respond with 500 status code", async () => {
-			const {req, res} = mockRequestResponse("GET", {}, {id: "id"});
-			await ingredientHandler(req, res);
+			const requestOptions = {query: {id: "invalid id"}};
 
-			expect(res.statusCode).toBe(500);
+			const {statusCode} = await requestHandler(
+				ingredientHandler,
+				requestOptions
+			);
+
+			expect(statusCode).toBe(500);
 		});
 	});
 });

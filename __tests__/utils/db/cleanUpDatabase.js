@@ -1,6 +1,6 @@
 import prisma from "@/prisma/client";
 
-const cleanUp = async () => {
+const cleanUpDatabase = async () => {
 	await Promise.all([prisma.order.deleteMany(), prisma.product.deleteMany()]);
 
 	await Promise.all([
@@ -9,4 +9,4 @@ const cleanUp = async () => {
 	]);
 };
 
-export default cleanUp;
+export default cleanUpDatabase;

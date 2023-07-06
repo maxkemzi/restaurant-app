@@ -1,45 +1,64 @@
-import {describe, it, expect, beforeEach} from "vitest";
+import {requestHandler} from "@/__tests__/utils";
+import {cleanUpDatabase, CategoryDbService} from "@/__tests__/utils/db";
+import {CategoryMockGenerator} from "@/__tests__/utils/mocks";
 import categoriesHandler from "@/pages/api/categories";
-import prisma from "@/prisma/client";
-import cleanUp from "@/__tests__/cleanUp";
-import mockRequestResponse from "@/__tests__/mockRequestResponse";
+import {beforeEach, describe, expect, it} from "vitest";
 
 describe("/api/categories", () => {
 	beforeEach(async () => {
-		await cleanUp();
+		await cleanUpDatabase();
 	});
 
 	describe("POST", () => {
 		it("should add category", async () => {
-			const {req, res} = mockRequestResponse("POST", {name: "pizzas"});
-			await categoriesHandler(req, res);
+			const mockCategory = CategoryMockGenerator.generate();
 
-			const body = res._getJSONData();
+			const requestOptions = {
+				method: "POST",
+				body: mockCategory
+			};
 
-			const createdCategory = JSON.parse(
-				JSON.stringify(await prisma.category.findFirst())
+			const {statusCode, body} = await requestHandler(
+				categoriesHandler,
+				requestOptions
 			);
 
-			expect(res.statusCode).toBe(201);
-			expect(createdCategory).toMatchObject({name: "pizzas"});
-			expect(body).toEqual(createdCategory);
+			expect(statusCode).toBe(201);
+
+			const existsInDb = await CategoryDbService.exists(mockCategory);
+			expect(existsInDb).toBe(true);
+
+			const categoryFromDb = await CategoryDbService.get(mockCategory);
+			expect(body).toEqual(categoryFromDb);
 		});
 
 		it("should respond with 500 status code", async () => {
-			const {req, res} = mockRequestResponse("POST", {name: 5});
-			await categoriesHandler(req, res);
+			const mockCategory = {name: false};
 
-			expect(res.statusCode).toBe(500);
+			const requestOptions = {method: "POST", body: mockCategory};
+
+			const {statusCode} = await requestHandler(
+				categoriesHandler,
+				requestOptions
+			);
+
+			expect(statusCode).toBe(500);
 		});
 	});
 
-	it("should return categories", async () => {
-		const {req, res} = mockRequestResponse();
-		await categoriesHandler(req, res);
+	describe("GET", () => {
+		let categories;
 
-		const body = res._getJSONData();
+		beforeEach(async () => {
+			const mockCategories = CategoryMockGenerator.generateMany(3);
+			categories = await CategoryDbService.createMany(mockCategories);
+		});
 
-		expect(res.statusCode).toBe(200);
-		expect(body).toEqual([]);
+		it("should return categories", async () => {
+			const {statusCode, body} = await requestHandler(categoriesHandler);
+
+			expect(statusCode).toBe(200);
+			expect(body).toEqual(categories);
+		});
 	});
 });

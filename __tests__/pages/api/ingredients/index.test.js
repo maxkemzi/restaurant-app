@@ -1,45 +1,62 @@
-import {describe, it, expect, beforeEach} from "vitest";
+import {requestHandler} from "@/__tests__/utils";
+import {IngredientDbService, cleanUpDatabase} from "@/__tests__/utils/db";
+import {IngredientMockGenerator} from "@/__tests__/utils/mocks";
 import ingredientsHandler from "@/pages/api/ingredients";
-import prisma from "@/prisma/client";
-import cleanUp from "@/__tests__/cleanUp";
-import mockRequestResponse from "@/__tests__/mockRequestResponse";
+import {beforeEach, describe, expect, it} from "vitest";
 
 describe("/api/ingredients", () => {
 	beforeEach(async () => {
-		await cleanUp();
+		await cleanUpDatabase();
 	});
 
 	describe("POST", () => {
 		it("should add ingredient", async () => {
-			const {req, res} = mockRequestResponse("POST", {name: "egg"});
-			await ingredientsHandler(req, res);
+			const mockIngredient = IngredientMockGenerator.generate();
 
-			const body = res._getJSONData();
+			const requestOptions = {method: "POST", body: mockIngredient};
 
-			const createdIngredient = JSON.parse(
-				JSON.stringify(await prisma.ingredient.findFirst())
+			const {body, statusCode} = await requestHandler(
+				ingredientsHandler,
+				requestOptions
 			);
 
-			expect(res.statusCode).toBe(201);
-			expect(createdIngredient).toMatchObject({name: "egg"});
-			expect(body).toEqual(createdIngredient);
+			expect(statusCode).toBe(201);
+
+			const existsInDb = await IngredientDbService.exists(mockIngredient);
+			expect(existsInDb).toBe(true);
+
+			const ingredientFromDb = await IngredientDbService.get(mockIngredient);
+			expect(body).toEqual(ingredientFromDb);
 		});
 
 		it("should respond with 500 status code", async () => {
-			const {req, res} = mockRequestResponse("POST", {name: 5});
-			await ingredientsHandler(req, res);
+			const requestOptions = {
+				method: "POST",
+				body: {name: false}
+			};
 
-			expect(res.statusCode).toBe(500);
+			const {statusCode} = await requestHandler(
+				ingredientsHandler,
+				requestOptions
+			);
+
+			expect(statusCode).toBe(500);
 		});
 	});
 
-	it("should return ingredients", async () => {
-		const {req, res} = mockRequestResponse();
-		await ingredientsHandler(req, res);
+	describe("GET", () => {
+		let ingredients;
 
-		const body = res._getJSONData();
+		beforeEach(async () => {
+			const mockIngredients = IngredientMockGenerator.generateMany(3);
+			ingredients = await IngredientDbService.createMany(mockIngredients);
+		});
 
-		expect(res.statusCode).toBe(200);
-		expect(body).toEqual([]);
+		it("should return ingredients", async () => {
+			const {body, statusCode} = await requestHandler(ingredientsHandler);
+
+			expect(statusCode).toBe(200);
+			expect(body).toEqual(ingredients);
+		});
 	});
 });

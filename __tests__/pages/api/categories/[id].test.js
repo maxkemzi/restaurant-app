@@ -1,103 +1,121 @@
-import {describe, it, expect, beforeEach} from "vitest";
-import categoriesHandler from "@/pages/api/categories";
+import {requestHandler} from "@/__tests__/utils";
+import {CategoryDbService, cleanUpDatabase} from "@/__tests__/utils/db";
+import {CategoryMockGenerator} from "@/__tests__/utils/mocks";
 import categoryHandler from "@/pages/api/categories/[id]";
-import prisma from "@/prisma/client";
-import cleanUp from "@/__tests__/cleanUp";
-import mockRequestResponse from "@/__tests__/mockRequestResponse";
+import {beforeEach, describe, expect, it} from "vitest";
 
 describe("/api/categories/:id", () => {
 	let category;
 
 	beforeEach(async () => {
-		await cleanUp();
+		await cleanUpDatabase();
 
-		// Create new category
-		const {req, res} = mockRequestResponse("POST", {name: "pizzas"});
-		await categoriesHandler(req, res);
-
-		category = res._getJSONData();
+		const mockCategory = CategoryMockGenerator.generate();
+		category = await CategoryDbService.create(mockCategory);
 	});
 
 	describe("PUT", () => {
 		it("should update category by id", async () => {
-			const {req, res} = mockRequestResponse(
-				"PUT",
-				{name: "desserts"},
-				{id: category.id}
-			);
-			await categoryHandler(req, res);
+			const mockCategory = CategoryMockGenerator.generate();
 
-			const body = res._getJSONData();
+			const requestOptions = {
+				method: "PUT",
+				body: mockCategory,
+				query: {id: category.id}
+			};
 
-			const updatedCategory = JSON.parse(
-				JSON.stringify(
-					await prisma.category.findUnique({where: {id: category.id}})
-				)
+			const {body, statusCode} = await requestHandler(
+				categoryHandler,
+				requestOptions
 			);
 
-			expect(res.statusCode).toBe(200);
-			expect(updatedCategory).toEqual({...category, name: "desserts"});
-			expect(body).toEqual(updatedCategory);
+			expect(statusCode).toBe(200);
+
+			const categoryFromDb = await CategoryDbService.getById(category.id);
+
+			expect(categoryFromDb).toMatchObject(mockCategory);
+			expect(body).toEqual(categoryFromDb);
 		});
 
 		it("should respond with 500 status code", async () => {
-			const {req, res} = mockRequestResponse(
-				"PUT",
-				{name: "desserts"},
-				{id: "id"}
-			);
-			await categoryHandler(req, res);
+			const requestOptions = {
+				method: "PUT",
+				body: {name: false},
+				query: {id: category.id}
+			};
 
-			expect(res.statusCode).toBe(500);
+			const {statusCode} = await requestHandler(
+				categoryHandler,
+				requestOptions
+			);
+
+			expect(statusCode).toBe(500);
 		});
 	});
 
 	describe("DELETE", () => {
 		it("should delete category by id", async () => {
-			const {req, res} = mockRequestResponse(
-				"DELETE",
-				{},
-				{id: `${category.id}`}
-			);
-			await categoryHandler(req, res);
+			const requestOptions = {
+				method: "DELETE",
+				query: {id: category.id}
+			};
 
-			const body = res._getJSONData();
-
-			const deletedCategory = JSON.parse(
-				JSON.stringify(
-					await prisma.category.findUnique({where: {id: category.id}})
-				)
+			const {body, statusCode} = await requestHandler(
+				categoryHandler,
+				requestOptions
 			);
 
-			expect(res.statusCode).toBe(200);
-			expect(deletedCategory).toBeNull();
+			expect(statusCode).toBe(200);
+
+			const existsInDb = await CategoryDbService.exists({id: category.id});
+			expect(existsInDb).toBe(false);
+
 			expect(body).toEqual(category);
 		});
 
 		it("should respond with 500 status code", async () => {
-			const {req, res} = mockRequestResponse("DELETE", {}, {id: "id"});
-			await categoryHandler(req, res);
+			const requestOptions = {
+				method: "DELETE",
+				query: {id: "invalid id"}
+			};
 
-			expect(res.statusCode).toBe(500);
+			const {statusCode} = await requestHandler(
+				categoryHandler,
+				requestOptions
+			);
+
+			expect(statusCode).toBe(500);
 		});
 	});
 
 	describe("GET", () => {
 		it("should return category by id", async () => {
-			const {req, res} = mockRequestResponse("GET", {}, {id: `${category.id}`});
-			await categoryHandler(req, res);
+			const requestOptions = {
+				query: {id: category.id}
+			};
 
-			const body = res._getJSONData();
+			const {body, statusCode} = await requestHandler(
+				categoryHandler,
+				requestOptions
+			);
 
-			expect(res.statusCode).toBe(200);
-			expect(body).toEqual(category);
+			expect(statusCode).toBe(200);
+
+			const categoryFromDb = await CategoryDbService.getById(category.id);
+			expect(body).toEqual(categoryFromDb);
 		});
 
 		it("should respond with 500 status code", async () => {
-			const {req, res} = mockRequestResponse("GET", {}, {id: "id"});
-			await categoryHandler(req, res);
+			const requestOptions = {
+				query: {id: "invalid id"}
+			};
 
-			expect(res.statusCode).toBe(500);
+			const {statusCode} = await requestHandler(
+				categoryHandler,
+				requestOptions
+			);
+
+			expect(statusCode).toBe(500);
 		});
 	});
 });

@@ -1,226 +1,198 @@
-import {describe, it, expect, beforeEach} from "vitest";
-import categoriesHandler from "@/pages/api/categories";
-import ingredientsHandler from "@/pages/api/ingredients";
+import {requestHandler} from "@/__tests__/utils";
+import {
+	CategoryDbService,
+	IngredientDbService,
+	cleanUpDatabase,
+	ProductDbService
+} from "@/__tests__/utils/db";
+import {
+	CategoryMockGenerator,
+	IngredientMockGenerator,
+	ProductMockGenerator
+} from "@/__tests__/utils/mocks";
 import productsHandler from "@/pages/api/products";
-import prisma from "@/prisma/client";
-import cleanUp from "@/__tests__/cleanUp";
-import mockRequestResponse from "@/__tests__/mockRequestResponse";
+import {beforeEach, describe, expect, it} from "vitest";
 
 describe("/api/products", () => {
-	let mockBody;
-	let mockProduct;
-	let mockProductWithIncludedRelations;
+	let category;
+	let ingredient;
 
 	beforeEach(async () => {
-		await cleanUp();
+		await cleanUpDatabase();
 
-		// Create category
-		const {req: createCategoryReq, res: createCategoryRes} =
-			mockRequestResponse("POST", {name: "category"});
-		await categoriesHandler(createCategoryReq, createCategoryRes);
+		const mockCategory = CategoryMockGenerator.generate();
+		category = await CategoryDbService.create(mockCategory);
 
-		const category = createCategoryRes._getJSONData();
-
-		// Create ingredient
-		const {req: createIngredientReq, res: createIngredientRes} =
-			mockRequestResponse("POST", {name: "egg"});
-		await ingredientsHandler(createIngredientReq, createIngredientRes);
-
-		const ingredient = createIngredientRes._getJSONData();
-
-		mockProduct = {
-			image: "image",
-			name: "name",
-			categoryId: category.id,
-			priceUsd: 500,
-			weight: 500,
-			sizeCm: 30,
-			isVegan: false,
-			isSpicy: false
-		};
-
-		mockProductWithIncludedRelations = {
-			...mockProduct,
-			ProductIngredients: [
-				{ingredientId: ingredient.id, Ingredient: ingredient}
-			]
-		};
-
-		mockBody = {
-			...mockProduct,
-			ingredientIds: [ingredient.id]
-		};
+		const mockIngredient = IngredientMockGenerator.generate();
+		ingredient = await IngredientDbService.create(mockIngredient);
 	});
 
 	describe("POST", () => {
 		it("should add product", async () => {
-			const {req, res} = mockRequestResponse("POST", mockBody);
-			await productsHandler(req, res);
+			const mockProduct = ProductMockGenerator.generate(category.id);
 
-			const body = res._getJSONData();
+			const requestOptions = {
+				method: "POST",
+				body: {...mockProduct, ingredientIds: [ingredient.id]}
+			};
 
-			const createdProduct = await prisma.product.findFirst();
+			const {statusCode, body} = await requestHandler(
+				productsHandler,
+				requestOptions
+			);
 
-			expect(res.statusCode).toBe(201);
-			expect(createdProduct).toMatchObject(mockProduct);
-			expect(body).toMatchObject(mockProductWithIncludedRelations);
+			expect(statusCode).toBe(201);
+
+			const existsInDb = await ProductDbService.exists(mockProduct);
+			expect(existsInDb).toBe(true);
+
+			const productFromDb = await ProductDbService.get(mockProduct);
+			expect(body).toMatchObject(productFromDb);
 		});
 
 		it("should respond with 500 status code", async () => {
-			const {req, res} = mockRequestResponse("POST", {});
-			await productsHandler(req, res);
+			const mockProduct = {name: false};
 
-			expect(res.statusCode).toBe(500);
+			const requestOptions = {method: "POST", body: mockProduct};
+
+			const {statusCode} = await requestHandler(
+				productsHandler,
+				requestOptions
+			);
+
+			expect(statusCode).toBe(500);
 		});
 	});
 
 	describe("GET", () => {
-		it("should return an empty array", async () => {
-			const {req, res} = mockRequestResponse();
-			await productsHandler(req, res);
-
-			const body = res._getJSONData();
-
-			expect(res.statusCode).toBe(200);
-			expect(body).toEqual([]);
-		});
-
 		describe("should respond with 500 status code", async () => {
-			it("pass invalid is_vegan value", async () => {
-				const {req, res} = mockRequestResponse("GET", {}, {isVegan: "5"});
-				await productsHandler(req, res);
+			it("pass invalid is vegan value", async () => {
+				const requestOptions = {method: "GET", query: {isVegan: "invalid"}};
 
-				expect(res.statusCode).toBe(500);
-			});
-
-			it("pass invalid is_spicy value", async () => {
-				const {req, res} = mockRequestResponse("GET", {}, {isSpicy: "5"});
-				await productsHandler(req, res);
-
-				expect(res.statusCode).toBe(500);
-			});
-
-			it("pass invalid category_id value", async () => {
-				const {req, res} = mockRequestResponse("GET", {}, {categoryId: "id"});
-				await productsHandler(req, res);
-
-				expect(res.statusCode).toBe(500);
-			});
-
-			it("pass invalid category_name value", async () => {
-				const {req, res} = mockRequestResponse(
-					"GET",
-					{},
-					{categoryName: false}
+				const {statusCode} = await requestHandler(
+					productsHandler,
+					requestOptions
 				);
-				await productsHandler(req, res);
 
-				expect(res.statusCode).toBe(500);
+				expect(statusCode).toBe(500);
+			});
+
+			it("pass invalid is spicy value", async () => {
+				const requestOptions = {method: "GET", query: {isSpicy: "invalid"}};
+
+				const {statusCode} = await requestHandler(
+					productsHandler,
+					requestOptions
+				);
+
+				expect(statusCode).toBe(500);
+			});
+
+			it("pass invalid category id value", async () => {
+				const requestOptions = {method: "GET", query: {categoryId: "invalid"}};
+
+				const {statusCode} = await requestHandler(
+					productsHandler,
+					requestOptions
+				);
+
+				expect(statusCode).toBe(500);
+			});
+
+			it("pass invalid category name value", async () => {
+				const requestOptions = {
+					method: "GET",
+					query: {categoryName: false}
+				};
+
+				const {statusCode} = await requestHandler(
+					productsHandler,
+					requestOptions
+				);
+
+				expect(statusCode).toBe(500);
 			});
 		});
 
 		describe("should return products", () => {
-			let mockBodies;
-			let productsFromResponse;
+			let products;
 
 			beforeEach(async () => {
-				mockBodies = [
-					{...mockBody, name: "pizza", priceUsd: 500},
-					{...mockBody, name: "cake", isVegan: true, priceUsd: 300},
-					{...mockBody, name: "wok", isSpicy: true, priceUsd: 400}
-				];
-
-				const createProduct = async body => {
-					const {req: createProductReq, res: createProductRes} =
-						mockRequestResponse("POST", body);
-					await productsHandler(createProductReq, createProductRes);
-					return createProductRes._getJSONData();
-				};
-
-				// Create products
-				await Promise.all(mockBodies.map(body => createProduct(body)));
-
-				// Get created products
-				const {req: getProductsReq, res: getProductsRes} =
-					mockRequestResponse();
-				await productsHandler(getProductsReq, getProductsRes);
-				productsFromResponse = getProductsRes._getJSONData();
+				const mockProducts = ProductMockGenerator.generateMany(3, category.id);
+				products = await ProductDbService.createMany(mockProducts);
 			});
 
 			it("should return all products", async () => {
-				const {req, res} = mockRequestResponse("GET", {});
-				await productsHandler(req, res);
+				const {statusCode, body} = await requestHandler(productsHandler);
 
-				const body = res._getJSONData();
-
-				expect(res.statusCode).toBe(200);
-				expect(body).toEqual(productsFromResponse);
+				expect(statusCode).toBe(200);
+				expect(body).toMatchObject(products);
 			});
 
 			it("should return only spicy products", async () => {
-				const {req, res} = mockRequestResponse("GET", {}, {isSpicy: "true"});
-				await productsHandler(req, res);
+				const requestOptions = {query: {isSpicy: "true"}};
 
-				const body = res._getJSONData();
-
-				expect(res.statusCode).toBe(200);
-				expect(body).toEqual(
-					productsFromResponse.filter(product => product.isSpicy === true)
+				const {statusCode, body} = await requestHandler(
+					productsHandler,
+					requestOptions
 				);
+
+				expect(statusCode).toBe(200);
+
+				const spicyProductsFromDb = await ProductDbService.getMany({
+					isSpicy: true
+				});
+				expect(body).toMatchObject(spicyProductsFromDb);
 			});
 
 			it("should return only vegan products", async () => {
-				const {req, res} = mockRequestResponse("GET", {}, {isVegan: "true"});
-				await productsHandler(req, res);
+				const requestOptions = {query: {isVegan: "true"}};
 
-				const body = res._getJSONData();
-
-				expect(res.statusCode).toBe(200);
-				expect(body).toEqual(
-					productsFromResponse.filter(product => product.isVegan === true)
+				const {statusCode, body} = await requestHandler(
+					productsHandler,
+					requestOptions
 				);
-			});
 
-			it("should return non-vegan and non-spicy products", async () => {
-				const {req, res} = mockRequestResponse(
-					"GET",
-					{},
-					{isVegan: "false", isSpicy: "false"}
-				);
-				await productsHandler(req, res);
+				expect(statusCode).toBe(200);
 
-				const body = res._getJSONData();
-
-				expect(res.statusCode).toBe(200);
-				expect(body).toEqual(
-					productsFromResponse.filter(
-						product => product.isVegan === false && product.isSpicy === false
-					)
-				);
+				const veganProductsFromDb = await ProductDbService.getMany({
+					isVegan: true
+				});
+				expect(body).toMatchObject(veganProductsFromDb);
 			});
 
 			it("should return products sorted by price in descending order", async () => {
-				const {req, res} = mockRequestResponse("GET", {}, {sort: "priceDesc"});
-				await productsHandler(req, res);
+				const requestOptions = {query: {sort: "priceDesc"}};
 
-				const body = res._getJSONData();
-
-				expect(res.statusCode).toBe(200);
-				expect(body).toEqual(
-					productsFromResponse.sort((a, b) => (a.priceUsd - b.priceUsd) * -1)
+				const {statusCode, body} = await requestHandler(
+					productsHandler,
+					requestOptions
 				);
+
+				expect(statusCode).toBe(200);
+
+				const productsFromDb = await ProductDbService.getMany(
+					{},
+					{priceUsd: "desc"}
+				);
+				expect(body).toMatchObject(productsFromDb);
 			});
 
 			it("should return products sorted by price in ascending order", async () => {
-				const {req, res} = mockRequestResponse("GET", {}, {sort: "priceAsc"});
-				await productsHandler(req, res);
+				const requestOptions = {query: {sort: "priceAsc"}};
 
-				const body = res._getJSONData();
-
-				expect(res.statusCode).toBe(200);
-				expect(body).toEqual(
-					productsFromResponse.sort((a, b) => a.priceUsd - b.priceUsd)
+				const {statusCode, body} = await requestHandler(
+					productsHandler,
+					requestOptions
 				);
+
+				expect(statusCode).toBe(200);
+
+				const productsFromDb = await ProductDbService.getMany(
+					{},
+					{priceUsd: "asc"}
+				);
+				expect(body).toMatchObject(productsFromDb);
 			});
 		});
 	});
