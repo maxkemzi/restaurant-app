@@ -29,17 +29,17 @@ const PizzaFilters = () => {
 	};
 
 	return (
-		<div className="flex gap-6 mb-6">
+		<div className="flex gap-6">
 			<CheckboxField
 				variant="error"
 				label="Spicy"
-				defaultChecked={!!isSpicy}
+				checked={isSpicy === "true"}
 				onChange={handleCheck("isSpicy")}
 			/>
 			<CheckboxField
 				variant="success"
 				label="Vegan"
-				defaultChecked={!!isVegan}
+				checked={isVegan === "true"}
 				onChange={handleCheck("isVegan")}
 			/>
 		</div>

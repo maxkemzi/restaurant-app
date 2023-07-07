@@ -33,6 +33,8 @@ describe("TextField", () => {
 	});
 
 	it("calls onChange handler when input value changes", () => {
+		const value = "JohnDoe";
+
 		const handleChange = vi.fn();
 		const {getByLabelText} = render(
 			<TextField
@@ -44,8 +46,8 @@ describe("TextField", () => {
 		);
 		const textField = getByLabelText(label);
 
-		fireEvent.change(textField, {target: {value: "JohnDoe"}});
+		fireEvent.change(textField, {target: {value}});
 		expect(handleChange).toHaveBeenCalledTimes(1);
-		expect(textField).toHaveValue("JohnDoe");
+		expect(textField).toHaveValue(value);
 	});
 });

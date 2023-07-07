@@ -5,10 +5,8 @@ import {describe, expect, it, vi} from "vitest";
 describe("CheckboxField", () => {
 	const label = "Check me";
 
-	it("renders checkbox with label and defaultChecked", () => {
-		const {getByLabelText} = render(
-			<CheckboxField label={label} defaultChecked />
-		);
+	it("renders checkbox with label and checked", () => {
+		const {getByLabelText} = render(<CheckboxField label={label} checked />);
 		const checkbox = getByLabelText(label);
 
 		expect(checkbox).toBeInTheDocument();

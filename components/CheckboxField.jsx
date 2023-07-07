@@ -1,6 +1,6 @@
 import classNames from "classnames";
 
-const CheckboxField = ({label, defaultChecked, onChange, variant}) => (
+const CheckboxField = ({label, checked, onChange, variant}) => (
 	<div className="form-control">
 		<label className="label cursor-pointer">
 			<span className="label-text mr-4">{label}</span>
@@ -10,7 +10,7 @@ const CheckboxField = ({label, defaultChecked, onChange, variant}) => (
 					"checkbox-success": variant === "success",
 					"checkbox-error": variant === "error"
 				})}
-				defaultChecked={defaultChecked}
+				checked={checked}
 				onChange={onChange}
 			/>
 		</label>
