@@ -45,4 +45,5 @@ const Button = ({
 	);
 };
 
+export {ButtonSize, ButtonColor};
 export default Button;

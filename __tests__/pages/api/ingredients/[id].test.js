@@ -1,6 +1,6 @@
-import {requestHandler} from "@/__tests__/utils";
-import {IngredientDbService, cleanUpDatabase} from "@/__tests__/utils/db";
-import {IngredientMockGenerator} from "@/__tests__/utils/mocks";
+import {requestHandler} from "@/__tests__/pages/utils";
+import {IngredientDbService, cleanUpDatabase} from "@/__tests__/pages/utils/db";
+import {IngredientMockGenerator} from "@/__tests__/pages/utils/mocks";
 import ingredientHandler from "@/pages/api/ingredients/[id]";
 import {beforeEach, describe, expect, it} from "vitest";
 

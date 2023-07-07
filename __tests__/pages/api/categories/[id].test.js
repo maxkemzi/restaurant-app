@@ -1,6 +1,6 @@
-import {requestHandler} from "@/__tests__/utils";
-import {CategoryDbService, cleanUpDatabase} from "@/__tests__/utils/db";
-import {CategoryMockGenerator} from "@/__tests__/utils/mocks";
+import {requestHandler} from "@/__tests__/pages/utils";
+import {CategoryDbService, cleanUpDatabase} from "@/__tests__/pages/utils/db";
+import {CategoryMockGenerator} from "@/__tests__/pages/utils/mocks";
 import categoryHandler from "@/pages/api/categories/[id]";
 import {beforeEach, describe, expect, it} from "vitest";
 

@@ -1,17 +1,17 @@
-import {requestHandler} from "@/__tests__/utils";
+import {requestHandler} from "@/__tests__/pages/utils";
 import {
 	CategoryDbService,
 	IngredientDbService,
-	ProductDbService,
 	OrderDbService,
+	ProductDbService,
 	cleanUpDatabase
-} from "@/__tests__/utils/db";
+} from "@/__tests__/pages/utils/db";
 import {
 	CategoryMockGenerator,
 	IngredientMockGenerator,
 	OrderMockGenerator,
 	ProductMockGenerator
-} from "@/__tests__/utils/mocks";
+} from "@/__tests__/pages/utils/mocks";
 import orderHandler from "@/pages/api/orders/[id]";
 import {beforeEach, describe, expect, it} from "vitest";
 
