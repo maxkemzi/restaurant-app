@@ -3,25 +3,33 @@ const {PrismaClient} = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const main = async () => {
+	await prisma.order.deleteMany();
+	await prisma.cartProduct.deleteMany();
+	await prisma.cart.deleteMany();
+	await prisma.productIngredient.deleteMany();
+	await prisma.product.deleteMany();
+	await prisma.category.deleteMany();
+	await prisma.ingredient.deleteMany();
+
+	const categories = [{name: "pizza"}, {name: "dessert"}, {name: "drink"}];
+	const ingredients = [
+		{name: "egg"},
+		{name: "cherry"},
+		{name: "cream cheese"},
+		{name: "mozzarella cheese"},
+		{name: "pizza sauce"},
+		{name: "wholegrain flour"},
+		{name: "chicken"},
+		{name: "chili pepper"},
+		{name: "basil"}
+	];
+
 	await Promise.all([
-		prisma.category.createMany({
-			data: [{name: "pizza"}, {name: "dessert"}, {name: "drink"}]
-		}),
-		prisma.ingredient.createMany({
-			data: [
-				{name: "egg"},
-				{name: "cherry"},
-				{name: "cream cheese"},
-				{name: "mozzarella cheese"},
-				{name: "pizza sauce"},
-				{name: "wholegrain flour"},
-				{name: "chicken"},
-				{name: "chili pepper"},
-				{name: "basil"}
-			]
-		})
+		prisma.category.createMany({data: categories}),
+		prisma.ingredient.createMany({data: ingredients})
 	]);
 
+	// // Insert pizzas
 	const pizzaCategory = await prisma.category.findUnique({
 		where: {name: "pizza"}
 	});
@@ -90,6 +98,7 @@ const main = async () => {
 		}
 	});
 
+	// // Insert drinks
 	const drinkCategory = await prisma.category.findUnique({
 		where: {name: "drink"}
 	});
@@ -106,6 +115,7 @@ const main = async () => {
 		}
 	});
 
+	// // Insert desserts
 	const dessertCategory = await prisma.category.findUnique({
 		where: {name: "dessert"}
 	});
