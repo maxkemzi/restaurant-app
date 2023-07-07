@@ -1,6 +1,5 @@
 import {RESTAURANT_NAME} from "@/lib/constants/restaurantInfo";
 import {CartProvider, ToastProvider} from "@/lib/contexts";
-import {Montserrat} from "next/font/google";
 import Header from "./(header)/Header";
 import Footer from "./Footer";
 import "./globals.css";
