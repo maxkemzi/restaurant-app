@@ -1,6 +1,12 @@
 {
-  "extends": ["next/core-web-vitals", "airbnb", "airbnb/hooks", "plugin:react/jsx-runtime", "prettier"],
-  "plugins": ["prettier", "jsx-a11y"],
+	"extends": [
+		"next/core-web-vitals",
+		"airbnb",
+		"airbnb/hooks",
+		"plugin:react/jsx-runtime",
+		"prettier"
+	],
+	"plugins": ["prettier", "jsx-a11y"],
 	"settings": {
 		"import/resolver": {
 			"alias": {
@@ -9,7 +15,7 @@
 			}
 		}
 	},
-  "rules": {
+	"rules": {
 		"prettier/prettier": "error",
 		"react/function-component-definition": [
 			"error",
@@ -24,8 +30,15 @@
 		"global-require": "warn",
 		"jsx-a11y/no-noninteractive-tabindex": "off",
 		"eqeqeq": ["error", "always", {"null": "ignore"}],
-		"camelcase": ["error", {"ignoreDestructuring": true, "properties": "never"}],
+		"camelcase": [
+			"error",
+			{"ignoreDestructuring": true, "properties": "never"}
+		],
 		"no-underscore-dangle": ["error", {"allow": ["_getJSONData"]}],
-		"import/no-extraneous-dependencies": "off"
+		"import/no-extraneous-dependencies": "off",
+		"jsx-a11y/label-has-associated-control": [
+			"error",
+			{"assert": "either"}
+		]
 	}
 }

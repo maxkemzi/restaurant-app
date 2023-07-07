@@ -5,8 +5,6 @@ import Header from "./(header)/Header";
 import Footer from "./Footer";
 import "./globals.css";
 
-const montserrat = Montserrat({subsets: ["latin"]});
-
 export const metadata = {
 	title: RESTAURANT_NAME,
 	description: "Created by Max Kyrychenko",
@@ -23,7 +21,7 @@ export const metadata = {
 
 const RootLayout = async ({children}) => (
 	<html lang="en">
-		<body className={montserrat.className}>
+		<body>
 			<CartProvider>
 				<ToastProvider>
 					<div className="flex flex-col min-h-screen">

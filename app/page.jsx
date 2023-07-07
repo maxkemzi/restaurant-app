@@ -1,5 +1,5 @@
-import Button from "@/components/Button";
 import {RESTAURANT_NAME} from "@/lib/constants";
+import MyLink from "@/components/MyLink";
 
 const Home = () => (
 	<div className="bg-base-200">
@@ -11,7 +11,7 @@ const Home = () => (
 						<p className="py-6">
 							Indulge in Flavorful Delights at {RESTAURANT_NAME}
 						</p>
-						<Button>Get Started</Button>
+						<MyLink path="/products">Get Started</MyLink>
 					</div>
 				</div>
 			</div>

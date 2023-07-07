@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import {useId} from "react";
 
-const TextField = ({label, name, type, className}) => {
+const TextField = ({label, name, type, className, onChange}) => {
 	const id = useId();
 	return (
 		<div className={classNames(className, "form-control w-full")}>
@@ -9,6 +9,7 @@ const TextField = ({label, name, type, className}) => {
 				<span className="label-text">{label}</span>
 			</label>
 			<input
+				onChange={onChange}
 				id={id}
 				type={type}
 				name={name}
