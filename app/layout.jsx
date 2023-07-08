@@ -25,7 +25,7 @@ const RootLayout = async ({children}) => (
 				<ToastProvider>
 					<div className="flex flex-col min-h-screen">
 						<Header />
-						<main className="flex-grow">{children}</main>
+						<main className="flex-grow bg-neutral">{children}</main>
 						<Footer />
 					</div>
 				</ToastProvider>

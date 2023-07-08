@@ -12,15 +12,16 @@ const CartDropdown = () => {
 
 	return (
 		<div className="dropdown dropdown-end">
-			<button tabIndex={0} type="button" className="btn btn-ghost btn-circle">
+			{/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+			<label tabIndex={0} className="btn btn-ghost btn-circle">
 				<div className="indicator">
 					<Icon name="cart" />
 					<span className="badge badge-sm indicator-item">{count}</span>
 				</div>
-			</button>
+			</label>
 			<div
 				tabIndex={0}
-				className="mt-3 card card-compact dropdown-content w-52 bg-base-100 shadow">
+				className="mt-3 z-[1] card card-compact dropdown-content w-52 bg-base-100 shadow">
 				<div className="card-body">
 					<span className="font-bold text-lg">{count} Items</span>
 					<span className="text-info">Total: ${cost}</span>

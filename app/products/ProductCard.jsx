@@ -37,8 +37,9 @@ const ProductCard = ({
 					{isVegan ? <div className="badge badge-success">Vegan</div> : null}
 				</h2>
 				<p className="text-center">
-					{sizeCm ? `${sizeCm} cm / ` : null}
-					{weight} {categoryName === "drinks" ? "ml" : "g"}{" "}
+					{sizeCm ? `${sizeCm}cm / ` : null}
+					{weight}
+					{categoryName === "drinks" ? "ml" : "g"}{" "}
 					{ingredients.length !== 0 ? `- ${ingredientsString}` : null}
 				</p>
 				<div className="card-actions justify-between items-center">

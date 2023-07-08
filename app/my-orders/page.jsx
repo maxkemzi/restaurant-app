@@ -18,7 +18,7 @@ const MyOrders = async () => {
 	const orders = clientId ? await getOrdersByClientId(clientId) : [];
 
 	return (
-		<div className="overflow-x-auto">
+		<div className="overflow-x-auto bg-base-100">
 			<table className="table w-full">
 				<thead>
 					<tr>
@@ -40,7 +40,7 @@ const MyOrders = async () => {
 						);
 						return (
 							<tr key={order.id}>
-								<th>{order.id}</th>
+								<td>{order.id}</td>
 								<td>{order.clientName}</td>
 								<td>{order.clientPhone}</td>
 								<td>{order.clientAddress}</td>

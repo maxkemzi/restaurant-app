@@ -1,6 +1,7 @@
 const MobileMenu = ({children}) => (
 	<div className="dropdown">
-		<button type="button" tabIndex={0} className="btn btn-ghost lg:hidden">
+		{/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+		<label tabIndex={0} className="btn btn-ghost lg:hidden">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				className="h-5 w-5"
@@ -14,10 +15,10 @@ const MobileMenu = ({children}) => (
 					d="M4 6h16M4 12h8m-8 6h16"
 				/>
 			</svg>
-		</button>
+		</label>
 		<ul
 			tabIndex={0}
-			className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+			className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
 			{children}
 		</ul>
 	</div>

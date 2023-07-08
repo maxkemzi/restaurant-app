@@ -17,6 +17,13 @@ module.exports = {
 	},
 	plugins: [require("@tailwindcss/typography"), require("daisyui")],
 	daisyui: {
-		darkTheme: "coffee"
+		themes: [
+			{
+				coffee: {
+					...require("daisyui/src/theming/themes")["[data-theme=coffee]"],
+					"base-content": "white"
+				}
+			}
+		]
 	}
 };

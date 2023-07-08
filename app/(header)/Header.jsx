@@ -20,7 +20,7 @@ const Header = async () => {
 	});
 
 	return (
-		<header className="navbar bg-base-100">
+		<header className="navbar bg-base z-50">
 			<div className="navbar-start">
 				<MobileMenu>
 					<MenuItem path={PathName.HOME} text="Home" />

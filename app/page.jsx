@@ -2,7 +2,7 @@ import MyLink from "@/components/MyLink";
 import {PathName, RESTAURANT_NAME} from "@/lib/constants";
 
 const Home = () => (
-	<div className="bg-base-200">
+	<div className="bg-neutral">
 		<div className="container mx-auto px-4">
 			<div className="hero min-h-screen">
 				<div className="hero-content text-center">
