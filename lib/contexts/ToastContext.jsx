@@ -41,6 +41,10 @@ const ToastProvider = ({children}) => {
 	const showToast = useCallback((type, message) => {
 		setToast({type, message});
 
+		if (timeout.current) {
+			clearTimeout(timeout.current);
+		}
+
 		timeout.current = setTimeout(() => {
 			setToast(initialToastState);
 		}, 3000);

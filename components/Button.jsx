@@ -14,12 +14,18 @@ const ButtonColor = {
 	PRIMARY: "primary"
 };
 
+const ButtonVariant = {
+	PRIMARY: "primary",
+	CIRCLE: "circle"
+};
+
 const Button = ({
 	children,
 	onClick,
 	isSubmit,
 	size = ButtonSize.MEDIUM,
-	color = ButtonColor.PRIMARY
+	color = ButtonColor.PRIMARY,
+	variant = ButtonVariant.PRIMARY
 }) => {
 	const classesBySize = {
 		"btn-sm": size === ButtonSize.SMALL,
@@ -35,11 +41,20 @@ const Button = ({
 		"btn-info": color === ButtonColor.INFO
 	};
 
+	const classesByVariant = {
+		"btn-circle": variant === ButtonVariant.CIRCLE
+	};
+
 	return (
 		<button
 			onClick={onClick}
 			type={isSubmit ? "submit" : "button"}
-			className={classNames("btn", classesBySize, classesByColor)}>
+			className={classNames(
+				"btn",
+				classesBySize,
+				classesByColor,
+				classesByVariant
+			)}>
 			{children}
 		</button>
 	);
