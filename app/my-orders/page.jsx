@@ -17,6 +17,10 @@ const MyOrders = async () => {
 
 	const orders = clientId ? await getOrdersByClientId(clientId) : [];
 
+	if (orders.length === 0) {
+		return <p className="text-center">You don&apos;t have any orders yet</p>;
+	}
+
 	return (
 		<div className="overflow-x-auto bg-base-100">
 			<table className="table w-full">

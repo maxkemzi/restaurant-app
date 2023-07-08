@@ -3,7 +3,7 @@ import PizzaFilters from "./PizzaFilters";
 import ProductList from "./ProductList";
 import SortSelect from "./SortSelect";
 
-export const revalidate = 60;
+export const revalidate = 24 * 3600;
 
 const Products = async ({searchParams}) => {
 	const {isSpicy, isVegan, category, sort} = searchParams;
