@@ -2,9 +2,12 @@
 
 import Button from "@/components/Button";
 import TextField from "@/components/TextField";
+import {PathName} from "@/lib/constants";
 import {useCartContext, useToastContext} from "@/lib/contexts";
+import {AppError} from "@/lib/error";
 import {useRouter} from "next/navigation";
 import CartProductCard from "./CartProductCard";
+import {placeOrder} from "./actions";
 
 const Cart = () => {
 	const {
@@ -16,40 +19,33 @@ const Cart = () => {
 	const router = useRouter();
 
 	const productIds = Object.entries(products).reduce((prev, [key, value]) => {
-		const ids = new Array(value.length).fill(key);
+		const ids = new Array(value.length).fill(Number(key));
 		return [...prev, ...ids];
 	}, []);
 
-	const handleSubmit = async e => {
-		e.preventDefault();
+	const handleAction = async formData => {
+		try {
+			const clientPhone = formData.get("clientPhone");
+			const clientAddress = formData.get("clientAddress");
+			const clientName = formData.get("clientName");
 
-		const {clientName, clientAddress, clientPhone} = e.target;
+			const data = {
+				clientPhone,
+				clientAddress,
+				clientName,
+				productIds
+			};
 
-		const data = {
-			clientName: clientName.value,
-			clientAddress: clientAddress.value,
-			clientPhone: clientPhone.value,
-			productIds
-		};
-
-		const options = {
-			method: "POST",
-			headers: {"Content-Type": "application/json"},
-			body: JSON.stringify(data)
-		};
-
-		const response = await fetch("/api/orders", options);
-
-		if (response.ok) {
-			showToast("success", "Your order is successfully placed.");
-			router.push("/");
-		} else {
-			showToast("error", "Error processing your order.");
+			await placeOrder(data);
+			showToast("success", "Your order have been placed.");
+			router.push(PathName.MY_ORDERS);
+		} catch (e) {
+			throw new AppError("Error placing your order.");
 		}
 	};
 
 	return (
-		<form onSubmit={handleSubmit}>
+		<form action={handleAction}>
 			<div className="grid grid-cols-[repeat(auto-fit,_minmax(280px,_1fr))] gap-6">
 				<div className="flex-1 prose">
 					<h1>Checkout</h1>

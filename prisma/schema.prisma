@@ -13,6 +13,8 @@ datasource db {
 
 model Order {
   id            Int      @id @default(autoincrement())
+  status        String   @default("new")
+  clientId      String
   clientName    String
   clientPhone   String
   clientAddress String

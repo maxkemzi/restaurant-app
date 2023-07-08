@@ -1,5 +1,6 @@
 "use client";
 
+import {PathName} from "@/lib/constants";
 import {useCartContext} from "@/lib/contexts";
 import Link from "next/link";
 
@@ -35,7 +36,7 @@ const CartDropdown = () => {
 					<span className="font-bold text-lg">{count} Items</span>
 					<span className="text-info">Total: ${cost}</span>
 					<div className="card-actions">
-						<Link href="/cart" className="btn btn-primary btn-block">
+						<Link href={PathName.CART} className="btn btn-primary btn-block">
 							View cart
 						</Link>
 					</div>

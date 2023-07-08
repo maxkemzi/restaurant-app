@@ -5,6 +5,7 @@ class OrderMockGenerator {
 
 	static generate() {
 		const mock = {
+			clientId: "id",
 			clientName: "name",
 			clientAddress: "address",
 			clientPhone: "phone"

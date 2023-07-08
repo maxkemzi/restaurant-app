@@ -3,17 +3,15 @@ import {createOrder, getOrders} from "@/lib/prisma/orders";
 const handler = async (req, res) => {
 	if (req.method === "POST") {
 		try {
-			const {clientName, clientPhone, clientAddress, productIds} = req.body;
-
-			const products = productIds?.map(productId => ({
-				productId: Number(productId)
-			}));
+			const {clientName, clientPhone, clientId, clientAddress, productIds} =
+				req.body;
 
 			const order = await createOrder({
 				clientName,
 				clientPhone,
+				clientId,
 				clientAddress,
-				products
+				productIds
 			});
 
 			res.status(201).json(order);

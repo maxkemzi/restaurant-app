@@ -18,7 +18,14 @@ const handler = async (req, res) => {
 	} else if (req.method === "PUT") {
 		try {
 			const {id} = parseQueryParams(req.query);
-			const {clientName, clientPhone, clientAddress, productIds} = req.body;
+			const {
+				clientName,
+				clientPhone,
+				clientAddress,
+				clientId,
+				status,
+				productIds
+			} = req.body;
 
 			const products = productIds?.map(productId => ({
 				productId: Number(productId)
@@ -28,6 +35,8 @@ const handler = async (req, res) => {
 				clientName,
 				clientPhone,
 				clientAddress,
+				clientId,
+				status,
 				products
 			});
 

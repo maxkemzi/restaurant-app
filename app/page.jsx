@@ -1,5 +1,5 @@
-import {RESTAURANT_NAME} from "@/lib/constants";
 import MyLink from "@/components/MyLink";
+import {PathName, RESTAURANT_NAME} from "@/lib/constants";
 
 const Home = () => (
 	<div className="bg-base-200">
@@ -11,7 +11,7 @@ const Home = () => (
 						<p className="py-6">
 							Indulge in Flavorful Delights at {RESTAURANT_NAME}
 						</p>
-						<MyLink path="/products">Get Started</MyLink>
+						<MyLink path={PathName.PRODUCTS}>Get Started</MyLink>
 					</div>
 				</div>
 			</div>
