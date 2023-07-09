@@ -5,14 +5,16 @@ const TableProduct = ({count, product}) => {
 
 	return (
 		<div className="card card-side bg-neutral shadow-xl">
-			<div className="w-full flex items-center flex-wrap">
-				<div className="card-body basis-3/5">
-					<p className="capitalize font-semibold">{name}</p>
+			<div className="w-full flex items-center justify-center flex-wrap">
+				<div className="card-body p-4 sm:p-6 md:p-8 basis-3/5">
+					<h5 className="capitalize font-semibold">{name}</h5>
 					<p>{count}</p>
 				</div>
-				<div className="p-2">
-					<figure className="grow max-w-[80px]">
-						<Image width={80} height={80} src={image} alt={name} />
+				<div className="p-2 hidden lg:block">
+					<figure>
+						<div className="relative w-20 h-20">
+							<Image fill objectFit="cover" src={image} alt={name} />
+						</div>
 					</figure>
 				</div>
 			</div>

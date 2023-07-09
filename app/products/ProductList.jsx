@@ -7,7 +7,7 @@ const ProductList = ({products}) => {
 	}
 
 	return (
-		<div className="grid gap-6 grid-cols-[repeat(auto-fill,_minmax(max(280px,_calc((100%-(1.5rem_*_3))/4)),_1fr))]">
+		<div className="grid gap-4 md:gap-6 grid-cols-[repeat(auto-fill,_minmax(max(280px,_calc((100%-(1.5rem_*_3))/4)),_1fr))]">
 			{products.map(product => (
 				<ProductCard
 					key={product.id}

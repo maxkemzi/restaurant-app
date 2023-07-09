@@ -20,18 +20,18 @@ const ProductCard = ({product, buttonSlot}) => {
 
 	return (
 		<div className="card bg-base-100 shadow-xl">
-			<div className="p-6">
-				<figure>
+			<figure className="px-2 py-2 sm:px-4 sm:py-2 md:px-6 md:py-4">
+				<div className="relative w-48 h-48">
 					<Image
-						width={200}
-						height={200}
+						fill
+						objectFit="cover"
 						src={image}
 						alt="product image"
 						className="rounded-xl"
 					/>
-				</figure>
-			</div>
-			<div className="card-body">
+				</div>
+			</figure>
+			<div className="card-body p-4 sm:p-6 md:p-8">
 				<h2 className="card-title self-center capitalize">
 					{name}
 					{isSpicy ? <div className="badge badge-error">Spicy</div> : null}

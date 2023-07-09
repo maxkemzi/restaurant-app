@@ -29,7 +29,7 @@ const PizzaFilters = () => {
 	};
 
 	return (
-		<div className="flex gap-6">
+		<div className="flex gap-4 md:gap-6">
 			<CheckboxField
 				variant="error"
 				label="Spicy"

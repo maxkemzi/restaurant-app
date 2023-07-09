@@ -20,8 +20,8 @@ const Header = async () => {
 	});
 
 	return (
-		<header className="navbar bg-base z-50">
-			<div className="navbar-start">
+		<header className="navbar bg-base z-50 flex-wrap sm:flex-nowrap">
+			<div className="navbar-start w-full sm:w-1/2">
 				<MobileMenu>
 					<MenuItem path={PathName.HOME} text="Home" />
 					<MobileMenuDropdown text="Menu">
@@ -44,7 +44,7 @@ const Header = async () => {
 					</MenuDropdown>
 				</Menu>
 			</div>
-			<div className="navbar-end gap-2">
+			<div className="navbar-end gap-2 w-full justify-end sm:w-1/2 sm:justify-end">
 				<CartDropdown />
 				<MyLink path={PathName.MY_ORDERS} size="small">
 					My orders

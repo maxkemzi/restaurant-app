@@ -16,9 +16,9 @@ const Products = async ({searchParams}) => {
 
 	return (
 		<>
-			<div className="flex items-center mb-4">
+			<div className="flex items-center mb-4 gap-2 flex-col sm:flex-row">
 				{category === "pizza" ? <PizzaFilters /> : null}
-				<div className="ml-auto">
+				<div className="ml-0 sm:ml-auto">
 					<SortSelect />
 				</div>
 			</div>
