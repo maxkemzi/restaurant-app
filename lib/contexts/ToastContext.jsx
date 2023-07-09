@@ -38,17 +38,22 @@ const ToastProvider = ({children}) => {
 		[]
 	);
 
-	const showToast = useCallback((type, message) => {
-		setToast({type, message});
-
-		if (timeout.current) {
-			clearTimeout(timeout.current);
-		}
-
-		timeout.current = setTimeout(() => {
-			setToast(initialToastState);
-		}, 3000);
+	const hideToast = useCallback(() => {
+		setToast(initialToastState);
 	}, []);
+
+	const showToast = useCallback(
+		(type, message) => {
+			setToast({type, message});
+
+			if (timeout.current) {
+				clearTimeout(timeout.current);
+			}
+
+			timeout.current = setTimeout(hideToast, 3000);
+		},
+		[hideToast]
+	);
 
 	const value = useMemo(() => ({showToast, toast}), [showToast, toast]);
 
@@ -60,15 +65,15 @@ const ToastProvider = ({children}) => {
 					invisible: !isVisible,
 					"opacity-0": !isVisible
 				})}>
-				<div
+				<button
+					onClick={hideToast}
+					type="button"
 					className={classNames("alert", {
 						"alert-error": toast.type === "error",
 						"alert-success": toast.type === "success"
 					})}>
-					<div>
-						<span>{toast.message}</span>
-					</div>
-				</div>
+					<span>{toast.message}</span>
+				</button>
 			</div>
 		</ToastContext.Provider>
 	);
