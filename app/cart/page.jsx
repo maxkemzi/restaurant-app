@@ -2,41 +2,44 @@
 
 import Button from "@/components/Button";
 import TextField from "@/components/TextField";
-import {PathName} from "@/lib/constants";
+import {PathName, phoneNumberRegex} from "@/lib/constants";
 import {useCartContext, useToastContext} from "@/lib/contexts";
 import {AppError} from "@/lib/error";
 import {useRouter} from "next/navigation";
-import CartProductCard from "./CartProductCard";
+import {useForm} from "react-hook-form";
+import CartProductList from "./CartProductList";
 import {placeOrder} from "./actions";
 
 const Cart = () => {
 	const {
-		cart: {products, cost},
-		removeProduct,
-		addProduct
+		cart: {products, cost}
 	} = useCartContext();
 	const {showToast} = useToastContext();
 	const router = useRouter();
+	const {
+		register,
+		handleSubmit,
+		formState: {errors}
+	} = useForm({
+		defaultValues: {
+			clientPhone: "",
+			clientAddress: "",
+			clientName: ""
+		}
+	});
+
+	const cartProducts = Object.values(products).map(productArr => productArr[0]);
 
 	const productIds = Object.entries(products).reduce((prev, [key, value]) => {
 		const ids = new Array(value.length).fill(Number(key));
 		return [...prev, ...ids];
 	}, []);
 
-	const handleAction = async formData => {
+	const onSubmit = async data => {
 		try {
-			const clientPhone = formData.get("clientPhone");
-			const clientAddress = formData.get("clientAddress");
-			const clientName = formData.get("clientName");
+			const order = {...data, productIds};
 
-			const data = {
-				clientPhone,
-				clientAddress,
-				clientName,
-				productIds
-			};
-
-			await placeOrder(data);
+			await placeOrder(order);
 			showToast("success", "Your order have been placed.");
 			router.push(PathName.MY_ORDERS);
 		} catch (e) {
@@ -45,18 +48,32 @@ const Cart = () => {
 	};
 
 	return (
-		<form action={handleAction}>
+		<form onSubmit={handleSubmit(onSubmit)}>
 			<div className="grid grid-cols-[repeat(auto-fit,_minmax(280px,_1fr))] gap-6">
 				<div className="flex-1 prose">
 					<h1>Checkout</h1>
 					<div>
 						<h2>Personal info</h2>
 						<div className="flex gap-4">
-							<TextField className="basis-1/2" label="Name" name="clientName" />
+							<TextField
+								className="basis-1/2"
+								label="Name"
+								error={errors.clientName?.message}
+								InputProps={register("clientName", {
+									required: "Name is required"
+								})}
+							/>
 							<TextField
 								className="basis-1/2"
 								label="Phone number"
-								name="clientPhone"
+								error={errors.clientPhone?.message}
+								InputProps={register("clientPhone", {
+									required: "Phone number is required",
+									pattern: {
+										value: phoneNumberRegex,
+										message: "Invalid phone number"
+									}
+								})}
 							/>
 						</div>
 						<h2>Delivery</h2>
@@ -64,32 +81,17 @@ const Cart = () => {
 							<TextField
 								className="basis-1/2"
 								label="Address"
-								name="clientAddress"
+								error={errors.clientAddress?.message}
+								InputProps={register("clientAddress", {
+									required: "Client address is required"
+								})}
 							/>
 							<div className="basis-1/2" />
 						</div>
 					</div>
 				</div>
 				<div className="flex-1">
-					<div className="flex flex-col gap-4 mb-6">
-						{Object.values(products).map(productArr => {
-							const product = productArr[0];
-							const count = productArr.length;
-
-							return (
-								<CartProductCard
-									key={product.id}
-									count={count}
-									image={product.image}
-									name={product.name}
-									priceUsd={product.priceUsd}
-									weight={product.weight}
-									onAddClick={() => addProduct(product)}
-									onRemoveClick={() => removeProduct(product.id)}
-								/>
-							);
-						})}
-					</div>
+					<CartProductList cartProducts={cartProducts} />
 					<div className="stats w-full">
 						<div className="stat flex justify-between items-center">
 							<div>

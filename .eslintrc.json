@@ -36,9 +36,12 @@
 		],
 		"no-underscore-dangle": ["error", {"allow": ["_getJSONData"]}],
 		"import/no-extraneous-dependencies": "off",
-		"jsx-a11y/label-has-associated-control": [
+		"jsx-a11y/label-has-associated-control": ["error", {"assert": "either"}],
+		"react/jsx-props-no-spreading": [
 			"error",
-			{"assert": "either"}
+			{
+				"html": "ignore"
+			}
 		]
 	}
 }

@@ -9,7 +9,7 @@ describe("TextField", () => {
 
 	it("renders text field with label, name, and type", () => {
 		const {getByLabelText} = render(
-			<TextField label={label} name={name} type={type} />
+			<TextField label={label} InputProps={{name, type}} />
 		);
 		const textField = getByLabelText(label);
 
@@ -22,8 +22,7 @@ describe("TextField", () => {
 		const {container} = render(
 			<TextField
 				label={label}
-				name={name}
-				type={type}
+				InputProps={{name, type}}
 				className="custom-class"
 			/>
 		);
@@ -39,9 +38,7 @@ describe("TextField", () => {
 		const {getByLabelText} = render(
 			<TextField
 				label={label}
-				name={name}
-				type={type}
-				onChange={handleChange}
+				InputProps={{name, type, onChange: handleChange}}
 			/>
 		);
 		const textField = getByLabelText(label);

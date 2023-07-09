@@ -23,6 +23,7 @@ const Button = ({
 	children,
 	onClick,
 	isSubmit,
+	isDisabled,
 	size = ButtonSize.MEDIUM,
 	color = ButtonColor.PRIMARY,
 	variant = ButtonVariant.PRIMARY
@@ -47,6 +48,7 @@ const Button = ({
 
 	return (
 		<button
+			disabled={isDisabled}
 			onClick={onClick}
 			type={isSubmit ? "submit" : "button"}
 			className={classNames(

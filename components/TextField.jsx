@@ -1,20 +1,19 @@
 import classNames from "classnames";
 import {useId} from "react";
 
-const TextField = ({label, name, type, className, onChange}) => {
+const TextField = ({label, error, className, InputProps}) => {
 	const id = useId();
 	return (
 		<div className={classNames(className, "form-control w-full")}>
 			<label className="label" htmlFor={id}>
 				<span className="label-text">{label}</span>
 			</label>
-			<input
-				onChange={onChange}
-				id={id}
-				type={type}
-				name={name}
-				className="input input-bordered w-full"
-			/>
+			<input id={id} className="input input-bordered w-full" {...InputProps} />
+			{error ? (
+				<label className="label">
+					<span className="label-text-alt text-error">{error}</span>
+				</label>
+			) : null}
 		</div>
 	);
 };
