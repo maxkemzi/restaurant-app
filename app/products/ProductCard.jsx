@@ -1,23 +1,22 @@
 import Image from "next/image";
 
-const ProductCard = ({
-	image,
-	sizeCm,
-	weight,
-	name,
-	priceUsd,
-	ingredients,
-	categoryName,
-	isSpicy,
-	isVegan,
-	buttonSlot
-}) => {
-	const ingredientsString = ingredients
-		.map(el => {
-			const str = el.Ingredient.name;
-			return `${str[0].toUpperCase()}${str.slice(1)}`;
-		})
-		.join(", ");
+const ProductCard = ({product, buttonSlot}) => {
+	const {
+		image,
+		sizeCm,
+		weight,
+		name,
+		priceUsd,
+		ProductIngredients,
+		Category: {name: categoryName},
+		isSpicy,
+		isVegan
+	} = product || {Category: {}};
+
+	const ingredientsString = ProductIngredients.map(el => {
+		const str = el.Ingredient.name;
+		return `${str[0].toUpperCase()}${str.slice(1)}`;
+	}).join(", ");
 
 	return (
 		<div className="card bg-base-100 shadow-xl">
@@ -39,8 +38,8 @@ const ProductCard = ({
 				<p className="text-center">
 					{sizeCm ? `${sizeCm}cm / ` : null}
 					{weight}
-					{categoryName === "drinks" ? "ml" : "g"}{" "}
-					{ingredients.length !== 0 ? `- ${ingredientsString}` : null}
+					{categoryName === "drink" ? "ml" : "g"}{" "}
+					{ProductIngredients.length !== 0 ? `- ${ingredientsString}` : null}
 				</p>
 				<div className="card-actions justify-between items-center">
 					<p>${priceUsd}</p>

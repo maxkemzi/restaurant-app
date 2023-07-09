@@ -22,7 +22,7 @@ const Products = async ({searchParams}) => {
 					<SortSelect />
 				</div>
 			</div>
-			<ProductList products={products} category={category} />
+			<ProductList products={products} />
 		</>
 	);
 };

@@ -1,7 +1,7 @@
 import AddToCartButton from "./AddToCartButton";
 import ProductCard from "./ProductCard";
 
-const ProductList = ({products, category}) => {
+const ProductList = ({products}) => {
 	if (products.length === 0) {
 		return <p className="text-center">There are no products</p>;
 	}
@@ -11,17 +11,8 @@ const ProductList = ({products, category}) => {
 			{products.map(product => (
 				<ProductCard
 					key={product.id}
+					product={product}
 					buttonSlot={<AddToCartButton product={product} />}
-					id={product.id}
-					isVegan={product.isVegan}
-					isSpicy={product.isSpicy}
-					categoryName={category}
-					image={product.image}
-					ingredients={product.ProductIngredients}
-					name={product.name}
-					priceUsd={product.priceUsd}
-					sizeCm={product.sizeCm}
-					weight={product.weight}
 				/>
 			))}
 		</div>

@@ -10,7 +10,7 @@ import {describe, expect, it} from "vitest";
 
 describe("products service", () => {
 	const defaultQueryOptions = {
-		include: {ProductIngredients: {include: {Ingredient: true}}}
+		include: {ProductIngredients: {include: {Ingredient: true}}, Category: true}
 	};
 
 	describe("get products", () => {

@@ -1,13 +1,7 @@
-import {OrderStatus} from "@/lib/constants";
 import {getOrdersByClientId} from "@/lib/prisma/orders";
 import {cookies} from "next/headers";
-import DeleteButton from "./DeleteButton";
-
-const orderStatusToTextMapping = {
-	[OrderStatus.NEW]: "new",
-	[OrderStatus.IN_PROGRESS]: "in progress",
-	[OrderStatus.COMPLETED]: "completed"
-};
+import OrderTableRow from "./OrderTableRow";
+import DeleteOrderButton from "./DeleteOrderButton";
 
 export const revalidate = 60;
 
@@ -37,31 +31,13 @@ const MyOrders = async () => {
 					</tr>
 				</thead>
 				<tbody>
-					{orders.map(order => {
-						const totalCost = order.Cart.CartProducts.reduce(
-							(prev, curr) => prev + curr.Product.priceUsd,
-							0
-						);
-						return (
-							<tr key={order.id}>
-								<td>{order.id}</td>
-								<td>{order.clientName}</td>
-								<td>{order.clientPhone}</td>
-								<td>{order.clientAddress}</td>
-								<td>${totalCost}</td>
-								<td>
-									<div className="badge badge-success">
-										{orderStatusToTextMapping[order.status]}
-									</div>
-								</td>
-								<td className="flex">
-									<div className="ml-auto">
-										<DeleteButton orderId={order.id} />
-									</div>
-								</td>
-							</tr>
-						);
-					})}
+					{orders.map(order => (
+						<OrderTableRow
+							key={order.id}
+							order={order}
+							actionsSlot={<DeleteOrderButton orderId={order.id} />}
+						/>
+					))}
 				</tbody>
 			</table>
 		</div>

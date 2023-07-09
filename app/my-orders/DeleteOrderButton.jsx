@@ -5,7 +5,7 @@ import {useToastContext} from "@/lib/contexts";
 import {AppError} from "@/lib/error";
 import {deleteOrder} from "./actions";
 
-const DeleteButton = ({orderId}) => {
+const DeleteOrderButton = ({orderId}) => {
 	const {showToast} = useToastContext();
 
 	const handleAction = async () => {
@@ -26,4 +26,4 @@ const DeleteButton = ({orderId}) => {
 	);
 };
 
-export default DeleteButton;
+export default DeleteOrderButton;
