@@ -12,7 +12,7 @@ import {placeOrder} from "./actions";
 
 const Cart = () => {
 	const {
-		cart: {products, cost}
+		cart: {products, cost, count}
 	} = useCartContext();
 	const {showToast} = useToastContext();
 	const router = useRouter();
@@ -91,14 +91,18 @@ const Cart = () => {
 					</div>
 				</div>
 				<div className="flex-1">
-					<CartProductList cartProducts={cartProducts} />
+					<div className="mb-6">
+						<CartProductList cartProducts={cartProducts} />
+					</div>
 					<div className="stats w-full">
 						<div className="stat flex justify-between items-center">
 							<div>
 								<div className="stat-title">Total cost</div>
 								<div className="stat-value">${cost}</div>
 							</div>
-							<Button isSubmit>Place an order</Button>
+							<Button isSubmit isDisabled={count === 0}>
+								Place an order
+							</Button>
 						</div>
 					</div>
 				</div>

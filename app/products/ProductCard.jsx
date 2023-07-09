@@ -20,15 +20,17 @@ const ProductCard = ({product, buttonSlot}) => {
 
 	return (
 		<div className="card bg-base-100 shadow-xl">
-			<figure className="px-6 pt-6">
-				<Image
-					width={200}
-					height={200}
-					src={image}
-					alt="product image"
-					className="rounded-xl"
-				/>
-			</figure>
+			<div className="p-6">
+				<figure>
+					<Image
+						width={200}
+						height={200}
+						src={image}
+						alt="product image"
+						className="rounded-xl"
+					/>
+				</figure>
+			</div>
 			<div className="card-body">
 				<h2 className="card-title self-center capitalize">
 					{name}

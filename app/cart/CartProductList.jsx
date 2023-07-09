@@ -7,7 +7,7 @@ const CartProductList = ({cartProducts}) => {
 	}
 
 	return (
-		<div className="flex flex-col gap-4 mb-6">
+		<div className="flex flex-col gap-4">
 			{cartProducts.map(cartProduct => (
 				<CartProductCard
 					key={cartProduct.id}

@@ -44,7 +44,7 @@ const Header = async () => {
 					</MenuDropdown>
 				</Menu>
 			</div>
-			<div className="navbar-end">
+			<div className="navbar-end gap-2">
 				<CartDropdown />
 				<MyLink path={PathName.MY_ORDERS} size="small">
 					My orders

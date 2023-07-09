@@ -24,6 +24,7 @@ const MyOrders = async () => {
 						<th>Name</th>
 						<th>Phone</th>
 						<th>Address</th>
+						<th>Products</th>
 						<th>Total</th>
 						<th>Status</th>
 						{/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
