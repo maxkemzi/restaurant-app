@@ -5,8 +5,8 @@ export default mergeConfig(
 	vitestConfig,
 	defineConfig({
 		test: {
-			include: ["./__tests__/pages/api/**/*.test.js"],
-			singleThread: true
+			include: ["./__tests__/lib/prisma/**/*.test.js"],
+			setupFiles: ["./__tests__/setups/prismaSetup.js"]
 		}
 	})
 );
