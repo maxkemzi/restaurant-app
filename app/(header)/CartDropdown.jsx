@@ -16,15 +16,23 @@ const CartDropdown = () => {
 			<label tabIndex={0} className="btn btn-ghost btn-circle">
 				<div className="indicator">
 					<Icon name="cart" />
-					<span className="badge badge-sm indicator-item">{count}</span>
+					<span
+						className="badge badge-sm indicator-item"
+						data-testid="iconCount">
+						{count}
+					</span>
 				</div>
 			</label>
 			<div
 				tabIndex={0}
 				className="mt-3 z-[1] card card-compact dropdown-content w-40 sm:w-52 bg-base-100 shadow">
 				<div className="card-body">
-					<span className="font-bold text-lg">{count} Items</span>
-					<span className="text-info">Total: ${cost}</span>
+					<span className="font-bold text-lg" data-testid="menuCount">
+						{count} Items
+					</span>
+					<span className="text-info" data-testid="totalCost">
+						Total: ${cost}
+					</span>
 					<div className="card-actions">
 						<Link href={PathName.CART} className="btn btn-primary btn-block">
 							View cart

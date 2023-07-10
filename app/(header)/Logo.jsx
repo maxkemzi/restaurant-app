@@ -1,10 +1,9 @@
-import {PathName} from "@/lib/constants";
-import {RESTAURANT_NAME} from "@/lib/constants/restaurantInfo";
+import {PathName, RestaurantInfo} from "@/lib/constants";
 import Link from "next/link";
 
 const Logo = () => (
 	<Link href={PathName.HOME} className="btn btn-ghost normal-case text-xl">
-		{RESTAURANT_NAME}
+		{RestaurantInfo.NAME}
 	</Link>
 );
 

@@ -1,5 +1,5 @@
 import MyLink from "@/components/MyLink";
-import {PathName, RESTAURANT_NAME} from "@/lib/constants";
+import {PathName, RestaurantInfo} from "@/lib/constants";
 
 const Home = () => (
 	<div className="bg-neutral">
@@ -7,10 +7,8 @@ const Home = () => (
 			<div className="hero min-h-screen">
 				<div className="hero-content text-center">
 					<div className="max-w-md">
-						<h1 className="text-5xl font-bold">{RESTAURANT_NAME}</h1>
-						<p className="py-6">
-							Indulge in Flavorful Delights at {RESTAURANT_NAME}
-						</p>
+						<h1 className="text-5xl font-bold">{RestaurantInfo.NAME}</h1>
+						<p className="py-6">{RestaurantInfo.SLOGAN}</p>
 						<MyLink path={PathName.PRODUCTS}>Get Started</MyLink>
 					</div>
 				</div>

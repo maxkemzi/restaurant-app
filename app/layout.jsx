@@ -1,11 +1,11 @@
-import {RESTAURANT_NAME} from "@/lib/constants/restaurantInfo";
+import RestaurantInfo from "@/lib/constants/restaurantInfo";
 import {CartProvider, ToastProvider} from "@/lib/contexts";
 import Header from "./(header)/Header";
 import Footer from "./Footer";
 import "./globals.css";
 
 export const metadata = {
-	title: RESTAURANT_NAME,
+	title: RestaurantInfo.NAME,
 	description: "Created by Max Kyrychenko",
 	keywords: ["Restaurant", "Pizza", "Desserts", "Food"],
 	authors: [

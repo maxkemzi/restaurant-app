@@ -21,7 +21,7 @@ const Error = ({error, reset}) => {
 		<div className="p-4">
 			<div>
 				<p className="mb-2">Error: {error.message}</p>
-				<Button onClick={reset}>Try again.</Button>
+				<Button onClick={reset}>Try again</Button>
 			</div>
 		</div>
 	);
