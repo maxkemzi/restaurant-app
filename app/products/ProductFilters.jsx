@@ -4,7 +4,7 @@ import CheckboxField from "@/components/CheckboxField";
 import {appendToQueryString, deleteFromQueryString} from "@/lib/helpers";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
 
-const PizzaFilters = () => {
+const ProductFilters = ({displaySettings}) => {
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
@@ -28,22 +28,39 @@ const PizzaFilters = () => {
 		}
 	};
 
+	const display = {
+		isSpicy: displaySettings?.isSpicy != null ? displaySettings.isSpicy : true,
+		isVegan: displaySettings?.isVegan != null ? displaySettings.isVegan : true
+	};
+
+	const noDisplayedFilter = Object.values(display).every(
+		value => value === false
+	);
+	if (noDisplayedFilter) {
+		return null;
+	}
+
 	return (
 		<div className="flex gap-4 md:gap-6">
-			<CheckboxField
-				variant="error"
-				label="Spicy"
-				checked={isSpicy === "true"}
-				onChange={handleCheck("isSpicy")}
-			/>
-			<CheckboxField
-				variant="success"
-				label="Vegan"
-				checked={isVegan === "true"}
-				onChange={handleCheck("isVegan")}
-			/>
+			{display.isSpicy ? (
+				<CheckboxField
+					variant="error"
+					label="Spicy"
+					checked={isSpicy === "true"}
+					onChange={handleCheck("isSpicy")}
+				/>
+			) : null}
+
+			{display.isVegan ? (
+				<CheckboxField
+					variant="success"
+					label="Vegan"
+					checked={isVegan === "true"}
+					onChange={handleCheck("isVegan")}
+				/>
+			) : null}
 		</div>
 	);
 };
 
-export default PizzaFilters;
+export default ProductFilters;

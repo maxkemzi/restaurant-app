@@ -1,5 +1,5 @@
 import {getProducts} from "@/lib/prisma/products";
-import PizzaFilters from "./PizzaFilters";
+import ProductFilters from "./ProductFilters";
 import ProductList from "./ProductList";
 import SortSelect from "./SortSelect";
 
@@ -14,10 +14,15 @@ const Products = async ({searchParams}) => {
 		isVegan: isVegan != null ? Boolean(isVegan) : undefined
 	});
 
+	const filterDisplaySettings = {
+		isSpicy: products.some(product => product.isSpicy === true),
+		isVegan: products.some(product => product.isVegan === true)
+	};
+
 	return (
 		<>
 			<div className="flex items-center mb-4 gap-2 flex-col sm:flex-row">
-				{category === "pizza" ? <PizzaFilters /> : null}
+				<ProductFilters displaySettings={filterDisplaySettings} />
 				<div className="ml-0 sm:ml-auto">
 					<SortSelect />
 				</div>
