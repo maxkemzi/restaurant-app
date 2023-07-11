@@ -1,20 +1,15 @@
+import {createCategory} from "@/__tests__/utils";
 import Header from "@/app/(header)/Header";
+import {PathName} from "@/lib/constants";
 import {getCategories} from "@/lib/prisma/categories";
-import {render, screen, within, fireEvent} from "@testing-library/react";
-import {describe, expect, it, vi} from "vitest";
+import {fireEvent, render, screen, within} from "@testing-library/react";
 import mockRouter from "next-router-mock";
 import {MemoryRouterProvider} from "next-router-mock/MemoryRouterProvider";
-import {PathName} from "@/lib/constants";
-import Logo from "@/app/(header)/Logo";
-import CartDropdown from "@/app/(header)/CartDropdown";
+import {describe, expect, it, vi} from "vitest";
 
 vi.mock("@/lib/prisma/categories", () => ({
 	getCategories: vi.fn()
 }));
-
-vi.mock("@/app/(header)/Logo");
-
-vi.mock("@/app/(header)/CartDropdown");
 
 vi.mock("@/components/Menu", () => ({
 	default: ({children}) => <div data-testid="Menu">{children}</div>
@@ -28,43 +23,50 @@ vi.mock("@/components/MenuItem", () => ({
 	default: () => <div data-testid="MenuItem" />
 }));
 
+vi.mock("@/app/(header)/Logo", () => ({
+	default: () => <div data-testid="Logo" />
+}));
+
+vi.mock("@/app/(header)/CartDropdown", () => ({
+	default: () => <div data-testid="CartDropdown" />
+}));
+
 describe("Header", () => {
-	it("renders menus, logo, cart dropdown and link", async () => {
-		const mockCategories = [
-			{id: 1, name: "Category 1"},
-			{id: 2, name: "Category 2"}
-		];
-		getCategories.mockResolvedValue(mockCategories);
+	it("renders header", async () => {
+		const categories = [createCategory()];
+		getCategories.mockResolvedValue(categories);
 
 		render(await Header());
 
-		const menu = await screen.findByTestId("Menu");
-		const menuItems = await within(menu).findAllByTestId("MenuItem");
-		expect(menuItems).toHaveLength(2 + mockCategories.length);
+		const defaultMenuItemsCount = 2;
 
-		const mobileMenu = await screen.findByTestId("MobileMenu");
-		const mobileMenuItems = await within(mobileMenu).findAllByTestId(
-			"MenuItem"
+		const menu = screen.getByTestId("Menu");
+		const menuItems = within(menu).getAllByTestId("MenuItem");
+		expect(menuItems).toHaveLength(defaultMenuItemsCount + categories.length);
+
+		const mobileMenu = screen.getByTestId("MobileMenu");
+		const mobileMenuItems = within(mobileMenu).getAllByTestId("MenuItem");
+		expect(mobileMenuItems).toHaveLength(
+			defaultMenuItemsCount + categories.length
 		);
-		expect(mobileMenuItems).toHaveLength(2 + mockCategories.length);
 
-		expect(Logo).toHaveBeenCalled();
-		expect(CartDropdown).toHaveBeenCalled();
+		const logo = screen.getByTestId("Logo");
+		expect(logo).toBeInTheDocument();
 
-		const link = await screen.getByRole("link", {name: /my orders/i});
+		const cartDropdown = screen.getByTestId("CartDropdown");
+		expect(cartDropdown).toBeInTheDocument();
+
+		const link = screen.getByRole("link", {name: /my orders/i});
 		expect(link).toBeInTheDocument();
 	});
 
-	it("navigates to the my orders path when link is clicked", async () => {
-		const mockCategories = [
-			{id: 1, name: "Category 1"},
-			{id: 2, name: "Category 2"}
-		];
-		getCategories.mockResolvedValue(mockCategories);
+	it("navigates to my orders path when link is clicked", async () => {
+		const categories = [createCategory()];
+		getCategories.mockResolvedValue(categories);
 
 		render(await Header(), {wrapper: MemoryRouterProvider});
 
-		const link = await screen.getByRole("link", {name: /my orders/i});
+		const link = screen.getByRole("link", {name: /my orders/i});
 		fireEvent.click(link);
 
 		expect(mockRouter.asPath).toEqual(PathName.MY_ORDERS);

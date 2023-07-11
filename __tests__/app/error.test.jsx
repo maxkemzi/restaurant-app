@@ -1,8 +1,9 @@
 import ErrorComponent from "@/app/error";
 import {useToastContext} from "@/lib/contexts";
-import {AppError} from "@/lib/error";
-import {fireEvent, render} from "@testing-library/react";
+import {fireEvent, render, screen} from "@testing-library/react";
 import {describe, expect, it, vi} from "vitest";
+import {createAppError, createError} from "../utils";
+import {createToastContext} from "./utils";
 
 vi.mock("@/lib/contexts", () => ({
 	useToastContext: vi.fn()
@@ -10,60 +11,58 @@ vi.mock("@/lib/contexts", () => ({
 
 describe("Error", () => {
 	it("renders fallback component", () => {
-		const errorMock = new Error("Test error message");
-		const resetMock = vi.fn();
-		useToastContext.mockReturnValue({showToast: vi.fn()});
+		const error = createError();
+		const reset = vi.fn();
+		const toastContext = createToastContext();
+		useToastContext.mockReturnValue(toastContext);
 
-		const {getByRole, getByText} = render(
-			<ErrorComponent error={errorMock} reset={resetMock} />
-		);
+		render(<ErrorComponent error={error} reset={reset} />);
 
-		const errorMessage = getByText(
-			new RegExp(`Error: ${errorMock.message}`, "i")
+		const errorMessage = screen.getByText(
+			new RegExp(`Error: ${error.message}`, "i")
 		);
 		expect(errorMessage).toBeInTheDocument();
 
-		const button = getByRole("button", /try again/i);
+		const button = screen.getByRole("button", /try again/i);
 		expect(button).toBeInTheDocument();
 	});
 
-	it("calls reset function when button is clicked", () => {
-		const errorMock = new Error("Test error message");
-		const resetMock = vi.fn();
-		useToastContext.mockReturnValue({showToast: vi.fn()});
+	it("resets error when the button is clicked", () => {
+		const error = createError();
+		const reset = vi.fn();
+		const toastContext = createToastContext();
+		useToastContext.mockReturnValue(toastContext);
 
-		const {getByRole} = render(
-			<ErrorComponent error={errorMock} reset={resetMock} />
-		);
+		const {getByRole} = render(<ErrorComponent error={error} reset={reset} />);
 
 		const button = getByRole("button", {name: /try again/i});
 		fireEvent.click(button);
 
-		expect(resetMock).toHaveBeenCalledTimes(1);
+		expect(reset).toHaveBeenCalledTimes(1);
 	});
 
-	it("calls showToast with error message", () => {
-		const errorMock = new AppError("Test error message");
-		const resetMock = vi.fn();
-		const showToastMock = vi.fn();
-		useToastContext.mockReturnValue({showToast: showToastMock});
+	it("shows error toast with specified error message if error is instance of AppError", () => {
+		const error = createAppError("Unexpected error.");
+		const reset = vi.fn();
+		const toastContext = createToastContext();
+		useToastContext.mockReturnValue(toastContext);
 
-		render(<ErrorComponent error={errorMock} reset={resetMock} />);
+		render(<ErrorComponent error={error} reset={reset} />);
 
-		expect(showToastMock).toHaveBeenCalledTimes(1);
-		expect(showToastMock).toHaveBeenCalledWith("error", errorMock.message);
+		expect(toastContext.showToast).toHaveBeenCalledTimes(1);
+		expect(toastContext.showToast).toHaveBeenCalledWith("error", error.message);
 	});
 
-	it("calls showToast with fallback error message if error is not instance of AppError", () => {
-		const errorMock = new Error("Test error message");
-		const resetMock = vi.fn();
-		const showToastMock = vi.fn();
-		useToastContext.mockReturnValue({showToast: showToastMock});
+	it("shows error toast with fallback error message if error is not instance of AppError", () => {
+		const error = createError();
+		const reset = vi.fn();
+		const toastContext = createToastContext();
+		useToastContext.mockReturnValue(toastContext);
 
-		render(<ErrorComponent error={errorMock} reset={resetMock} />);
+		render(<ErrorComponent error={error} reset={reset} />);
 
-		expect(showToastMock).toHaveBeenCalledTimes(1);
-		expect(showToastMock).toHaveBeenCalledWith(
+		expect(toastContext.showToast).toHaveBeenCalledTimes(1);
+		expect(toastContext.showToast).toHaveBeenCalledWith(
 			"error",
 			"Something went wrong."
 		);

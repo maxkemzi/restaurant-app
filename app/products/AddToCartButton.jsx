@@ -31,11 +31,19 @@ const AddToCartButton = ({product}) => {
 
 		return (
 			<div className="flex gap-2 justify-between items-center text-center">
-				<Button size="small" variant="circle" onClick={handleRemoveFromCart}>
+				<Button
+					size="small"
+					variant="circle"
+					onClick={handleRemoveFromCart}
+					data-testid="remove-button">
 					<Icon name="minus" />
 				</Button>
 				<p className="w-7">{productCount}</p>
-				<Button size="small" variant="circle" onClick={handleAddToCart}>
+				<Button
+					size="small"
+					variant="circle"
+					onClick={handleAddToCart}
+					data-testid="add-button">
 					<Icon name="plus" />
 				</Button>
 			</div>

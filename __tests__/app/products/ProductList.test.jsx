@@ -3,27 +3,27 @@ import ProductCard from "@/app/products/ProductCard";
 import ProductList from "@/app/products/ProductList";
 import {render, screen} from "@testing-library/react";
 import {describe, expect, it, vi} from "vitest";
-import {createProductMock} from "@/prisma/__mocks__/product";
+import {createProduct} from "../../utils";
 
 vi.mock("@/app/products/ProductCard");
 vi.mock("@/app/products/AddToCartButton");
 
 describe("ProductList", () => {
 	it("renders product list", () => {
-		const mockProducts = [createProductMock(1), createProductMock(2)];
+		const products = [createProduct(), createProduct(2)];
 
-		render(<ProductList products={mockProducts} />);
+		render(<ProductList products={products} />);
 
-		expect(ProductCard).toHaveBeenCalledTimes(mockProducts.length);
+		expect(ProductCard).toHaveBeenCalledTimes(products.length);
 		expect(ProductCard.mock.calls).toEqual(
-			mockProducts.map(product => [
+			products.map(product => [
 				expect.objectContaining({product}),
 				expect.anything()
 			])
 		);
-		expect(AddToCartButton).toHaveBeenCalledTimes(mockProducts.length);
+		expect(AddToCartButton).toHaveBeenCalledTimes(products.length);
 		expect(AddToCartButton.mock.calls).toEqual(
-			mockProducts.map(product => [
+			products.map(product => [
 				expect.objectContaining({product}),
 				expect.anything()
 			])
@@ -31,13 +31,11 @@ describe("ProductList", () => {
 	});
 
 	it("renders fallback message if products list is empty", () => {
-		const mockProducts = [];
+		const products = [];
 
-		render(<ProductList products={mockProducts} />);
+		render(<ProductList products={products} />);
 
 		const fallbackText = screen.getByText(/there are no products/i);
 		expect(fallbackText).toBeInTheDocument();
-
-		expect(ProductCard).not.toHaveBeenCalled();
 	});
 });

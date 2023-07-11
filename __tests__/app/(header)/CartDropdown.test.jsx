@@ -5,6 +5,7 @@ import {fireEvent, render, screen} from "@testing-library/react";
 import mockRouter from "next-router-mock";
 import {MemoryRouterProvider} from "next-router-mock/MemoryRouterProvider";
 import {describe, expect, it, vi} from "vitest";
+import {createCartContext} from "../utils";
 
 vi.mock("@/lib/contexts", () => ({
 	useCartContext: vi.fn()
@@ -12,28 +13,28 @@ vi.mock("@/lib/contexts", () => ({
 
 describe("CartDropdown", () => {
 	it("renders cart products count and total cost", () => {
-		const cartMock = {count: 10, cost: 15};
-		useCartContext.mockReturnValue({cart: cartMock});
+		const cartContext = createCartContext();
+		useCartContext.mockReturnValue(cartContext);
 
 		render(<CartDropdown />);
 
 		const iconCount = screen.getByTestId("iconCount");
-		expect(iconCount).toHaveTextContent(cartMock.count);
+		expect(iconCount).toHaveTextContent(cartContext.cart.count);
 
 		const menuCount = screen.getByTestId("menuCount");
 		expect(menuCount).toHaveTextContent(
-			new RegExp(`${cartMock.count} Items`, "i")
+			new RegExp(`${cartContext.cart.count} Items`, "i")
 		);
 
 		const totalCost = screen.getByTestId("totalCost");
 		expect(totalCost).toHaveTextContent(
-			new RegExp(`Total: \\$${cartMock.cost}`, "i")
+			new RegExp(`Total: \\$${cartContext.cart.cost}`, "i")
 		);
 	});
 
 	it("navigates to the cart path when link is clicked", () => {
-		const cartMock = {count: 10, cost: 15};
-		useCartContext.mockReturnValue({cart: cartMock});
+		const cartContext = createCartContext();
+		useCartContext.mockReturnValue(cartContext);
 
 		render(<CartDropdown />, {wrapper: MemoryRouterProvider});
 

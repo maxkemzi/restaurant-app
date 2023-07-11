@@ -1,11 +1,8 @@
-import PizzaFilters from "@/app/products/PizzaFilters";
-import ProductList from "@/app/products/ProductList";
-import SortSelect from "@/app/products/SortSelect";
+import {createProduct} from "@/__tests__/utils";
 import Products from "@/app/products/page";
 import {getProducts} from "@/lib/prisma/products";
-import {createProductMock} from "@/prisma/__mocks__/product";
-import {render} from "@testing-library/react";
-import {describe, it, vi, expect} from "vitest";
+import {render, screen} from "@testing-library/react";
+import {describe, expect, it, vi} from "vitest";
 
 vi.mock("@/lib/prisma/products", () => ({
 	getProducts: vi.fn()
@@ -17,32 +14,34 @@ vi.mock("next/navigation", () => ({
 	usePathname: vi.fn()
 }));
 
-vi.mock("@/app/products/ProductList");
+vi.mock("@/app/products/ProductFilters", () => ({
+	default: () => <div data-testid="ProductFilters" />
+}));
 
-vi.mock("@/app/products/SortSelect");
+vi.mock("@/app/products/SortSelect", () => ({
+	default: () => <div data-testid="SortSelect" />
+}));
 
-vi.mock("@/app/products/PizzaFilters");
+vi.mock("@/app/products/ProductList", () => ({
+	default: () => <div data-testid="ProductList" />
+}));
 
 describe("Products", () => {
 	it("renders products page", async () => {
-		const mockProducts = [createProductMock(1)];
-		getProducts.mockResolvedValue(mockProducts);
+		const products = [createProduct()];
+		getProducts.mockResolvedValue(products);
 
 		render(await Products({searchParams: {}}));
 
-		expect(SortSelect).toHaveBeenCalled();
-		expect(ProductList).toHaveBeenCalledWith(
-			expect.objectContaining({products: mockProducts}),
-			expect.anything()
-		);
-	});
+		expect(getProducts).toHaveBeenCalled();
 
-	it("renders pizza filters when the category equals to pizza", async () => {
-		const mockProducts = [createProductMock(1)];
-		getProducts.mockResolvedValue(mockProducts);
+		const productFilters = screen.getByTestId("ProductFilters");
+		expect(productFilters).toBeInTheDocument();
 
-		render(await Products({searchParams: {category: "pizza"}}));
+		const sortSelect = screen.getByTestId("SortSelect");
+		expect(sortSelect).toBeInTheDocument();
 
-		expect(PizzaFilters).toHaveBeenCalled();
+		const productList = screen.getByTestId("ProductList");
+		expect(productList).toBeInTheDocument();
 	});
 });

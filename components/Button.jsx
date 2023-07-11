@@ -21,12 +21,12 @@ const ButtonVariant = {
 
 const Button = ({
 	children,
-	onClick,
 	isSubmit,
 	isDisabled,
 	size = ButtonSize.MEDIUM,
 	color = ButtonColor.PRIMARY,
-	variant = ButtonVariant.PRIMARY
+	variant = ButtonVariant.PRIMARY,
+	...rest
 }) => {
 	const classesBySize = {
 		"btn-sm": size === ButtonSize.SMALL,
@@ -49,14 +49,14 @@ const Button = ({
 	return (
 		<button
 			disabled={isDisabled}
-			onClick={onClick}
 			type={isSubmit ? "submit" : "button"}
 			className={classNames(
 				"btn",
 				classesBySize,
 				classesByColor,
 				classesByVariant
-			)}>
+			)}
+			{...rest}>
 			{children}
 		</button>
 	);

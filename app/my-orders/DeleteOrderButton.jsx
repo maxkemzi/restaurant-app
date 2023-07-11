@@ -11,14 +11,14 @@ const DeleteOrderButton = ({orderId}) => {
 	const handleAction = async () => {
 		try {
 			await deleteOrder(orderId);
-			showToast("success", "Your order have been deleted.");
+			showToast("success", "Your order have been deleted");
 		} catch (e) {
 			throw new AppError("Error deleting your order.");
 		}
 	};
 
 	return (
-		<form action={handleAction}>
+		<form action={handleAction} aria-label="form">
 			<Button isSubmit color="error" size="small">
 				Delete
 			</Button>

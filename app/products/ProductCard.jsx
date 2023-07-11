@@ -26,7 +26,7 @@ const ProductCard = ({product, buttonSlot}) => {
 						fill
 						objectFit="cover"
 						src={image}
-						alt="product image"
+						alt={`${name} image`}
 						className="rounded-xl"
 					/>
 				</div>
