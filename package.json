@@ -14,7 +14,8 @@
 		"db:seed:dev": "dotenv -e .env.local -- npm run db:seed",
 		"db:migrate:dev": "dotenv -e .env.local -- npx prisma migrate dev",
 		"db:deploy": "npx prisma generate && npx prisma migrate reset --force && npx prisma migrate deploy",
-		"vercel-build": "npm run db:deploy && next build"
+		"vercel-build": "npm run db:deploy && next build",
+		"prepare": "husky install"
 	},
 	"prisma": {
 		"seed": "node prisma/seed.js"
@@ -51,6 +52,7 @@
 		"eslint-plugin-prettier": "^4.2.1",
 		"eslint-plugin-react": "^7.32.2",
 		"eslint-plugin-react-hooks": "^4.6.0",
+		"husky": "^8.0.3",
 		"jsdom": "^22.1.0",
 		"next-router-mock": "^0.9.7",
 		"node-mocks-http": "^1.12.2",
