@@ -1,4 +1,4 @@
-import Logo from "@/app/(header)/Logo";
+import Logo from "@/components/Logo";
 import {PathName, RestaurantInfo} from "@/lib/constants";
 import {fireEvent, render, screen} from "@testing-library/react";
 import mockRouter from "next-router-mock";
@@ -15,7 +15,7 @@ describe("Logo", () => {
 		expect(link).toBeInTheDocument();
 	});
 
-	it("navigates to the home path when link is clicked", () => {
+	it("navigates to the home path when the link is clicked", () => {
 		render(<Logo />, {wrapper: MemoryRouterProvider});
 
 		const link = screen.getByRole("link", {

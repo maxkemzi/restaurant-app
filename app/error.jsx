@@ -1,6 +1,6 @@
 "use client";
 
-import Button from "@/components/Button";
+import Button from "@/components/ui/Button";
 import {useToastContext} from "@/lib/contexts";
 import {AppError} from "@/lib/error";
 import {useEffect} from "react";

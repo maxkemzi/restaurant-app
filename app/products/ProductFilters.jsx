@@ -1,6 +1,6 @@
 "use client";
 
-import CheckboxField from "@/components/CheckboxField";
+import CheckboxField from "@/components/ui/CheckboxField";
 import {appendToQueryString, deleteFromQueryString} from "@/lib/helpers";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
 

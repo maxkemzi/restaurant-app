@@ -1,7 +1,7 @@
 "use client";
 
-import Select from "@/components/Select";
-import SelectOption from "@/components/SelectOption";
+import Select from "@/components/ui/Select";
+import SelectOption from "@/components/ui/SelectOption";
 import {deleteFromQueryString, setToQueryString} from "@/lib/helpers";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
 

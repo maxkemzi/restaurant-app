@@ -62,5 +62,5 @@ const Button = ({
 	);
 };
 
-export {ButtonColor, ButtonSize};
+export {ButtonColor, ButtonSize, ButtonVariant};
 export default Button;

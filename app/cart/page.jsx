@@ -1,7 +1,7 @@
 "use client";
 
-import Button from "@/components/Button";
-import TextField from "@/components/TextField";
+import Button from "@/components/ui/Button";
+import TextField from "@/components/ui/TextField";
 import {PathName, phoneNumberRegex} from "@/lib/constants";
 import {useCartContext, useToastContext} from "@/lib/contexts";
 import {AppError} from "@/lib/error";

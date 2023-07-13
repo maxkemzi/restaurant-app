@@ -80,5 +80,7 @@ export {
 	createOrder,
 	createProduct,
 	createProductIngredient,
-	createAppError
+	createAppError,
+	createCart,
+	createCartProduct
 };

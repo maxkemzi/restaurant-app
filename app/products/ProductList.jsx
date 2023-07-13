@@ -1,5 +1,5 @@
-import AddToCartButton from "./AddToCartButton";
-import ProductCard from "./ProductCard";
+import AddToCartButton from "@/components/AddToCartButton";
+import ProductCard from "../../components/ProductCard";
 
 const ProductList = ({products}) => {
 	if (products.length === 0) {

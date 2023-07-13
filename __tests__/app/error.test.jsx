@@ -23,22 +23,22 @@ describe("Error", () => {
 		);
 		expect(errorMessage).toBeInTheDocument();
 
-		const button = screen.getByRole("button", /try again/i);
-		expect(button).toBeInTheDocument();
+		const resetButton = screen.getByRole("button", /try again/i);
+		expect(resetButton).toBeInTheDocument();
 	});
 
-	it("resets error when the button is clicked", () => {
+	it("resets error when the reset button is clicked", () => {
 		const error = createError();
 		const reset = vi.fn();
 		const toastContext = createToastContext();
 		useToastContext.mockReturnValue(toastContext);
 
-		const {getByRole} = render(<ErrorComponent error={error} reset={reset} />);
+		render(<ErrorComponent error={error} reset={reset} />);
 
-		const button = getByRole("button", {name: /try again/i});
-		fireEvent.click(button);
+		const resetButton = screen.getByRole("button", /try again/i);
+		fireEvent.click(resetButton);
 
-		expect(reset).toHaveBeenCalledTimes(1);
+		expect(reset).toHaveBeenCalledOnce();
 	});
 
 	it("shows error toast with specified error message if error is instance of AppError", () => {
@@ -49,7 +49,7 @@ describe("Error", () => {
 
 		render(<ErrorComponent error={error} reset={reset} />);
 
-		expect(toastContext.showToast).toHaveBeenCalledTimes(1);
+		expect(toastContext.showToast).toHaveBeenCalledOnce();
 		expect(toastContext.showToast).toHaveBeenCalledWith("error", error.message);
 	});
 
@@ -61,7 +61,7 @@ describe("Error", () => {
 
 		render(<ErrorComponent error={error} reset={reset} />);
 
-		expect(toastContext.showToast).toHaveBeenCalledTimes(1);
+		expect(toastContext.showToast).toHaveBeenCalledOnce();
 		expect(toastContext.showToast).toHaveBeenCalledWith(
 			"error",
 			"Something went wrong."

@@ -1,6 +1,6 @@
 "use client";
 
-import Icon from "@/components/Icon";
+import Icon from "@/components/ui//Icon";
 import {PathName} from "@/lib/constants";
 import {useCartContext} from "@/lib/contexts";
 import Link from "next/link";
@@ -27,12 +27,8 @@ const CartDropdown = () => {
 				tabIndex={0}
 				className="mt-3 z-[1] card card-compact dropdown-content w-40 sm:w-52 bg-base-100 shadow">
 				<div className="card-body">
-					<span className="font-bold text-lg" data-testid="menuCount">
-						{count} Items
-					</span>
-					<span className="text-info" data-testid="totalCost">
-						Total: ${cost}
-					</span>
+					<span className="font-bold text-lg">{count} Items</span>
+					<span className="text-info">Total: ${cost}</span>
 					<div className="card-actions">
 						<Link href={PathName.CART} className="btn btn-primary btn-block">
 							View cart

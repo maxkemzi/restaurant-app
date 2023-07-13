@@ -1,6 +1,6 @@
 import {getOrdersByClientId} from "@/lib/prisma/orders";
 import {cookies} from "next/headers";
-import OrderTableRow from "./OrderTableRow";
+import OrderTableRow from "../../components/OrderTableRow";
 import DeleteOrderButton from "./DeleteOrderButton";
 
 export const revalidate = 60;

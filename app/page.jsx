@@ -1,4 +1,4 @@
-import MyLink from "@/components/MyLink";
+import MyLink from "@/components/ui/MyLink";
 import {PathName, RestaurantInfo} from "@/lib/constants";
 
 const Home = () => (

@@ -1,4 +1,4 @@
-import ProductCard from "@/app/products/ProductCard";
+import ProductCard from "@/components/ProductCard";
 import {render, screen} from "@testing-library/react";
 import {describe, expect, it} from "vitest";
 import {
@@ -6,7 +6,7 @@ import {
 	createIngredient,
 	createProduct,
 	createProductIngredient
-} from "../../utils";
+} from "../utils";
 
 describe("ProductCard", () => {
 	it("renders product card", () => {
@@ -16,7 +16,7 @@ describe("ProductCard", () => {
 
 		const image = screen.getByRole("img");
 		expect(image).toBeInTheDocument();
-		expect(image).toHaveAttribute("alt", `${product.name} image`);
+		expect(image).toHaveAttribute("alt", `${product.name} product image`);
 		expect(image).toHaveAttribute(
 			"src",
 			expect.stringContaining(encodeURIComponent(product.image))

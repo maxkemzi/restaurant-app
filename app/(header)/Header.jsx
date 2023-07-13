@@ -1,13 +1,13 @@
-import MyLink from "@/components/MyLink";
+import Menu from "@/components/ui/Menu";
+import MenuDropdown from "@/components/ui/MenuDropdown";
+import MenuItem from "@/components/ui/MenuItem";
+import MobileMenu from "@/components/ui/MobileMenu";
+import MobileMenuDropdown from "@/components/ui/MobileMenuDropdown";
+import MyLink from "@/components/ui/MyLink";
 import {PathName} from "@/lib/constants";
 import {getCategories} from "@/lib/prisma/categories";
-import Menu from "../../components/Menu";
-import MenuDropdown from "../../components/MenuDropdown";
-import MenuItem from "../../components/MenuItem";
-import MobileMenu from "../../components/MobileMenu";
-import MobileMenuDropdown from "../../components/MobileMenuDropdown";
 import CartDropdown from "./CartDropdown";
-import Logo from "./Logo";
+import Logo from "../../components/Logo";
 
 export const revalidate = 60;
 
