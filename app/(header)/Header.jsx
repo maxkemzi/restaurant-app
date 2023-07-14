@@ -14,9 +14,9 @@ export const revalidate = 60;
 const Header = async () => {
 	const categories = await getCategories();
 
-	const getCategoryLinkPath = category => ({
+	const getCategoryLinkPath = categoryName => ({
 		pathname: PathName.PRODUCTS,
-		query: {category}
+		query: {categoryName}
 	});
 
 	return (

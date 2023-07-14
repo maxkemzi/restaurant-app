@@ -4,7 +4,7 @@ import CheckboxField from "@/components/ui/CheckboxField";
 import {appendToQueryString, deleteFromQueryString} from "@/lib/helpers";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
 
-const ProductFilters = ({displaySettings}) => {
+const ProductFilters = ({hasSpicyProducts, hasVeganProducts}) => {
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
@@ -28,21 +28,14 @@ const ProductFilters = ({displaySettings}) => {
 		}
 	};
 
-	const display = {
-		isSpicy: displaySettings?.isSpicy != null ? displaySettings.isSpicy : true,
-		isVegan: displaySettings?.isVegan != null ? displaySettings.isVegan : true
-	};
-
-	const noDisplayedFilter = Object.values(display).every(
-		value => value === false
-	);
-	if (noDisplayedFilter) {
+	const hasNoProductsToFilter = !hasSpicyProducts && !hasVeganProducts;
+	if (hasNoProductsToFilter) {
 		return null;
 	}
 
 	return (
 		<div className="flex gap-4 md:gap-6">
-			{display.isSpicy ? (
+			{hasSpicyProducts ? (
 				<CheckboxField
 					variant="error"
 					label="Spicy"
@@ -51,7 +44,7 @@ const ProductFilters = ({displaySettings}) => {
 				/>
 			) : null}
 
-			{display.isVegan ? (
+			{hasVeganProducts ? (
 				<CheckboxField
 					variant="success"
 					label="Vegan"
