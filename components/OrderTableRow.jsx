@@ -8,7 +8,7 @@ const orderStatusToTextMapping = {
 	[OrderStatus.COMPLETED]: "completed"
 };
 
-const OrderTableRow = ({order, actionsSlot}) => {
+const OrderTableRow = ({order, actionsSlot, testId}) => {
 	const {
 		id,
 		clientName,
@@ -38,7 +38,7 @@ const OrderTableRow = ({order, actionsSlot}) => {
 	};
 
 	return (
-		<tr>
+		<tr data-testid={testId}>
 			<td>{id}</td>
 			<td>{clientName}</td>
 			<td>{clientPhone}</td>
@@ -60,6 +60,7 @@ const OrderTableRow = ({order, actionsSlot}) => {
 										key={product.id}
 										count={count}
 										product={product}
+										testId={`table-product-${product.id}`}
 									/>
 								);
 							})}

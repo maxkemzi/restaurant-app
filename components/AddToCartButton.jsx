@@ -5,7 +5,7 @@ import Icon from "@/components/ui/Icon";
 import {useCartContext, useToastContext} from "@/lib/contexts";
 import {CartProductDTO} from "@/lib/dtos";
 
-const AddToCartButton = ({product}) => {
+const AddToCartButton = ({product, testId}) => {
 	const {
 		addProduct,
 		removeProduct,
@@ -30,7 +30,9 @@ const AddToCartButton = ({product}) => {
 		const productCount = products[product.id].length;
 
 		return (
-			<div className="flex gap-2 justify-between items-center text-center">
+			<div
+				className="flex gap-2 justify-between items-center text-center"
+				data-testid={testId}>
 				<Button
 					size="small"
 					variant="circle"
@@ -38,7 +40,9 @@ const AddToCartButton = ({product}) => {
 					data-testid="remove-button">
 					<Icon name="minus" />
 				</Button>
-				<p className="w-7">{productCount}</p>
+				<p className="w-7" data-testid="product-count">
+					{productCount}
+				</p>
 				<Button
 					size="small"
 					variant="circle"
@@ -50,7 +54,11 @@ const AddToCartButton = ({product}) => {
 		);
 	}
 
-	return <Button onClick={handleAddToCart}>Add to cart</Button>;
+	return (
+		<Button onClick={handleAddToCart} testId={testId}>
+			Add to cart
+		</Button>
+	);
 };
 
 export default AddToCartButton;

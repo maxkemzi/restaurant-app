@@ -23,6 +23,7 @@ const Button = ({
 	children,
 	isSubmit,
 	isDisabled,
+	testId,
 	size = ButtonSize.MEDIUM,
 	color = ButtonColor.PRIMARY,
 	variant = ButtonVariant.PRIMARY,
@@ -56,6 +57,7 @@ const Button = ({
 				classesByColor,
 				classesByVariant
 			)}
+			data-testid={testId}
 			{...rest}>
 			{children}
 		</button>

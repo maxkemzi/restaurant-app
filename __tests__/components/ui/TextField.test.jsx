@@ -1,57 +1,52 @@
-import {describe, expect, it, vi} from "vitest";
-import {render, fireEvent, screen} from "@testing-library/react";
 import TextField from "@/components/ui/TextField";
+import {fireEvent, render, screen} from "@testing-library/react";
+import {expect, it, vi} from "vitest";
 
-describe("TextField", () => {
-	it("renders text field with label and input value", () => {
-		const label = "Label";
-		const InputProps = {defaultValue: "value"};
+it("renders text field with label and input value", () => {
+	const label = "Label";
+	const InputProps = {defaultValue: "value"};
+	render(<TextField label={label} InputProps={InputProps} />);
 
-		render(<TextField label={label} InputProps={InputProps} />);
-		const labelElement = screen.getByTestId("label");
-		const labelText = screen.getByLabelText(label);
-		const input = screen.getByRole("textbox", {value: InputProps.defaultValue});
+	const labelText = screen.getByLabelText(label);
+	expect(labelText).toBeInTheDocument();
+	const labelElement = screen.getByTestId("label");
+	const input = screen.getByRole("textbox", {value: InputProps.defaultValue});
+	expect(input).toBeInTheDocument();
+	expect(input.id).toBe(labelElement.htmlFor);
+});
 
-		expect(labelText).toBeInTheDocument();
-		expect(input).toBeInTheDocument();
-		expect(input.id).toBe(labelElement.htmlFor);
-	});
+it("renders text field with custom className", () => {
+	const className = "custom-class";
+	const {container} = render(<TextField className={className} />);
 
-	it("renders text field with custom className", () => {
-		const className = "custom-class";
+	const textField = container.firstChild;
+	expect(textField).toHaveClass(className);
+});
 
-		const {container} = render(<TextField className={className} />);
-		const textField = container.firstChild;
+it("renders error text if it is provided", () => {
+	const errorText = "error";
+	render(<TextField error={errorText} />);
 
-		expect(textField).toHaveClass(className);
-	});
+	const error = screen.getByText(errorText);
+	expect(error).toBeInTheDocument();
+});
 
-	it("renders error text if it is provided", () => {
-		const errorText = "error";
+it("doesn't render error text if it isn't provided", () => {
+	render(<TextField />);
 
-		render(<TextField error={errorText} />);
-		const error = screen.getByText(errorText);
+	const error = screen.queryByTestId("error");
+	expect(error).not.toBeInTheDocument();
+});
 
-		expect(error).toBeInTheDocument();
-	});
+it("calls input onChange handler", () => {
+	const initialValue = "initial value";
+	const handleChange = vi.fn();
+	render(
+		<TextField InputProps={{onChange: handleChange, value: initialValue}} />
+	);
 
-	it("doesn't render error text if it isn't provided", () => {
-		render(<TextField />);
-		const error = screen.queryByTestId("error");
+	const input = screen.getByRole("textbox");
+	fireEvent.change(input, {target: {value: "new value"}});
 
-		expect(error).not.toBeInTheDocument();
-	});
-
-	it("calls input onChange handler", () => {
-		const initialValue = "initial value";
-		const handleChange = vi.fn();
-
-		render(
-			<TextField InputProps={{onChange: handleChange, value: initialValue}} />
-		);
-		const input = screen.getByRole("textbox");
-		fireEvent.change(input, {target: {value: "new value"}});
-
-		expect(handleChange).toHaveBeenCalledOnce();
-	});
+	expect(handleChange).toHaveBeenCalledOnce();
 });

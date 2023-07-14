@@ -37,6 +37,7 @@ const MyOrders = async () => {
 							key={order.id}
 							order={order}
 							actionsSlot={<DeleteOrderButton orderId={order.id} />}
+							testId={`order-table-row-${order.id}`}
 						/>
 					))}
 				</tbody>

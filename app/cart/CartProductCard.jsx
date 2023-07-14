@@ -1,9 +1,11 @@
 import Image from "next/image";
 
-const CartProductCard = ({actionsSlot, cartProduct}) => {
+const CartProductCard = ({actionsSlot, cartProduct, testId}) => {
 	const {image, name, weight, priceUsd} = cartProduct || {};
 	return (
-		<div className="card card-side flex justify-center flex-wrap bg-base-100 shadow-xl">
+		<div
+			className="card card-side flex justify-center flex-wrap bg-base-100 shadow-xl"
+			data-testid={testId}>
 			<figure className="sm:p-4 p-2">
 				<div className="relative w-32 h-32">
 					<Image fill objectFit="cover" src={image} alt={name} />

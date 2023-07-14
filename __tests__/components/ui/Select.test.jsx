@@ -1,31 +1,28 @@
 import Select from "@/components/ui/Select";
 import {fireEvent, render, screen, within} from "@testing-library/react";
-import {describe, expect, it, vi} from "vitest";
+import {expect, it, vi} from "vitest";
 
-describe("Select", () => {
-	it("renders select with children and default value", () => {
-		const value = "Value";
-		const childText = "Child";
+it("renders select with children and default value", () => {
+	const value = "Value";
+	const childText = "Child";
+	render(
+		<Select value={value}>
+			<li>{childText}</li>
+		</Select>
+	);
 
-		render(
-			<Select value={value}>
-				<li>{childText}</li>
-			</Select>
-		);
-		const select = screen.getByRole("combobox", {value});
-		const child = within(select).getByText(childText);
+	const select = screen.getByRole("combobox", {value});
+	expect(select).toBeInTheDocument();
+	const child = within(select).getByText(childText);
+	expect(child).toBeInTheDocument();
+});
 
-		expect(select).toBeInTheDocument();
-		expect(child).toBeInTheDocument();
-	});
+it("calls onChange handler when select value changes", () => {
+	const handleChange = vi.fn();
+	render(<Select onChange={handleChange} />);
 
-	it("calls onChange handler when select value changes", () => {
-		const handleChange = vi.fn();
+	const select = screen.getByRole("combobox");
+	fireEvent.change(select);
 
-		render(<Select onChange={handleChange} />);
-		const select = screen.getByRole("combobox");
-		fireEvent.change(select);
-
-		expect(handleChange).toHaveBeenCalledOnce();
-	});
+	expect(handleChange).toHaveBeenCalledOnce();
 });

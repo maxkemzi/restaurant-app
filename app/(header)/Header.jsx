@@ -22,24 +22,42 @@ const Header = async () => {
 	return (
 		<header className="navbar bg-base z-50 flex-wrap sm:flex-nowrap">
 			<div className="navbar-start w-full sm:w-1/2">
-				<MobileMenu>
-					<MenuItem path={PathName.HOME} text="Home" />
+				<MobileMenu testId="mobile-menu">
+					<MenuItem path={PathName.HOME} text="Home" testId="menu-item-home" />
 					<MobileMenuDropdown text="Menu">
-						<MenuItem path={PathName.PRODUCTS} text="All" />
+						<MenuItem
+							path={PathName.PRODUCTS}
+							text="All"
+							testId="menu-item-all"
+						/>
 						{categories.map(({name, id}) => (
-							<MenuItem key={id} path={getCategoryLinkPath(name)} text={name} />
+							<MenuItem
+								key={id}
+								path={getCategoryLinkPath(name)}
+								text={name}
+								testId={`menu-item-category-${id}`}
+							/>
 						))}
 					</MobileMenuDropdown>
 				</MobileMenu>
-				<Logo />
+				<Logo testId="logo" />
 			</div>
 			<div className="navbar-center hidden lg:flex">
-				<Menu>
-					<MenuItem path={PathName.HOME} text="Home" />
+				<Menu testId="menu">
+					<MenuItem path={PathName.HOME} text="Home" testId="menu-item-home" />
 					<MenuDropdown text="Menu">
-						<MenuItem path={PathName.PRODUCTS} text="All" />
+						<MenuItem
+							path={PathName.PRODUCTS}
+							text="All"
+							testId="menu-item-all"
+						/>
 						{categories.map(({name, id}) => (
-							<MenuItem key={id} path={getCategoryLinkPath(name)} text={name} />
+							<MenuItem
+								key={id}
+								path={getCategoryLinkPath(name)}
+								text={name}
+								testId={`menu-item-category-${id}`}
+							/>
 						))}
 					</MenuDropdown>
 				</Menu>

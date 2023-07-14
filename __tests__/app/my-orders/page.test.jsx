@@ -2,7 +2,13 @@ import {deleteOrder} from "@/app/my-orders/actions";
 import MyOrders from "@/app/my-orders/page";
 import {useToastContext} from "@/lib/contexts";
 import {getOrdersByClientId} from "@/lib/prisma/orders";
-import {fireEvent, render, screen, waitFor} from "@testing-library/react";
+import {
+	fireEvent,
+	render,
+	screen,
+	waitFor,
+	within
+} from "@testing-library/react";
 import {cookies} from "next/headers";
 import {describe, expect, it, vi} from "vitest";
 import {createOrder} from "../../utils";
@@ -24,90 +30,71 @@ vi.mock("@/lib/contexts", () => ({
 	useToastContext: vi.fn()
 }));
 
-vi.mock("@/components/OrderTableRow", () => ({
-	default: ({actionsSlot}) => (
-		<div data-testid="OrderTableRow">{actionsSlot}</div>
-	)
-}));
+const setUp = async values => {
+	const orders = values?.orders || [];
+	getOrdersByClientId.mockReturnValue(orders);
+	const toastContext = values?.toastContext || createToastContext();
+	useToastContext.mockReturnValue(toastContext);
+	const cookie = values?.cookie || null;
+	cookies.mockReturnValue({get: vi.fn(() => cookie)});
+	const utils = render(await MyOrders());
 
-describe("MyOrders", () => {
-	describe("orders table", () => {
-		it("renders orders when there is a client id in cookies", async () => {
-			const orders = [createOrder()];
-			getOrdersByClientId.mockReturnValue(orders);
-			const toastContext = createToastContext();
-			useToastContext.mockReturnValue(toastContext);
-			cookies.mockReturnValue({get: () => ({value: "clientId"})});
+	return {...utils, orders, toastContext};
+};
 
-			render(await MyOrders());
-
-			expect(getOrdersByClientId).toHaveBeenCalledOnce();
-			const orderTableRows = screen.getAllByTestId("OrderTableRow");
-			expect(orderTableRows).toHaveLength(orders.length);
+describe("table of orders", () => {
+	it("renders orders when there is a client id in cookies", async () => {
+		const {orders} = await setUp({
+			orders: [createOrder()],
+			cookie: {value: "clientId"}
 		});
 
-		it("renders fallback text when there is no client id in cookies", async () => {
-			const toastContext = createToastContext();
-			useToastContext.mockReturnValue(toastContext);
-			cookies.mockReturnValue({get: () => ({})});
+		expect(getOrdersByClientId).toHaveBeenCalledOnce();
 
-			render(await MyOrders());
-
-			expect(getOrdersByClientId).not.toHaveBeenCalled();
-			const fallbackText = screen.getByText("You don't have any orders yet");
-			expect(fallbackText).toBeInTheDocument();
-		});
-
-		it("renders fallback text when there are no orders", async () => {
-			const orders = [];
-			getOrdersByClientId.mockReturnValue(orders);
-			const toastContext = createToastContext();
-			useToastContext.mockReturnValue(toastContext);
-			cookies.mockReturnValue({get: () => ({value: "clientId"})});
-
-			render(await MyOrders());
-
-			expect(getOrdersByClientId).toHaveBeenCalledOnce();
-			const fallbackText = screen.getByText("You don't have any orders yet");
-			expect(fallbackText).toBeInTheDocument();
+		const orderTableRows = screen.getAllByTestId(/order-table-row/);
+		expect(orderTableRows).toHaveLength(orders.length);
+		orders.forEach(order => {
+			const orderTableRow = screen.getByTestId(`order-table-row-${order.id}`);
+			expect(orderTableRow).toBeInTheDocument();
+			const deleteOrderButton = within(orderTableRow).getByRole("button", {
+				name: /delete/i
+			});
+			expect(deleteOrderButton).toBeInTheDocument();
+			expect(deleteOrderButton).toHaveAttribute("type", "submit");
 		});
 	});
 
-	describe("delete order button", () => {
-		it("renders button for the order table row", async () => {
-			const orders = [createOrder()];
-			getOrdersByClientId.mockReturnValue(orders);
-			const toastContext = createToastContext();
-			useToastContext.mockReturnValue(toastContext);
-			cookies.mockReturnValue({get: () => ({value: "clientId"})});
+	it("renders fallback text when there is no client id in cookies", async () => {
+		await setUp({cookie: null});
 
-			render(await MyOrders());
+		const fallbackText = screen.getByText("You don't have any orders yet");
+		expect(fallbackText).toBeInTheDocument();
+	});
 
-			const button = screen.getByRole("button", {name: /delete/i});
-			expect(button).toBeInTheDocument();
-			expect(button).toHaveAttribute("type", "submit");
+	it("renders fallback text when there are no orders", async () => {
+		await setUp({orders: [], cookie: {value: "clientId"}});
+
+		expect(getOrdersByClientId).toHaveBeenCalledOnce();
+		const fallbackText = screen.getByText("You don't have any orders yet");
+		expect(fallbackText).toBeInTheDocument();
+	});
+
+	it("deletes order when the delete order button is clicked", async () => {
+		const orderId = 1;
+		const {toastContext} = await setUp({
+			orders: [createOrder(orderId)],
+			cookie: {value: "clientId"}
 		});
 
-		it("successfully deletes order", async () => {
-			const orderId = 1;
-			const orders = [createOrder(orderId)];
-			getOrdersByClientId.mockReturnValue(orders);
-			const toastContext = createToastContext();
-			useToastContext.mockReturnValue(toastContext);
-			cookies.mockReturnValue({get: () => ({value: "clientId"})});
+		const button = screen.getByRole("button", {name: /delete/i});
+		fireEvent.click(button);
 
-			render(await MyOrders());
-
-			const button = screen.getByRole("button", {name: /delete/i});
-			fireEvent.click(button);
-
-			await waitFor(() => {
-				expect(deleteOrder).toHaveBeenCalledWith(orderId);
-				expect(toastContext.showToast).toHaveBeenCalledWith(
-					"success",
-					"Your order have been deleted"
-				);
-			});
+		await waitFor(() => {
+			expect(deleteOrder).toHaveBeenCalledWith(orderId);
+			expect(toastContext.showToast).toHaveBeenCalledWith(
+				"success",
+				"Your order have been deleted"
+			);
 		});
 	});
 });

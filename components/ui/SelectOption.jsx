@@ -1,5 +1,7 @@
-const SelectOption = ({children, value}) => (
-	<option value={value}>{children}</option>
+const SelectOption = ({children, value, testId}) => (
+	<option value={value} data-testid={testId}>
+		{children}
+	</option>
 );
 
 export default SelectOption;

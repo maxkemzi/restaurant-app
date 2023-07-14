@@ -2,6 +2,7 @@ import {createProduct} from "@/__tests__/utils";
 import Products from "@/app/products/page";
 import {getProducts} from "@/lib/prisma/products";
 import {render, screen, within} from "@testing-library/react";
+import {useSearchParams} from "next/navigation";
 import {describe, expect, it, vi} from "vitest";
 
 vi.mock("@/lib/prisma/products", () => ({
@@ -10,130 +11,90 @@ vi.mock("@/lib/prisma/products", () => ({
 
 vi.mock("next/navigation", () => ({
 	...require("next-router-mock"),
-	useSearchParams: () => ({get: vi.fn()}),
+	useSearchParams: vi.fn(),
 	usePathname: vi.fn()
 }));
 
-vi.mock("@/components/ProductCard", () => ({
-	default: ({buttonSlot}) => <div data-testid="ProductCard">{buttonSlot}</div>
-}));
+const setUp = async values => {
+	useSearchParams.mockReturnValue(new URLSearchParams());
+	const products = values?.products || [];
+	getProducts.mockReturnValue(products);
+	const utils = render(await Products({searchParams: {}}));
 
-vi.mock("@/components/AddToCartButton", () => ({
-	default: () => (
-		<button type="button" data-testid="AddToCartButton">
-			AddToCartButton
-		</button>
-	)
-}));
+	return {...utils, products};
+};
 
-describe("Products", () => {
-	describe("renders product filters", () => {
-		it("renders all filters if there are vegan and spicy products", async () => {
-			const products = [
-				createProduct(1, {isSpicy: true}),
-				createProduct(2, {isVegan: true})
-			];
-			getProducts.mockReturnValue(products);
+describe("product filters", () => {
+	it("renders filters if there is at least one vegan product", async () => {
+		await setUp({products: [createProduct(1, {isVegan: true})]});
 
-			render(await Products({searchParams: {}}));
+		const productFilters = screen.getByTestId("product-filters");
+		expect(productFilters).toBeInTheDocument();
+	});
 
-			const spicyFilter = screen.getByLabelText("Spicy");
-			expect(spicyFilter).toBeInTheDocument();
+	it("renders filters if there is at least one spicy product", async () => {
+		await setUp({products: [createProduct(1, {isSpicy: true})]});
 
-			const veganFilter = screen.getByLabelText("Vegan");
-			expect(veganFilter).toBeInTheDocument();
+		const productFilters = screen.getByTestId("product-filters");
+		expect(productFilters).toBeInTheDocument();
+	});
+
+	it("doesn't render filters if there are no either vegan or spicy products", async () => {
+		await setUp({
+			products: [
+				createProduct(1, {isVegan: false}),
+				createProduct(2, {isSpicy: false})
+			]
 		});
 
-		it("doesn't render filters if there are no either vegan or spicy products", async () => {
-			const products = [];
-			getProducts.mockReturnValue(products);
+		const productFilters = screen.queryByTestId("product-filters");
+		expect(productFilters).not.toBeInTheDocument();
+	});
+});
 
-			render(await Products({searchParams: {}}));
+it("renders sort select", async () => {
+	await setUp();
 
-			const spicyFilter = screen.queryByLabelText("Spicy");
-			expect(spicyFilter).not.toBeInTheDocument();
+	const select = screen.getByTestId("sort-select");
+	expect(select).toBeInTheDocument();
 
-			const veganFilter = screen.queryByLabelText("Vegan");
-			expect(veganFilter).not.toBeInTheDocument();
+	const sortByOption = screen.getByTestId("sort-by-option");
+	expect(sortByOption).toBeInTheDocument();
+	expect(sortByOption).toHaveTextContent(/sort by/i);
+	expect(sortByOption).toHaveValue("");
+
+	const priceLowToHighOption = screen.getByTestId("price-asc-option");
+	expect(priceLowToHighOption).toBeInTheDocument();
+	expect(priceLowToHighOption).toHaveTextContent(/Price: Low to High/i);
+	expect(priceLowToHighOption).toHaveValue("priceAsc");
+
+	const priceHighToLowOption = screen.getByTestId("price-desc-option");
+	expect(priceHighToLowOption).toBeInTheDocument();
+	expect(priceHighToLowOption).toHaveTextContent(/Price: High to Low/i);
+	expect(priceHighToLowOption).toHaveValue("priceDesc");
+});
+
+describe("product list", () => {
+	it("renders list if there is at least one product", async () => {
+		const {products} = await setUp({
+			products: [createProduct(), createProduct(2)]
 		});
 
-		it("renders only spicy filter if there are only spicy products", async () => {
-			const products = [createProduct(1, {isSpicy: true})];
-			getProducts.mockReturnValue(products);
-
-			render(await Products({searchParams: {}}));
-
-			const spicyFilter = screen.getByLabelText("Spicy");
-			expect(spicyFilter).toBeInTheDocument();
-
-			const veganFilter = screen.queryByLabelText("Vegan");
-			expect(veganFilter).not.toBeInTheDocument();
-		});
-
-		it("renders only vegan filter if there are only vegan products", async () => {
-			const products = [createProduct(1, {isVegan: true})];
-			getProducts.mockReturnValue(products);
-
-			render(await Products({searchParams: {}}));
-
-			const spicyFilter = screen.queryByLabelText("Spicy");
-			expect(spicyFilter).not.toBeInTheDocument();
-
-			const veganFilter = screen.getByLabelText("Vegan");
-			expect(veganFilter).toBeInTheDocument();
+		const productCards = screen.getAllByTestId(/product-card/);
+		expect(productCards).toHaveLength(products.length);
+		products.forEach(product => {
+			const productCard = screen.getByTestId(`product-card-${product.id}`);
+			expect(productCard).toBeInTheDocument();
+			const addToCartButton =
+				within(productCard).getByTestId("add-to-cart-button");
+			expect(addToCartButton).toBeInTheDocument();
 		});
 	});
 
-	it("renders sort select", async () => {
-		const products = [];
-		getProducts.mockReturnValue(products);
+	it("renders fallback message if there are no products", async () => {
+		await setUp({products: []});
 
-		render(await Products({searchParams: {}}));
-
-		const select = screen.getByRole("combobox");
-		expect(select).toBeInTheDocument();
-
-		const sortByOption = within(select).getByRole("option", {
-			name: /sort by/i,
-			value: ""
-		});
-		expect(sortByOption).toBeInTheDocument();
-
-		const priceLowToHighOption = within(select).getByRole("option", {
-			name: /Price: Low to High/i,
-			value: "priceAsc"
-		});
-		expect(priceLowToHighOption).toBeInTheDocument();
-
-		const priceHighToLowOption = within(select).getByRole("option", {
-			name: /Price: High to Low/i,
-			value: "priceDesc"
-		});
-		expect(priceHighToLowOption).toBeInTheDocument();
-	});
-
-	describe("renders product list", () => {
-		it("successfully renders product list", async () => {
-			const products = [createProduct(), createProduct(2)];
-			getProducts.mockReturnValue(products);
-
-			render(await Products({searchParams: {}}));
-
-			const productCards = screen.getAllByTestId("ProductCard");
-			expect(productCards).toHaveLength(products.length);
-
-			const addToCartButtons = screen.getAllByTestId("AddToCartButton");
-			expect(addToCartButtons).toHaveLength(products.length);
-		});
-
-		it("renders fallback message when products list is empty", async () => {
-			const products = [];
-			getProducts.mockReturnValue(products);
-
-			render(await Products({searchParams: {}}));
-
-			const fallbackText = screen.getByText(/there are no products/i);
-			expect(fallbackText).toBeInTheDocument();
-		});
+		const fallbackMessage = screen.getByText(/there are no products/i);
+		expect(fallbackMessage).toBeInTheDocument();
 	});
 });

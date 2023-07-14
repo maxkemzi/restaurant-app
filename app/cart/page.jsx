@@ -62,6 +62,7 @@ const Cart = () => {
 								InputProps={register("clientName", {
 									required: "Name is required"
 								})}
+								testId="name-text-field"
 							/>
 							<TextField
 								className="basis-1/2"
@@ -74,6 +75,7 @@ const Cart = () => {
 										message: "Invalid phone number"
 									}
 								})}
+								testId="phone-text-field"
 							/>
 						</div>
 						<h2>Delivery</h2>
@@ -85,6 +87,7 @@ const Cart = () => {
 								InputProps={register("clientAddress", {
 									required: "Client address is required"
 								})}
+								testId="address-text-field"
 							/>
 							<div className="basis-1/2" />
 						</div>
@@ -98,9 +101,14 @@ const Cart = () => {
 						<div className="stat flex justify-between items-center">
 							<div>
 								<div className="stat-title">Total cost</div>
-								<div className="stat-value">${cost}</div>
+								<div className="stat-value" data-testid="total-cost">
+									${cost}
+								</div>
 							</div>
-							<Button isSubmit isDisabled={count === 0}>
+							<Button
+								isSubmit
+								isDisabled={count === 0}
+								testId="place-order-button">
 								Place an order
 							</Button>
 						</div>

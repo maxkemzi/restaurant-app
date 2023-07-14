@@ -1,5 +1,5 @@
-const MobileMenu = ({children}) => (
-	<div className="dropdown">
+const MobileMenu = ({children, testId}) => (
+	<div className="dropdown" data-testid={testId}>
 		{/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
 		<label tabIndex={0} className="btn btn-ghost lg:hidden">
 			<svg

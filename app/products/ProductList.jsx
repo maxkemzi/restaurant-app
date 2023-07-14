@@ -12,7 +12,10 @@ const ProductList = ({products}) => {
 				<ProductCard
 					key={product.id}
 					product={product}
-					buttonSlot={<AddToCartButton product={product} />}
+					buttonSlot={
+						<AddToCartButton product={product} testId="add-to-cart-button" />
+					}
+					testId={`product-card-${product.id}`}
 				/>
 			))}
 		</div>

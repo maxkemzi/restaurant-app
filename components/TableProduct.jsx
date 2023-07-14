@@ -1,10 +1,10 @@
 import Image from "next/image";
 
-const TableProduct = ({count, product}) => {
+const TableProduct = ({count, product, testId}) => {
 	const {image, name} = product || {};
 
 	return (
-		<div className="card card-side bg-neutral shadow-xl">
+		<div className="card card-side bg-neutral shadow-xl" data-testid={testId}>
 			<div className="w-full flex items-center justify-center flex-wrap">
 				<div className="card-body p-4 sm:p-6 md:p-8 basis-3/5">
 					<h5 className="capitalize font-semibold">{name}</h5>

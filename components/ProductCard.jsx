@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-const ProductCard = ({product, buttonSlot}) => {
+const ProductCard = ({product, buttonSlot, testId}) => {
 	const {
 		image,
 		sizeCm,
@@ -19,7 +19,7 @@ const ProductCard = ({product, buttonSlot}) => {
 	}).join(", ");
 
 	return (
-		<div className="card bg-base-100 shadow-xl">
+		<div className="card bg-base-100 shadow-xl" data-testid={testId}>
 			<figure className="px-2 py-2 sm:px-4 sm:py-2 md:px-6 md:py-4">
 				<div className="relative w-48 h-48">
 					<Image

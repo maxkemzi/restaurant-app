@@ -3,26 +3,24 @@ import {PathName, RestaurantInfo} from "@/lib/constants";
 import {fireEvent, render, screen} from "@testing-library/react";
 import mockRouter from "next-router-mock";
 import {MemoryRouterProvider} from "next-router-mock/MemoryRouterProvider";
-import {describe, expect, it} from "vitest";
+import {expect, it} from "vitest";
 
-describe("Logo", () => {
-	it("renders logo", () => {
-		render(<Logo />);
+it("renders logo link", () => {
+	render(<Logo />);
 
-		const link = screen.getByRole("link", {
-			name: new RegExp(RestaurantInfo.NAME, "i")
-		});
-		expect(link).toBeInTheDocument();
+	const link = screen.getByRole("link", {
+		name: new RegExp(RestaurantInfo.NAME, "i")
 	});
+	expect(link).toBeInTheDocument();
+});
 
-	it("navigates to the home path when the link is clicked", () => {
-		render(<Logo />, {wrapper: MemoryRouterProvider});
+it("navigates to the home path when the link is clicked", () => {
+	render(<Logo />, {wrapper: MemoryRouterProvider});
 
-		const link = screen.getByRole("link", {
-			name: new RegExp(RestaurantInfo.NAME, "i")
-		});
-		fireEvent.click(link);
-
-		expect(mockRouter.asPath).toBe(PathName.HOME);
+	const link = screen.getByRole("link", {
+		name: new RegExp(RestaurantInfo.NAME, "i")
 	});
+	fireEvent.click(link);
+
+	expect(mockRouter.asPath).toBe(PathName.HOME);
 });

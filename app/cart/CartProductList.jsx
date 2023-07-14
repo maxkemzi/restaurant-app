@@ -12,7 +12,13 @@ const CartProductList = ({cartProducts}) => {
 				<CartProductCard
 					key={cartProduct.id}
 					cartProduct={cartProduct}
-					actionsSlot={<AddToCartButton product={cartProduct} />}
+					actionsSlot={
+						<AddToCartButton
+							product={cartProduct}
+							testId="add-to-cart-button"
+						/>
+					}
+					testId={`cart-product-card-${cartProduct.id}`}
 				/>
 			))}
 		</div>

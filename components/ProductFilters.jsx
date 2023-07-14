@@ -4,7 +4,7 @@ import CheckboxField from "@/components/ui/CheckboxField";
 import {appendToQueryString, deleteFromQueryString} from "@/lib/helpers";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
 
-const ProductFilters = ({hasSpicyProducts, hasVeganProducts}) => {
+const ProductFilters = ({hasSpicyProducts, hasVeganProducts, testId}) => {
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
@@ -34,7 +34,7 @@ const ProductFilters = ({hasSpicyProducts, hasVeganProducts}) => {
 	}
 
 	return (
-		<div className="flex gap-4 md:gap-6">
+		<div className="flex gap-4 md:gap-6" data-testid={testId}>
 			{hasSpicyProducts ? (
 				<CheckboxField
 					variant="error"

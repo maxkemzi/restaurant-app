@@ -1,5 +1,5 @@
 import {getProducts} from "@/lib/prisma/products";
-import ProductFilters from "./ProductFilters";
+import ProductFilters from "../../components/ProductFilters";
 import ProductList from "./ProductList";
 import SortSelect from "./SortSelect";
 
@@ -26,6 +26,7 @@ const Products = async ({searchParams}) => {
 				<ProductFilters
 					hasSpicyProducts={hasSpicyProducts}
 					hasVeganProducts={hasVeganProducts}
+					testId="product-filters"
 				/>
 				<div className="ml-0 sm:ml-auto">
 					<SortSelect />

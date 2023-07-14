@@ -1,10 +1,12 @@
 import classNames from "classnames";
 import {useId} from "react";
 
-const TextField = ({label, error, className, InputProps}) => {
+const TextField = ({label, error, className, InputProps, testId}) => {
 	const id = useId();
 	return (
-		<div className={classNames(className, "form-control w-full")}>
+		<div
+			className={classNames(className, "form-control w-full")}
+			data-testid={testId}>
 			<label className="label" htmlFor={id} data-testid="label">
 				<span className="label-text">{label}</span>
 			</label>

@@ -4,66 +4,59 @@ import Button, {
 	ButtonVariant
 } from "@/components/ui/Button";
 import {fireEvent, render, screen} from "@testing-library/react";
-import {describe, expect, it, vi} from "vitest";
+import {expect, it, vi} from "vitest";
 
-describe("Button", () => {
-	it("renders button with default props", () => {
-		const text = "Click me";
+it("renders button with default props", () => {
+	const text = "Click me";
+	render(<Button>{text}</Button>);
 
-		render(<Button>{text}</Button>);
-		const button = screen.getByText(text);
+	const button = screen.getByRole("button", {name: text});
+	expect(button).toBeInTheDocument();
+	expect(button).toHaveAttribute("type", "button");
+	expect(button).toHaveClass("btn-md");
+	expect(button).toHaveClass("btn-primary");
+	expect(button).not.toHaveClass("btn-circle");
+});
 
-		expect(button).toBeInTheDocument();
-		expect(button).toHaveAttribute("type", "button");
-		expect(button).toHaveClass("btn-md");
-		expect(button).toHaveClass("btn-primary");
-		expect(button).not.toHaveClass("btn-circle");
-	});
+it("renders button with custom size", () => {
+	const text = "Click me";
+	render(<Button size={ButtonSize.SMALL}>{text}</Button>);
 
-	it("renders button with custom size", () => {
-		const text = "Click me";
+	const button = screen.getByRole("button", {name: text});
+	expect(button).toHaveClass("btn-sm");
+});
 
-		render(<Button size={ButtonSize.SMALL}>{text}</Button>);
-		const button = screen.getByText(text);
+it("renders button with custom color", () => {
+	const text = "Click me";
+	render(<Button color={ButtonColor.SUCCESS}>{text}</Button>);
 
-		expect(button).toHaveClass("btn-sm");
-	});
+	const button = screen.getByRole("button", {name: text});
+	expect(button).toHaveClass("btn-success");
+});
 
-	it("renders button with custom color", () => {
-		const text = "Click me";
+it("renders button with submit type", () => {
+	const text = "Click me";
+	render(<Button isSubmit>{text}</Button>);
 
-		render(<Button color={ButtonColor.SUCCESS}>{text}</Button>);
-		const button = screen.getByText(text);
+	const button = screen.getByRole("button", {name: text});
+	expect(button).toHaveAttribute("type", "submit");
+});
 
-		expect(button).toHaveClass("btn-success");
-	});
+it("renders button with circle variant", () => {
+	const text = "Click me";
+	render(<Button variant={ButtonVariant.CIRCLE}>{text}</Button>);
 
-	it("renders button with submit type", () => {
-		const text = "Click me";
+	const button = screen.getByRole("button", {name: text});
+	expect(button).toHaveClass("btn-circle");
+});
 
-		render(<Button isSubmit>{text}</Button>);
-		const button = screen.getByText(text);
+it("calls onClick handler when clicked", () => {
+	const text = "Click me";
+	const handleClick = vi.fn();
+	render(<Button onClick={handleClick}>{text}</Button>);
 
-		expect(button).toHaveAttribute("type", "submit");
-	});
+	const button = screen.getByRole("button", {name: text});
+	fireEvent.click(button);
 
-	it("renders button with circle variant", () => {
-		const text = "Click me";
-
-		render(<Button variant={ButtonVariant.CIRCLE}>{text}</Button>);
-		const button = screen.getByText(text);
-
-		expect(button).toHaveClass("btn-circle");
-	});
-
-	it("calls onClick handler when clicked", () => {
-		const text = "Click me";
-		const handleClick = vi.fn();
-
-		render(<Button onClick={handleClick}>{text}</Button>);
-		const button = screen.getByText(text);
-		fireEvent.click(button);
-
-		expect(handleClick).toHaveBeenCalledOnce();
-	});
+	expect(handleClick).toHaveBeenCalledOnce();
 });
