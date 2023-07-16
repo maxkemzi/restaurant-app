@@ -1,9 +1,11 @@
 import {vi} from "vitest";
 
 const createCartContext = (overrides = {}) => ({
+	products: [],
 	addProduct: vi.fn(),
 	removeProduct: vi.fn(),
-	cart: {count: 0, cost: 0, products: {}},
+	totalCount: 0,
+	totalCost: 0,
 	...overrides
 });
 

@@ -1,10 +1,10 @@
 import AddToCartButton from "@/components/AddToCartButton";
 import {useCartContext, useToastContext} from "@/lib/contexts";
-import {CartProductDTO} from "@/lib/dtos";
+import CartProductDTO from "@/lib/contexts/CartContext/CartProductDTO";
 import {fireEvent, render, screen} from "@testing-library/react";
 import {describe, expect, it, vi} from "vitest";
+import {createCartContext, createToastContext} from "../app/utils";
 import {createProduct} from "../utils";
-import {createToastContext, createCartContext} from "../app/utils";
 
 vi.mock("@/lib/contexts", () => ({
 	useCartContext: vi.fn(),
@@ -37,9 +37,7 @@ describe("add to cart button (if product is not in cart)", () => {
 		fireEvent.click(button);
 
 		expect(cartContext.addProduct).toHaveBeenCalledOnce();
-		expect(cartContext.addProduct).toHaveBeenCalledWith(
-			new CartProductDTO(product)
-		);
+		expect(cartContext.addProduct).toHaveBeenCalledWith(product);
 		expect(toastContext.showToast).toHaveBeenCalledOnce();
 		expect(toastContext.showToast).toHaveBeenCalledWith(
 			"success",
@@ -53,9 +51,7 @@ describe("add/remove from cart buttons (if product is in cart)", () => {
 		const product = createProduct();
 		setUp({
 			product,
-			cartContext: createCartContext({
-				cart: {products: {[product.id]: [new CartProductDTO(product)]}}
-			})
+			cartContext: createCartContext({products: [new CartProductDTO(product)]})
 		});
 
 		const removeButton = screen.getByTestId("remove-button");
@@ -71,9 +67,7 @@ describe("add/remove from cart buttons (if product is in cart)", () => {
 		const product = createProduct();
 		const {cartContext} = setUp({
 			product,
-			cartContext: createCartContext({
-				cart: {products: {[product.id]: [new CartProductDTO(product)]}}
-			})
+			cartContext: createCartContext({products: [new CartProductDTO(product)]})
 		});
 
 		const removeButton = screen.getByTestId("remove-button");
@@ -87,18 +81,14 @@ describe("add/remove from cart buttons (if product is in cart)", () => {
 		const product = createProduct();
 		const {cartContext, toastContext} = setUp({
 			product,
-			cartContext: createCartContext({
-				cart: {products: {[product.id]: [new CartProductDTO(product)]}}
-			})
+			cartContext: createCartContext({products: [new CartProductDTO(product)]})
 		});
 
 		const addButton = screen.getByTestId("add-button");
 		fireEvent.click(addButton);
 
 		expect(cartContext.addProduct).toHaveBeenCalledOnce();
-		expect(cartContext.addProduct).toHaveBeenCalledWith(
-			new CartProductDTO(product)
-		);
+		expect(cartContext.addProduct).toHaveBeenCalledWith(product);
 		expect(toastContext.showToast).toHaveBeenCalledOnce();
 		expect(toastContext.showToast).toHaveBeenCalledWith(
 			"success",

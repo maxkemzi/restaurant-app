@@ -3,22 +3,13 @@
 import Button from "@/components/ui/Button";
 import Icon from "@/components/ui/Icon";
 import {useCartContext, useToastContext} from "@/lib/contexts";
-import {CartProductDTO} from "@/lib/dtos";
 
 const AddToCartButton = ({product, testId}) => {
-	const {
-		addProduct,
-		removeProduct,
-		cart: {products}
-	} = useCartContext();
+	const {addProduct, removeProduct, products} = useCartContext();
 	const {showToast} = useToastContext();
 
-	const productInCart = Object.hasOwn(products, product.id);
-
 	const handleAddToCart = () => {
-		const cartProduct = new CartProductDTO(product);
-		addProduct(cartProduct);
-
+		addProduct(product);
 		showToast("success", "Product has been added to cart");
 	};
 
@@ -26,9 +17,9 @@ const AddToCartButton = ({product, testId}) => {
 		removeProduct(product.id);
 	};
 
-	if (productInCart) {
-		const productCount = products[product.id].length;
-
+	const productIsInCart = products.some(el => el.id === product.id);
+	if (productIsInCart) {
+		const productCount = products.find(el => el.id === product.id).count;
 		return (
 			<div
 				className="flex gap-2 justify-between items-center text-center"

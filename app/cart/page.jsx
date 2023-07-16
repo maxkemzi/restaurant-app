@@ -11,9 +11,7 @@ import CartProductList from "./CartProductList";
 import {placeOrder} from "./actions";
 
 const Cart = () => {
-	const {
-		cart: {products, cost, count}
-	} = useCartContext();
+	const {products, totalCost, totalCount} = useCartContext();
 	const {showToast} = useToastContext();
 	const router = useRouter();
 	const {
@@ -28,15 +26,11 @@ const Cart = () => {
 		}
 	});
 
-	const cartProducts = Object.values(products).map(productArr => productArr[0]);
-
-	const productIds = Object.entries(products).reduce((prev, [key, value]) => {
-		const ids = new Array(value.length).fill(Number(key));
-		return [...prev, ...ids];
-	}, []);
-
 	const onSubmit = async data => {
 		try {
+			const productIds = products.flatMap(({id, count}) =>
+				Array(count).fill(id)
+			);
 			const order = {...data, productIds};
 
 			await placeOrder(order);
@@ -95,19 +89,19 @@ const Cart = () => {
 				</div>
 				<div className="flex-1">
 					<div className="mb-6">
-						<CartProductList cartProducts={cartProducts} />
+						<CartProductList cartProducts={products} />
 					</div>
 					<div className="stats w-full">
 						<div className="stat flex justify-between items-center">
 							<div>
 								<div className="stat-title">Total cost</div>
 								<div className="stat-value" data-testid="total-cost">
-									${cost}
+									${totalCost}
 								</div>
 							</div>
 							<Button
 								isSubmit
-								isDisabled={count === 0}
+								isDisabled={totalCount === 0}
 								testId="place-order-button">
 								Place an order
 							</Button>

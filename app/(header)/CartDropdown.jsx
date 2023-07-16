@@ -6,9 +6,7 @@ import {useCartContext} from "@/lib/contexts";
 import Link from "next/link";
 
 const CartDropdown = () => {
-	const {
-		cart: {count, cost}
-	} = useCartContext();
+	const {totalCost, totalCount} = useCartContext();
 
 	return (
 		<div className="dropdown dropdown-end">
@@ -19,7 +17,7 @@ const CartDropdown = () => {
 					<span
 						className="badge badge-sm indicator-item"
 						data-testid="iconCount">
-						{count}
+						{totalCount}
 					</span>
 				</div>
 			</label>
@@ -27,8 +25,8 @@ const CartDropdown = () => {
 				tabIndex={0}
 				className="mt-3 z-[1] card card-compact dropdown-content w-40 sm:w-52 bg-base-100 shadow">
 				<div className="card-body">
-					<span className="font-bold text-lg">{count} Items</span>
-					<span className="text-info">Total: ${cost}</span>
+					<span className="font-bold text-lg">{totalCount} Items</span>
+					<span className="text-info">Total: ${totalCost}</span>
 					<div className="card-actions">
 						<Link href={PathName.CART} className="btn btn-primary btn-block">
 							View cart

@@ -1,7 +1,6 @@
 import {createProduct} from "@/__tests__/utils";
 import Cart from "@/app/cart/page";
 import {useCartContext, useToastContext} from "@/lib/contexts";
-import {CartProductDTO} from "@/lib/dtos";
 import {render, screen, within} from "@testing-library/react";
 import {describe, expect, it, vi} from "vitest";
 import {createCartContext, createToastContext} from "../utils";
@@ -21,9 +20,6 @@ vi.mock("@/lib/contexts", () => ({
 	useToastContext: vi.fn()
 }));
 
-const createCartProduct = (...args) =>
-	new CartProductDTO(createProduct(...args));
-
 const setUp = values => {
 	const cartContext = values?.cartContext || createCartContext();
 	useCartContext.mockReturnValue(cartContext);
@@ -39,7 +35,7 @@ it("renders total cart products cost", () => {
 
 	const totalCost = screen.getByTestId("total-cost");
 	expect(totalCost).toBeInTheDocument();
-	expect(totalCost).toHaveTextContent(`$${cartContext.cart.cost}`);
+	expect(totalCost).toHaveTextContent(`$${cartContext.totalCost}`);
 });
 
 describe("place order button", () => {
@@ -54,7 +50,11 @@ describe("place order button", () => {
 
 	it("renders non-disabled button if the product count is not equal to 0", () => {
 		setUp({
-			cartContext: createCartContext({cart: {products: {}, cost: 0, count: 5}})
+			cartContext: createCartContext({
+				products: [],
+				totalCost: 0,
+				totalCount: 5
+			})
 		});
 
 		const placeOrderButton = screen.getByTestId("place-order-button");
@@ -63,7 +63,11 @@ describe("place order button", () => {
 
 	it("renders disabled button if the product count is equal to 0", () => {
 		setUp({
-			cartContext: createCartContext({cart: {products: {}, cost: 0, count: 0}})
+			cartContext: createCartContext({
+				products: [],
+				totalCost: 0,
+				totalCount: 0
+			})
 		});
 
 		const placeOrderButton = screen.getByTestId("place-order-button");
@@ -99,18 +103,21 @@ it("renders text fields", () => {
 
 describe("cart product list", () => {
 	it("renders list if there is at least one product", () => {
-		const products = {
-			1: [createCartProduct(1, {name: "Product 1", weight: 500, priceUsd: 40})],
-			2: [createCartProduct(2, {name: "Product 2", weight: 250, priceUsd: 20})]
-		};
-		const cartProducts = Object.values(products).map(arr => arr[0]);
+		const products = [
+			createProduct(1, {name: "Product 1", weight: 500, priceUsd: 40}),
+			createProduct(2, {name: "Product 2", weight: 250, priceUsd: 20})
+		];
 		setUp({
-			cartContext: createCartContext({cart: {products, count: 0, cost: 0}})
+			cartContext: createCartContext({
+				products,
+				totalCost: 0,
+				totalCount: 0
+			})
 		});
 
 		const cartProductCards = screen.getAllByTestId(/cart-product-card/);
-		expect(cartProductCards).toHaveLength(cartProducts.length);
-		cartProducts.forEach(product => {
+		expect(cartProductCards).toHaveLength(products.length);
+		products.forEach(product => {
 			const cartProductCard = screen.getByTestId(
 				`cart-product-card-${product.id}`
 			);
@@ -135,7 +142,11 @@ describe("cart product list", () => {
 
 	it("renders fallback message if there are no products", () => {
 		setUp({
-			cartContext: createCartContext({cart: {products: [], count: 0, cost: 0}})
+			cartContext: createCartContext({
+				products: [],
+				totalCost: 0,
+				totalCount: 0
+			})
 		});
 
 		const fallbackMessage = screen.getByText(/your cart is empty/i);

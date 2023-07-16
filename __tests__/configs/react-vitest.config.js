@@ -9,7 +9,8 @@ export default mergeConfig(
 		test: {
 			include: [
 				"./__tests__/components/**/*.test.jsx",
-				"./__tests__/app/**/*.test.jsx"
+				"./__tests__/app/**/*.test.jsx",
+				"./__tests__/lib/contexts/**/*.test.jsx"
 			],
 			setupFiles: ["./__tests__/setups/reactSetup.js"],
 			environment: "jsdom"

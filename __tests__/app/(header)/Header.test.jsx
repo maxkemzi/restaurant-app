@@ -76,13 +76,13 @@ it("renders cart dropdown", async () => {
 
 	const iconCount = screen.getByTestId("iconCount");
 	expect(iconCount).toBeInTheDocument();
-	expect(iconCount).toHaveTextContent(cartContext.cart.count);
+	expect(iconCount).toHaveTextContent(cartContext.totalCount);
 	const menuCount = screen.getByText(
-		new RegExp(`${cartContext.cart.count} Items`, "i")
+		new RegExp(`${cartContext.totalCount} Items`, "i")
 	);
 	expect(menuCount).toBeInTheDocument();
 	const totalCost = screen.getByText(
-		new RegExp(`Total: \\$${cartContext.cart.cost}`, "i")
+		new RegExp(`Total: \\$${cartContext.totalCost}`, "i")
 	);
 	expect(totalCost).toBeInTheDocument();
 });
