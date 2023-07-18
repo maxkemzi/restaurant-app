@@ -1,6 +1,5 @@
 import AddToCartButton from "@/components/AddToCartButton";
 import {useCartContext, useToastContext} from "@/lib/contexts";
-import CartProductDTO from "@/lib/contexts/CartContext/CartProductDTO";
 import {fireEvent, render, screen} from "@testing-library/react";
 import {describe, expect, it, vi} from "vitest";
 import {createCartContext, createToastContext} from "../app/utils";
@@ -51,7 +50,7 @@ describe("add/remove from cart buttons (if product is in cart)", () => {
 		const product = createProduct();
 		setUp({
 			product,
-			cartContext: createCartContext({products: [new CartProductDTO(product)]})
+			cartContext: createCartContext({products: [{...product, count: 1}]})
 		});
 
 		const removeButton = screen.getByTestId("remove-button");
@@ -67,7 +66,7 @@ describe("add/remove from cart buttons (if product is in cart)", () => {
 		const product = createProduct();
 		const {cartContext} = setUp({
 			product,
-			cartContext: createCartContext({products: [new CartProductDTO(product)]})
+			cartContext: createCartContext({products: [product]})
 		});
 
 		const removeButton = screen.getByTestId("remove-button");
@@ -81,7 +80,7 @@ describe("add/remove from cart buttons (if product is in cart)", () => {
 		const product = createProduct();
 		const {cartContext, toastContext} = setUp({
 			product,
-			cartContext: createCartContext({products: [new CartProductDTO(product)]})
+			cartContext: createCartContext({products: [product]})
 		});
 
 		const addButton = screen.getByTestId("add-button");

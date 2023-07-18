@@ -1,6 +1,5 @@
 import {createProduct} from "@/__tests__/utils";
 import {CartProvider, useCartContext} from "@/lib/contexts";
-import CartProductDTO from "@/lib/contexts/CartContext/CartProductDTO";
 import {fireEvent, render, screen, within} from "@testing-library/react";
 import {expect, it, vi} from "vitest";
 
@@ -55,18 +54,15 @@ it("provider provides children with correct values from local storage", () => {
 	const {products} = setUp({
 		ui: <CartConsumer />,
 		products: [
-			{...new CartProductDTO(createProduct(1, {priceUsd: 40})), count: 1},
-			{...new CartProductDTO(createProduct(2, {priceUsd: 20})), count: 4}
+			{...createProduct(1, {priceUsd: 40}), count: 1},
+			{...createProduct(2, {priceUsd: 20}), count: 4}
 		]
 	});
 
 	const totalCount = screen.getByTestId("total-count");
-	expect(totalCount).toHaveTextContent(products[0].count + products[1].count);
+	expect(totalCount).toHaveTextContent("5");
 	const totalCost = screen.getByTestId("total-cost");
-	expect(totalCost).toHaveTextContent(
-		products[0].priceUsd * products[0].count +
-			products[1].priceUsd * products[1].count
-	);
+	expect(totalCost).toHaveTextContent("120");
 	const productEls = screen.getAllByTestId(/product/);
 	expect(productEls).toHaveLength(products.length);
 	products.forEach(product => {
@@ -104,7 +100,16 @@ it("adds product to storage when the addProduct is called", () => {
 	const addButton = screen.getByRole("button", {name: /add product/i});
 	fireEvent.click(addButton);
 
-	const updatedProducts = [...products, new CartProductDTO(newProduct)];
+	const newCartProduct = {
+		name: newProduct.name,
+		image: newProduct.image,
+		weight: newProduct.weight,
+		id: newProduct.id,
+		sizeCm: newProduct.sizeCm,
+		priceUsd: newProduct.priceUsd,
+		count: 1
+	};
+	const updatedProducts = [...products, newCartProduct];
 	expect(setItem).toHaveBeenCalledWith(
 		"cartProducts",
 		JSON.stringify(updatedProducts)
@@ -112,25 +117,37 @@ it("adds product to storage when the addProduct is called", () => {
 });
 
 it("removes product from state when the removeProduct is called", async () => {
-	const products = [new CartProductDTO(createProduct())];
-	setUp({ui: <CartConsumer productIdToRemove={products[0].id} />, products});
+	const productId = 1;
+	const products = [{...createProduct(productId), count: 1}];
+	setUp({ui: <CartConsumer productIdToRemove={productId} />, products});
 
 	const removeButton = screen.getByRole("button", {name: /remove product/i});
 	fireEvent.click(removeButton);
 
-	const productEl = screen.queryByTestId(`product-${products[0].id}`);
+	const productEl = screen.queryByTestId(`product-${productId}`);
 	expect(productEl).not.toBeInTheDocument();
 });
 
 it("removes product from storage when the removeProduct is called", async () => {
-	const products = [new CartProductDTO(createProduct())];
-	setUp({ui: <CartConsumer productIdToRemove={products[0].id} />, products});
+	const productId = 1;
+	const products = [
+		{
+			id: productId,
+			name: "name",
+			image: "image",
+			weight: "weight",
+			sizeCm: 0,
+			priceUsd: 0,
+			count: 1
+		}
+	];
+	setUp({ui: <CartConsumer productIdToRemove={productId} />, products});
 
 	const setItem = vi.spyOn(Storage.prototype, "setItem");
 	const removeButton = screen.getByRole("button", {name: /remove product/i});
 	fireEvent.click(removeButton);
 
-	const updatedProducts = products.filter(el => el.id !== products[0].id);
+	const updatedProducts = products.filter(el => el.id !== productId);
 	expect(setItem).toHaveBeenCalledWith(
 		"cartProducts",
 		JSON.stringify(updatedProducts)
