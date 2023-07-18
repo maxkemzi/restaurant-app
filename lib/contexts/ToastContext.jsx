@@ -60,21 +60,19 @@ const ToastProvider = ({children}) => {
 	return (
 		<ToastContext.Provider value={value}>
 			{children}
-			<div
-				className={classNames("toast toast-top toast-end z-50", {
-					invisible: !isVisible,
-					"opacity-0": !isVisible
-				})}>
-				<button
-					onClick={hideToast}
-					type="button"
-					className={classNames("alert", {
-						"alert-error": toast.type === "error",
-						"alert-success": toast.type === "success"
-					})}>
-					<span>{toast.message}</span>
-				</button>
-			</div>
+			{isVisible ? (
+				<div className="toast toast-top toast-end z-50">
+					<button
+						onClick={hideToast}
+						type="button"
+						className={classNames("alert", {
+							"alert-error": toast.type === "error",
+							"alert-success": toast.type === "success"
+						})}>
+						<span>{toast.message}</span>
+					</button>
+				</div>
+			) : null}
 		</ToastContext.Provider>
 	);
 };
