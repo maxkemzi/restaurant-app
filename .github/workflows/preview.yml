@@ -27,7 +27,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install dependencies
-        run: npm install
+        uses: cypress-io/github-action@v5
+        with:
+          runTests: false
       - name: Setup database
         run: npx prisma generate && npx prisma migrate deploy
       - name: Run unit tests
@@ -35,6 +37,7 @@ jobs:
       - name: Run E2E tests
         uses: cypress-io/github-action@v5
         with:
+          install: false
           build: npm run build
           start: npm start
       - name: Check code style
