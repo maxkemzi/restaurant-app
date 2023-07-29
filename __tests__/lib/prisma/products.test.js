@@ -4,8 +4,8 @@ import {
 	getProductById,
 	getProducts,
 	updateProductById
-} from "@/lib/prisma/products";
-import prismaMock from "@/prisma/__mocks__/client";
+} from "@/src/lib/prisma/products";
+import prismaMock from "@/src/prisma/__mocks__/client";
 import {describe, expect, it} from "vitest";
 
 describe("products service", () => {

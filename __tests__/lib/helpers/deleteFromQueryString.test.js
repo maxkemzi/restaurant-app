@@ -1,5 +1,5 @@
-import {deleteFromQueryString} from "@/lib/helpers";
-import {expect, it, describe} from "vitest";
+import {deleteFromQueryString} from "@/src/lib/helpers";
+import {describe, expect, it} from "vitest";
 
 describe("deletion of the parameter from the query string", () => {
 	it("should work with an existing parameter", () => {

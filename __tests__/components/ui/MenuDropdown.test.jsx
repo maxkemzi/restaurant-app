@@ -1,4 +1,4 @@
-import MenuDropdown from "@/components/ui/MenuDropdown";
+import MenuDropdown from "@/src/components/ui/MenuDropdown";
 import {render, screen, within} from "@testing-library/react";
 import {expect, it} from "vitest";
 

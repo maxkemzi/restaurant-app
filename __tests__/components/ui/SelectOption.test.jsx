@@ -1,4 +1,4 @@
-import SelectOption from "@/components/ui/SelectOption";
+import SelectOption from "@/src/components/ui/SelectOption";
 import {render, screen, within} from "@testing-library/react";
 import {expect, it} from "vitest";
 

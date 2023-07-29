@@ -1,4 +1,4 @@
-import {ToastProvider, useToastContext} from "@/lib/contexts";
+import {ToastProvider, useToastContext} from "@/src/lib/contexts";
 import {act, fireEvent, render, screen} from "@testing-library/react";
 import {beforeEach, expect, it, vi} from "vitest";
 

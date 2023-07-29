@@ -1,5 +1,5 @@
-import {setToQueryString} from "@/lib/helpers";
-import {expect, it, describe} from "vitest";
+import {setToQueryString} from "@/src/lib/helpers";
+import {describe, expect, it} from "vitest";
 
 describe("settings a new parameter to the query string", () => {
 	it("should work with an empty query string", () => {

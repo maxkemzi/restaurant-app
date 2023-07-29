@@ -1,19 +1,19 @@
 import {createCategory} from "@/__tests__/utils";
-import Header from "@/app/(header)/Header";
-import {PathName} from "@/lib/constants";
-import {useCartContext} from "@/lib/contexts";
-import {getCategories} from "@/lib/prisma/categories";
+import Header from "@/src/app/(header)/Header";
+import {PathName} from "@/src/lib/constants";
+import {useCartContext} from "@/src/lib/contexts";
+import {getCategories} from "@/src/lib/prisma/categories";
 import {fireEvent, render, screen, within} from "@testing-library/react";
 import mockRouter from "next-router-mock";
 import {MemoryRouterProvider} from "next-router-mock/MemoryRouterProvider";
 import {expect, it, vi} from "vitest";
 import {createCartContext} from "../utils";
 
-vi.mock("@/lib/prisma/categories", () => ({
+vi.mock("@/src/lib/prisma/categories", () => ({
 	getCategories: vi.fn()
 }));
 
-vi.mock("@/lib/contexts", () => ({
+vi.mock("@/src/lib/contexts", () => ({
 	useCartContext: vi.fn()
 }));
 

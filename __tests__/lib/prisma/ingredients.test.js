@@ -4,8 +4,8 @@ import {
 	getIngredientById,
 	getIngredients,
 	updateIngredientById
-} from "@/lib/prisma/ingredients";
-import prismaMock from "@/prisma/__mocks__/client";
+} from "@/src/lib/prisma/ingredients";
+import prismaMock from "@/src/prisma/__mocks__/client";
 import {describe, expect, it} from "vitest";
 
 describe("ingredients service", () => {

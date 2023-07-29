@@ -1,4 +1,4 @@
-import ProductFilters from "@/components/ProductFilters";
+import ProductFilters from "@/src/components/ProductFilters";
 import {render, screen} from "@testing-library/react";
 import {expect, it, vi} from "vitest";
 

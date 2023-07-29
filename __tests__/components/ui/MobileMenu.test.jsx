@@ -1,4 +1,4 @@
-import MobileMenu from "@/components/ui/MobileMenu";
+import MobileMenu from "@/src/components/ui/MobileMenu";
 import {render, screen, within} from "@testing-library/react";
 import {expect, it} from "vitest";
 

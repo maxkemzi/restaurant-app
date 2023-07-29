@@ -1,11 +1,11 @@
-import AddToCartButton from "@/components/AddToCartButton";
-import {useCartContext, useToastContext} from "@/lib/contexts";
+import AddToCartButton from "@/src/components/AddToCartButton";
+import {useCartContext, useToastContext} from "@/src/lib/contexts";
 import {fireEvent, render, screen} from "@testing-library/react";
 import {describe, expect, it, vi} from "vitest";
 import {createCartContext, createToastContext} from "../app/utils";
 import {createProduct} from "../utils";
 
-vi.mock("@/lib/contexts", () => ({
+vi.mock("@/src/lib/contexts", () => ({
 	useCartContext: vi.fn(),
 	useToastContext: vi.fn()
 }));

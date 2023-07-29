@@ -1,5 +1,5 @@
-import {parseQueryParams} from "@/lib/helpers";
-import {it, expect, describe} from "vitest";
+import {parseQueryParams} from "@/src/lib/helpers";
+import {describe, expect, it} from "vitest";
 
 describe("parsing query parameters", () => {
 	it("should parse an empty parameters object", () => {

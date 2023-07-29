@@ -1,7 +1,7 @@
-import {deleteOrder} from "@/app/my-orders/actions";
-import MyOrders from "@/app/my-orders/page";
-import {useToastContext} from "@/lib/contexts";
-import {getOrdersByClientId} from "@/lib/prisma/orders";
+import {deleteOrder} from "@/src/app/my-orders/actions";
+import MyOrders from "@/src/app/my-orders/page";
+import {useToastContext} from "@/src/lib/contexts";
+import {getOrdersByClientId} from "@/src/lib/prisma/orders";
 import {
 	fireEvent,
 	render,
@@ -18,15 +18,15 @@ vi.mock("next/headers", () => ({
 	cookies: vi.fn()
 }));
 
-vi.mock("@/lib/prisma/orders", () => ({
+vi.mock("@/src/lib/prisma/orders", () => ({
 	getOrdersByClientId: vi.fn()
 }));
 
-vi.mock("@/app/my-orders/actions", () => ({
+vi.mock("@/src/app/my-orders/actions", () => ({
 	deleteOrder: vi.fn()
 }));
 
-vi.mock("@/lib/contexts", () => ({
+vi.mock("@/src/lib/contexts", () => ({
 	useToastContext: vi.fn()
 }));
 

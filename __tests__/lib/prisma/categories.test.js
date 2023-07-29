@@ -4,8 +4,8 @@ import {
 	getCategories,
 	getCategoryById,
 	updateCategoryById
-} from "@/lib/prisma/categories";
-import prismaMock from "@/prisma/__mocks__/client";
+} from "@/src/lib/prisma/categories";
+import prismaMock from "@/src/prisma/__mocks__/client";
 import {describe, expect, it} from "vitest";
 
 describe("categories service", () => {

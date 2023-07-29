@@ -1,4 +1,4 @@
-import MenuItem from "@/components/ui/MenuItem";
+import MenuItem from "@/src/components/ui/MenuItem";
 import {fireEvent, render, screen} from "@testing-library/react";
 import mockRouter from "next-router-mock";
 import {MemoryRouterProvider} from "next-router-mock/MemoryRouterProvider";

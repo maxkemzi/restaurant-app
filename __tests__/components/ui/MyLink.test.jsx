@@ -1,4 +1,4 @@
-import MyLink, {LinkSize} from "@/components/ui/MyLink";
+import MyLink, {LinkSize} from "@/src/components/ui/MyLink";
 import {fireEvent, render, screen} from "@testing-library/react";
 import mockRouter from "next-router-mock";
 import {MemoryRouterProvider} from "next-router-mock/MemoryRouterProvider";

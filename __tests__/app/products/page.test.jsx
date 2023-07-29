@@ -1,11 +1,11 @@
 import {createProduct} from "@/__tests__/utils";
-import Products from "@/app/products/page";
-import {getProducts} from "@/lib/prisma/products";
+import Products from "@/src/app/products/page";
+import {getProducts} from "@/src/lib/prisma/products";
 import {render, screen, within} from "@testing-library/react";
 import {useSearchParams} from "next/navigation";
 import {describe, expect, it, vi} from "vitest";
 
-vi.mock("@/lib/prisma/products", () => ({
+vi.mock("@/src/lib/prisma/products", () => ({
 	getProducts: vi.fn()
 }));
 

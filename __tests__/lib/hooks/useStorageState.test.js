@@ -1,6 +1,6 @@
-import {useStorageState} from "@/lib/hooks";
-import {afterEach, it, expect} from "vitest";
-import {renderHook, act} from "@testing-library/react";
+import {useStorageState} from "@/src/lib/hooks";
+import {act, renderHook} from "@testing-library/react";
+import {afterEach, expect, it} from "vitest";
 
 afterEach(() => {
 	localStorage.clear();

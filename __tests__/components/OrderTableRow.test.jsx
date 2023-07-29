@@ -4,8 +4,8 @@ import {
 	createOrder,
 	createProduct
 } from "@/__tests__/utils";
-import OrderTableRow from "@/components/OrderTableRow";
-import {OrderStatus} from "@/lib/constants";
+import OrderTableRow from "@/src/components/OrderTableRow";
+import {OrderStatus} from "@/src/lib/constants";
 import {render, screen} from "@testing-library/react";
 import {expect, it} from "vitest";
 

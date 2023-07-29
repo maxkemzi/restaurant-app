@@ -1,7 +1,7 @@
 import {createProduct} from "@/__tests__/utils";
-import TableProduct from "@/components/TableProduct";
+import TableProduct from "@/src/components/TableProduct";
 import {render, screen} from "@testing-library/react";
-import {it, expect} from "vitest";
+import {expect, it} from "vitest";
 
 it("renders table product", () => {
 	const product = createProduct();

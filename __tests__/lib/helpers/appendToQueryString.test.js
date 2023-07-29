@@ -1,4 +1,4 @@
-import {appendToQueryString} from "@/lib/helpers";
+import {appendToQueryString} from "@/src/lib/helpers";
 import {describe, expect, it} from "vitest";
 
 describe("appendix of a new parameter to the query string", () => {

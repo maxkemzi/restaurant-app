@@ -1,4 +1,4 @@
-import TextField from "@/components/ui/TextField";
+import TextField from "@/src/components/ui/TextField";
 import {fireEvent, render, screen} from "@testing-library/react";
 import {expect, it, vi} from "vitest";
 

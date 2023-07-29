@@ -1,11 +1,11 @@
 import {createProduct} from "@/__tests__/utils";
-import Cart from "@/app/cart/page";
-import {useCartContext, useToastContext} from "@/lib/contexts";
+import Cart from "@/src/app/cart/page";
+import {useCartContext, useToastContext} from "@/src/lib/contexts";
 import {render, screen, within} from "@testing-library/react";
 import {describe, expect, it, vi} from "vitest";
 import {createCartContext, createToastContext} from "../utils";
 
-vi.mock("@/app/cart/actions", () => ({
+vi.mock("@/src/app/cart/actions", () => ({
 	placeOrder: vi.fn()
 }));
 
@@ -15,7 +15,7 @@ vi.mock("next/navigation", () => ({
 	usePathname: vi.fn()
 }));
 
-vi.mock("@/lib/contexts", () => ({
+vi.mock("@/src/lib/contexts", () => ({
 	useCartContext: vi.fn(),
 	useToastContext: vi.fn()
 }));

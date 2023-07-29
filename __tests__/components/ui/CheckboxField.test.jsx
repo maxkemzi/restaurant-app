@@ -1,4 +1,6 @@
-import CheckboxField, {CheckboxVariant} from "@/components/ui/CheckboxField";
+import CheckboxField, {
+	CheckboxVariant
+} from "@/src/components/ui/CheckboxField";
 import {fireEvent, render, screen} from "@testing-library/react";
 import {expect, it, vi} from "vitest";
 

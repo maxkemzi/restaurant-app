@@ -1,4 +1,4 @@
-import ParamSelect from "@/components/ParamSelect";
+import ParamSelect from "@/src/components/ParamSelect";
 import {fireEvent, render, screen, within} from "@testing-library/react";
 import mockRouter from "next-router-mock";
 import {MemoryRouterProvider} from "next-router-mock/MemoryRouterProvider";

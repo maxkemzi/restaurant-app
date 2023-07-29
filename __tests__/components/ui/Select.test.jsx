@@ -1,4 +1,4 @@
-import Select from "@/components/ui/Select";
+import Select from "@/src/components/ui/Select";
 import {fireEvent, render, screen, within} from "@testing-library/react";
 import {expect, it, vi} from "vitest";
 

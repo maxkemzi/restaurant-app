@@ -1,5 +1,5 @@
 import {createProduct} from "@/__tests__/utils";
-import {CartProvider, useCartContext} from "@/lib/contexts";
+import {CartProvider, useCartContext} from "@/src/lib/contexts";
 import {fireEvent, render, screen, within} from "@testing-library/react";
 import {expect, it, vi} from "vitest";
 

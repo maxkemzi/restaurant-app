@@ -1,11 +1,11 @@
-import ErrorComponent from "@/app/error";
-import {useToastContext} from "@/lib/contexts";
+import ErrorComponent from "@/src/app/error";
+import {useToastContext} from "@/src/lib/contexts";
 import {fireEvent, render, screen} from "@testing-library/react";
 import {expect, it, vi} from "vitest";
 import {createAppError} from "../utils";
 import {createToastContext} from "./utils";
 
-vi.mock("@/lib/contexts", () => ({
+vi.mock("@/src/lib/contexts", () => ({
 	useToastContext: vi.fn()
 }));
 

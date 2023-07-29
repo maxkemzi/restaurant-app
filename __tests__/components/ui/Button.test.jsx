@@ -2,7 +2,7 @@ import Button, {
 	ButtonColor,
 	ButtonSize,
 	ButtonVariant
-} from "@/components/ui/Button";
+} from "@/src/components/ui/Button";
 import {fireEvent, render, screen} from "@testing-library/react";
 import {expect, it, vi} from "vitest";
 

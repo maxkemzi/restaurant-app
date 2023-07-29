@@ -1,5 +1,5 @@
-import Home from "@/app/page";
-import {PathName, RestaurantInfo} from "@/lib/constants";
+import Home from "@/src/app/page";
+import {PathName, RestaurantInfo} from "@/src/lib/constants";
 import {fireEvent, render, screen} from "@testing-library/react";
 import mockRouter from "next-router-mock";
 import {MemoryRouterProvider} from "next-router-mock/MemoryRouterProvider";

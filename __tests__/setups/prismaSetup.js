@@ -1,6 +1,6 @@
-import {vi, beforeEach} from "vitest";
+import {beforeEach, vi} from "vitest";
 
-vi.mock("@/prisma/client");
+vi.mock("@/src/prisma/client");
 
 beforeEach(() => {
 	vi.restoreAllMocks();

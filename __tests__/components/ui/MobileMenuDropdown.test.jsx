@@ -1,4 +1,4 @@
-import MobileMenuDropdown from "@/components/ui/MobileMenuDropdown";
+import MobileMenuDropdown from "@/src/components/ui/MobileMenuDropdown";
 import {render, screen, within} from "@testing-library/react";
 import {expect, it} from "vitest";
 

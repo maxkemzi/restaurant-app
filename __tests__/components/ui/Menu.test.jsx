@@ -1,4 +1,4 @@
-import Menu from "@/components/ui/Menu";
+import Menu from "@/src/components/ui/Menu";
 import {render, screen, within} from "@testing-library/react";
 import {expect, it} from "vitest";
 
