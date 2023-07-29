@@ -11,7 +11,10 @@ const CartDropdown = () => {
 	return (
 		<div className="dropdown dropdown-end">
 			{/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-			<label tabIndex={0} className="btn btn-ghost btn-circle">
+			<label
+				tabIndex={0}
+				className="btn btn-ghost btn-circle"
+				data-testid="cart-button">
 				<div className="indicator">
 					<Icon name="cart" />
 					<span

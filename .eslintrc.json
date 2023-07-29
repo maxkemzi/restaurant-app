@@ -4,7 +4,8 @@
 		"airbnb",
 		"airbnb/hooks",
 		"plugin:react/jsx-runtime",
-		"prettier"
+		"prettier",
+		"plugin:cypress/recommended"
 	],
 	"plugins": ["prettier", "jsx-a11y"],
 	"settings": {
