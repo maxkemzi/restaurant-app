@@ -24,10 +24,11 @@ const ProductCard = ({product, buttonSlot, testId}) => {
 				<div className="relative w-48 h-48">
 					<Image
 						fill
-						objectFit="cover"
+						sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
 						src={image}
+						priority
 						alt={`${name} product image`}
-						className="rounded-xl"
+						className="rounded-xl object-cover"
 					/>
 				</div>
 			</figure>

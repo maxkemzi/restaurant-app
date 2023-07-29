@@ -8,7 +8,14 @@ const CartProductCard = ({actionsSlot, cartProduct, testId}) => {
 			data-testid={testId}>
 			<figure className="sm:p-4 p-2">
 				<div className="relative w-32 h-32">
-					<Image fill objectFit="cover" src={image} alt={name} />
+					<Image
+						className="object-cover"
+						sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+						fill
+						priority
+						src={image}
+						alt={name}
+					/>
 				</div>
 			</figure>
 			<div className="card-body p-4 sm:p-6 md:p-8 basis-3/5">

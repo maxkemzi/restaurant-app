@@ -13,7 +13,14 @@ const TableProduct = ({count, product, testId}) => {
 				<div className="p-2 hidden lg:block">
 					<figure>
 						<div className="relative w-20 h-20">
-							<Image fill objectFit="cover" src={image} alt={`${name} image`} />
+							<Image
+								fill
+								priority
+								className="object-cover"
+								sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+								src={image}
+								alt={`${name} image`}
+							/>
 						</div>
 					</figure>
 				</div>
