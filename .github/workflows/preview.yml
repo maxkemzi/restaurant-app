@@ -33,7 +33,9 @@ jobs:
       - name: Run unit tests
         run: npm test -- --reporter=html --outputFile=./reports/tests/index.html
       - name: Run E2E tests
-        run: npm run test:e2e:headless
+        uses: coactions/setup-xvfb@v1
+        with:
+          run: npm run test:e2e:headless
       - name: Check code style
         run: npm run lint -- -f node_modules/eslint-html-reporter/reporter.js -o ./reports/lint/index.html
       - name: Upload lint and test results
