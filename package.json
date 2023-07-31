@@ -8,7 +8,7 @@
 		"start": "next start",
 		"lint": "next lint",
 		"test:e2e": "start-server-and-test dev http://localhost:3000 \"cypress open --e2e\"",
-		"test:e2e:headless": "start-server-and-test dev http://localhost:3000 \"cypress run --e2e\"",
+		"test:e2e:headless": "start-server-and-test dev http://localhost:3000 \"cypress run --e2e --headless\"",
 		"test:react": "vitest --config ./__tests__/configs/react-vitest.config.js",
 		"test:prisma": "vitest --config ./__tests__/configs/prisma-vitest.config.js",
 		"test": "vitest --watch=false",
