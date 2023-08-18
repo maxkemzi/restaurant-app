@@ -8,16 +8,12 @@ import {PathName} from "@/src/lib/constants";
 import {getCategories} from "@/src/lib/prisma/categories";
 import Logo from "../../components/Logo";
 import CartDropdown from "./CartDropdown";
+import CategoryMenuItems from "./CategoryMenuItems";
 
 export const revalidate = 60;
 
 const Header = async () => {
 	const categories = await getCategories();
-
-	const getCategoryLinkPath = categoryName => ({
-		pathname: PathName.PRODUCTS,
-		query: {categoryName}
-	});
 
 	return (
 		<header className="navbar bg-base z-50 flex-wrap sm:flex-nowrap">
@@ -25,19 +21,7 @@ const Header = async () => {
 				<MobileMenu testId="mobile-menu">
 					<MenuItem path={PathName.HOME} text="Home" testId="menu-item-home" />
 					<MobileMenuDropdown text="Menu">
-						<MenuItem
-							path={PathName.PRODUCTS}
-							text="All"
-							testId="menu-item-all"
-						/>
-						{categories.map(({name, id}) => (
-							<MenuItem
-								key={id}
-								path={getCategoryLinkPath(name)}
-								text={name}
-								testId={`menu-item-category-${id}`}
-							/>
-						))}
+						<CategoryMenuItems categories={categories} />
 					</MobileMenuDropdown>
 				</MobileMenu>
 				<Logo testId="logo" />
@@ -46,19 +30,7 @@ const Header = async () => {
 				<Menu testId="menu">
 					<MenuItem path={PathName.HOME} text="Home" testId="menu-item-home" />
 					<MenuDropdown text="Menu">
-						<MenuItem
-							path={PathName.PRODUCTS}
-							text="All"
-							testId="menu-item-all"
-						/>
-						{categories.map(({name, id}) => (
-							<MenuItem
-								key={id}
-								path={getCategoryLinkPath(name)}
-								text={name}
-								testId={`menu-item-category-${id}`}
-							/>
-						))}
+						<CategoryMenuItems categories={categories} />
 					</MenuDropdown>
 				</Menu>
 			</div>

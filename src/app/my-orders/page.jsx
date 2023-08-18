@@ -10,7 +10,6 @@ const MyOrders = async () => {
 	const clientId = cookieStore.get("clientId")?.value;
 
 	const orders = clientId ? await getOrdersByClientId(clientId) : [];
-
 	if (orders.length === 0) {
 		return <p className="text-center">You don&apos;t have any orders yet</p>;
 	}
