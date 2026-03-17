@@ -1,5 +1,6 @@
 FROM node:20-alpine AS base
-RUN apk add --no-cache su-exec
+
+RUN ln -s /usr/lib/libssl.so.3 /lib/libssl.so.3
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -9,24 +10,48 @@ WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm ci
+
+# Rebuild the source code only when needed
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+RUN npx prisma generate
+
+RUN npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
 WORKDIR /app
 
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
+ENV NODE_ENV=production
 
 RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --shell /bin/sh --uid 1001 --disabled-password nextjs
+RUN adduser --system --uid 1001 nextjs
 
+COPY --from=builder /app/public ./public
+
+# Set the correct permission for prerender cache
+RUN mkdir .next
+RUN chown nextjs:nodejs .next
+
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+COPY --from=deps /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder --chown=nextjs:nodejs /app/src/prisma ./src/prisma
+
+COPY --from=builder /app/entrypoint.sh ./
 # Make the entrypoint script executable
 RUN chmod +x ./entrypoint.sh
 # Set the entrypoint to the script
 ENTRYPOINT ["./entrypoint.sh"]
 
-ENV NODE_ENV=production
+USER nextjs
 
 EXPOSE 3000
 

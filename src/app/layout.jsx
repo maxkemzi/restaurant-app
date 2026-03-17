@@ -18,6 +18,9 @@ export const metadata = {
 	publisher: "Max Kyrychenko"
 };
 
+// Prevent connection to database during prerendering stage
+export const dynamic = "force-dynamic";
+
 const RootLayout = async ({children}) => (
 	<html lang="en">
 		<body>

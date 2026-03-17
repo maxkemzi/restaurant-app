@@ -22,14 +22,4 @@ if [ "$missing_vars" = true ]; then
 	exit 1
 fi
 
-npm run db:deploy
-
-npm run db:seed
-
-npm run build
-
-chown -R nextjs:nodejs .next
-
-cp -a ./.next/standalone/. ./
-
-exec su-exec nextjs "$@"
+exec "$@"
