@@ -42,7 +42,6 @@ RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-COPY --from=deps /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder --chown=nextjs:nodejs /app/src/prisma ./src/prisma
 
 COPY --from=builder /app/entrypoint.sh ./
@@ -51,7 +50,12 @@ RUN chmod +x ./entrypoint.sh
 # Set the entrypoint to the script
 ENTRYPOINT ["./entrypoint.sh"]
 
+USER root
+
+RUN npm i -g prisma@4.13.0
+
 USER nextjs
+
 
 EXPOSE 3000
 
